@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
-import Nav from "./Components/Nav";
-import Footer from "./Components/Footer";
-import Clinics from "./Pages/clinics/Clinics";
-import Home from "./Pages/Home/Home";
-import Posts from "./Pages/community/Posts";
-import ClinicDetail from "./Pages/Clinic_Detail/Clinic_Detail";
-import Login from "./Pages/login";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+import Clinics from "./pages/clinics/Clinics";
+import Home from "./pages/home/Home";
+import Posts from "./pages/community/Posts";
+import ClinicDetail from "./pages/clinics/ClinicDetail";
+import Login from "./pages/login";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
-          <Route path="/clinics/:id" element={<ClinicDetail />} />
+          <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
         </Routes>
         <Footer />
       </BrowserRouter>
