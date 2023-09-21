@@ -6,6 +6,7 @@ import Footer from "./Components/Footer";
 import Clinics from "./Pages/clinics/Clinics";
 import Home from "./Pages/Home/Home";
 import Posts from "./Pages/community/Posts";
+import ClinicDetail from "./Pages/Clinic_Detail/Clinic_Detail";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
+          <Route path="/clinics/:id" element={<ClinicDetail />} />
         </Routes>
         <Footer />
       </BrowserRouter>
