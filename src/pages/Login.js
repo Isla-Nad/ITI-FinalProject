@@ -50,10 +50,12 @@ function Login(){
     return(
         <>
         
-        <div id="content" align="center" >
-            <form  className="col-6 " onSubmit={(e)=> submit(e)}>
+        <div id="content" align="center">
+            <form  className="col-sm-6 border col-md-4"
+            style={{borderRadius:"5px", padding:"16px", margin:"16px"}}
+            onSubmit={(e)=> submit(e)}>
 
-                <h1>Login Form</h1>
+                <h1 className="text-info">welcome back !</h1>
 
                 <p  align="left">Email: </p>
                 <input type="text" id="mail" 
@@ -74,7 +76,7 @@ function Login(){
                  <p  className="text-danger ">{error.passError}</p>
                 < br />
                
-                <button type="submit" className="btn btn-primary">Login</button>
+                <button type="submit" className="btn btn-info">Login</button>
             </form> 
         </div>
             </>
