@@ -7,7 +7,7 @@ import Clinics from "./Pages/clinics/Clinics";
 import Home from "./Pages/Home/Home";
 import Posts from "./Pages/community/Posts";
 import ClinicDetail from "./Pages/Clinic_Detail/Clinic_Detail";
-import Login from "./pages/login";
+import Login from "./Pages/login";
 
 function App() {
   return (
