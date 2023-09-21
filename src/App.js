@@ -10,17 +10,15 @@ import ClinicDetail from "./pages/clinics/ClinicDetail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 
-
 function App() {
   return (
     <>
       <BrowserRouter>
         <Nav />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          <Route path="/" element={<Home />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
