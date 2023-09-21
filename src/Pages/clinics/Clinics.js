@@ -6,7 +6,7 @@ import "./Clinics.css";
 const Clinics = () => {
   const [clinics, setClinics] = useState([]);
 
-  useEffect((...args) => {
+  useEffect(() => {
     axios
       .get("https://retoolapi.dev/NxioV4/data")
       .then((response) => setClinics(response.data)) //
