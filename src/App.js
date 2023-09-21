@@ -1,8 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import Home from './Home/Home';
-import Nav from './Home/Nav';
-import Footer from './Home/Footer';
+import Nav from './Nav';
+import Footer from './Footer';
 import Container from './Home/Container';
 
 

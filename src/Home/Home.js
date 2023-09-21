@@ -1,6 +1,6 @@
-import Nav from "./Nav";
+import Nav from "../Nav";
 import Container from "./Container";
-import Footer from "./Footer";
+import Footer from "../Footer";
 
 function Home (){
 <>
