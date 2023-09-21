@@ -2,10 +2,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
-import Nav from "./Components/Nav";
-import Clinics from "./Pages/clinics/Clinics";
-import Home from "./Pages/Home/Home";
-import Footer from "./Components/Footer";
+import Nav from "./components/Nav";
+import Clinics from "./pages/clinics/Clinics";
+import Home from "./pages/Home/Home";
+import Footer from "./components/Footer";
+import Login from "./pages/login";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
         <Nav />
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/clinics" element={<Clinics />} />
         </Routes>
