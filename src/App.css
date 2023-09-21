@@ -41,7 +41,7 @@
 }
 .banner-text{
   position: absolute;
-  top:30%;
+  top:24%;
   left: 10%;
   color: aliceblue;
 }
@@ -69,4 +69,12 @@ top:20px;
   left: 30px;
   top:20px
 }
-
+.iconns1-come{
+  display: flex;
+  justify-content: space-evenly;
+}
+.iconns2-come{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 40px 0px;
+}
