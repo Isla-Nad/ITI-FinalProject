@@ -1,4 +1,4 @@
-import about from '../../icons/unnamed.jpg'
+import about from '../../icons/9bf8ed5c33225b24deb716885dac0343.jpg'
 function Aboutus(){
 return(
     < div className=' row ' style={{display:"flex",justifyContent:"space-evenly",padding:"60px 0px"}} >
