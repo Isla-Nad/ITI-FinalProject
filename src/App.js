@@ -7,7 +7,9 @@ import Clinics from "./pages/clinics/Clinics";
 import Home from "./pages/home/Home";
 import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
-import Login from "./pages/login";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Nav />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
           <Route path="/" element={<Home />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
