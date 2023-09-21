@@ -1,4 +1,8 @@
-import image from "../../img/Banner.png";
+import image from "../../icons/Banner.png";
+import Aboutus from "./Aboutus";
+import Cometics from "./Cometics";
+import OurTeam from "./OurTeam";
+
 
 function Home() {
   return (
@@ -11,7 +15,11 @@ function Home() {
         <h3>Every Smiles Everday</h3>
         <p>--because your smile is our passion</p>
       </div>
+      <Aboutus/>
+      <Cometics/>
+      <OurTeam/>
     </>
+
   );
 }
 export default Home;
