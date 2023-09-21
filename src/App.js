@@ -5,6 +5,7 @@ import Nav from "./Components/Nav";
 import Clinics from "./Pages/clinics/Clinics";
 import Home from "./Pages/Home/Home";
 import Footer from "./Components/Footer";
+import ClinicDetail from "./Pages/Clinic_Detail/Clinic_Detail";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/clinics" element={<Clinics />} />
+          <Route path="/Pages/Clinic_Detail/Clinic_Detail" element={<ClinicDetail />} />
         </Routes>
         <Footer />
       </BrowserRouter>
