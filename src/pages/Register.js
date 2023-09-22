@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import Error from '../components/error';
 
-const Login = () => {
+
+const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [errors,setErrors] = useState({})
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,18 +20,42 @@ const Login = () => {
     // console.log(name,value)
   };
 
+  const validateForm = ()=> {
+    const formErrors = {}
+
+    const emailPattern = /^\S+@\S+\.\S+$/;
+    if(!emailPattern.test(formData.email))
+    {
+      formErrors.email = 'Invalid Email Adress'
+    }
+
+    const passwordPattern = /^.{8,}$/;
+    if(!passwordPattern.test(formData.password))
+    {
+      formErrors.password = 'Invalid password'
+    }
+
+    // confirm password validation 
+    if(formData.password != formData.confirmPassword)
+    {
+      formErrors.confirmPassword = "Password doesn't match!"
+    }
+      return formErrors
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your registration logic here
-    console.log(formData);
+    // test the 
+    setErrors(validateForm())
+    // console.log(validateForm)
+    console.log(errors)
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5">
         <div className="row justify-content-center">
         <div className="col-md-6">
-            <div className="card">
-            <div className="card-body">
+            <div className="">
+            <div className="">
                 <h2 className="text-center">Register</h2>
                 <form onSubmit={handleSubmit}  noValidate>
                 <div className="form-group">
@@ -55,6 +82,7 @@ const Login = () => {
                     required
                   />
                 </div>
+                {errors && <Error error={errors.email} />}
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
                   <input
@@ -66,6 +94,7 @@ const Login = () => {
                     onChange={handleChange}
                     required
                   />
+                  {errors && <Error error={errors.password} />}
                 </div>
                 <div className="form-group">
                   <label htmlFor="confirmPassword">Confirm Password</label>
@@ -78,6 +107,7 @@ const Login = () => {
                     onChange={handleChange}
                     required
                   />
+                  {errors && <Error error={errors.confirmPassword} />}
                 </div>
                 <button type="submit" className="btn btn-primary btn-block">
                   Register
@@ -91,4 +121,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
