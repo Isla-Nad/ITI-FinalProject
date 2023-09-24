@@ -1,7 +1,9 @@
-import Table from "react-bootstrap/Table";
-import MedicalHistoryForm from "./MedicalHistoryForm";
-import { Button } from "react-bootstrap";
 import { useState } from "react";
+import MedicalHistoryForm from "./MedicalHistoryForm";
+import { Button, Col, Row } from "react-bootstrap";
+import PatientDataPopup from "./PatientDataPopup";
+import "./MedicalHistory.css";
+import ConfirmationModal from "./ConfirmationModal";
 
 const MedicalHistory = () => {
   const [showForm, setShowForm] = useState(false);
@@ -17,6 +19,10 @@ const MedicalHistory = () => {
     file: null,
   });
   const [historyData, setHistoryData] = useState([]);
+  const [selectedPatientData, setSelectedPatientData] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +36,17 @@ const MedicalHistory = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setHistoryData([...historyData, formData]);
+
+    if (editMode) {
+      const updatedHistoryData = [...historyData];
+      updatedHistoryData[selectedIndex] = formData;
+      setHistoryData(updatedHistoryData);
+      setShowForm(false);
+      setEditMode(false);
+      setSelectedIndex(null);
+    } else {
+      setHistoryData([...historyData, formData]);
+    }
 
     setShowForm(false);
 
@@ -46,40 +62,74 @@ const MedicalHistory = () => {
       file: formData.file,
     });
   };
+
+  const showPatientData = (patientData) => {
+    setSelectedPatientData(patientData);
+  };
+
+  const closePatientDataPopup = () => {
+    setSelectedPatientData(null);
+  };
+
+  const editPatientData = (history, index) => {
+    setEditMode(true);
+    setFormData(history);
+    setShowForm(true);
+    setSelectedIndex(index);
+  };
+
+  const confirmRemoval = () => {
+    const updatedHistoryData = [...historyData];
+    updatedHistoryData.splice(selectedIndex, 1);
+    setHistoryData(updatedHistoryData);
+
+    setShowConfirmationModal(false);
+    setSelectedIndex(null);
+  };
+
+  const removePatientData = (index) => {
+    setShowConfirmationModal(true);
+    setSelectedIndex(index);
+  };
+  const cancelRemoval = () => {
+    setShowConfirmationModal(false);
+    setSelectedIndex(null);
+  };
+
   return (
-    <div style={{ flex: "1 0 auto", padding: "50px" }}>
-      <h2>Submitted Dental History</h2>
-      <Table striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>#no</th>
-            <th>Patient Name</th>
-            <th>Date of Visit</th>
-            <th>File</th>
-          </tr>
-        </thead>
-        <tbody>
-          {historyData.map((history, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{history.patientName}</td>
-              <td>{history.dateOfVisit}</td>
-              <td>
-                {history.file && (
-                  <a href={URL.createObjectURL(history.file)} target="_blank" rel="noopener noreferrer">
-                    View File
-                  </a>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
+      <h2 className="header text-center">Dental History</h2>
+      <Row className="grid-header">
+        <Col className="grid-col col-1">#</Col>
+        <Col className="grid-col">Patient Name</Col>
+        <Col className="grid-col">Date of Visit</Col>
+        <Col className="grid-col">Actions</Col>
+      </Row>
+      {historyData.map((history, index) => (
+        <Row key={index} className="grid-row">
+          <Col className="grid-col col-1">{index + 1}</Col>
+          <Col className="grid-col">{history.patientName}</Col>
+          <Col className="grid-col">{history.dateOfVisit}</Col>
+          <Col className="grid-col gap-2 d-flex">
+            <Button onClick={() => showPatientData(history)}>View</Button>
+            <Button variant="warning" onClick={() => editPatientData(history, index)}>
+              Edit
+            </Button>
+            <Button variant="danger" onClick={() => removePatientData(index)}>
+              Remove
+            </Button>
+          </Col>
+        </Row>
+      ))}
       {showForm ? (
-        <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientName={formData.patientName} dateOfVisit={formData.dateOfVisit} allergies={formData.allergies} medicalConditions={formData.medicalConditions} dentalConditions={formData.dentalConditions} previousTreatments={formData.previousTreatments} dentalHygieneHabits={formData.dentalHygieneHabits} specificDentalConcerns={formData.specificDentalConcerns} />
+        <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? "Finish Editing" : "Add New Dental History"} />
       ) : (
-        <Button onClick={() => setShowForm(true)}>Add New Dental History</Button>
+        <Button onClick={() => setShowForm(true)} className="add-button m-3">
+          Add New Dental History
+        </Button>
       )}
+      {selectedPatientData && <PatientDataPopup patientData={selectedPatientData} show={selectedPatientData !== null} onHide={closePatientDataPopup} />}
+      {showConfirmationModal && <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} />}
     </div>
   );
 };
