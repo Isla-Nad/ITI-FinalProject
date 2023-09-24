@@ -9,6 +9,7 @@ import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
+          <Route path="/medicalHistory" element={<MedicalHistory />} />
         </Routes>
         <Footer />
       </BrowserRouter>
