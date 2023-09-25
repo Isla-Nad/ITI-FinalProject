@@ -2,7 +2,7 @@ import { Container, Form, Button } from "react-bootstrap";
 
 function MedicalHistoryForm(props) {
   return (
-    <Container className="mt-5">
+    <Container>
       <Form onSubmit={props.handleSubmit}>
         <Form.Group controlId="patientName">
           <Form.Label>Patient Name:</Form.Label>
@@ -49,7 +49,7 @@ function MedicalHistoryForm(props) {
           <Form.Control type="file" accept=".pdf, .jpg, .jpeg, .png" onChange={props.handleFileChange} />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-3">
+        <Button variant="primary" type="submit" className="my-3">
           {props.buttonText}
         </Button>
       </Form>

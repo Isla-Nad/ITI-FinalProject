@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MedicalHistoryForm from "./MedicalHistoryForm";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
 import "./MedicalHistory.css";
 import ConfirmationModal from "./ConfirmationModal";
@@ -122,7 +122,12 @@ const MedicalHistory = () => {
         </Row>
       ))}
       {showForm ? (
-        <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? "Finish Editing" : "Add New Dental History"} />
+        <Modal show={showForm} onHide={() => setShowForm(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>{editMode ? `Edit ${formData.patientName}'s History` : "Add New Dental History"}</Modal.Title>
+          </Modal.Header>
+          <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? "Finish Editing" : "Add New Dental History"} />
+        </Modal>
       ) : (
         <Button onClick={() => setShowForm(true)} className="add-button m-3">
           Add New Dental History
