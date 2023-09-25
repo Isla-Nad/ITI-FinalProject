@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MedicalHistoryForm from "./MedicalHistoryForm";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
@@ -18,7 +18,7 @@ const MedicalHistory = () => {
     specificDentalConcerns: "",
     file: null,
   });
-  const [historyData, setHistoryData] = useState([]);
+  const [historyData, setHistoryData] = useState(JSON.parse(localStorage.getItem("HistoryData")) || []);
   const [selectedPatientData, setSelectedPatientData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -95,6 +95,10 @@ const MedicalHistory = () => {
     setShowConfirmationModal(false);
     setSelectedIndex(null);
   };
+
+  useEffect(() => {
+    localStorage.setItem("HistoryData", JSON.stringify(historyData));
+  }, [historyData]);
 
   return (
     <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
