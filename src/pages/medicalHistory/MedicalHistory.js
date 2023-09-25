@@ -7,17 +7,7 @@ import ConfirmationModal from "./ConfirmationModal";
 
 const MedicalHistory = () => {
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    patientName: "",
-    dateOfVisit: "",
-    allergies: "",
-    medicalConditions: "",
-    dentalConditions: "",
-    previousTreatments: "",
-    dentalHygieneHabits: "",
-    specificDentalConcerns: "",
-    file: null,
-  });
+  const [formData, setFormData] = useState({ patientName: "", dateOfVisit: "", allergies: "", medicalConditions: "", dentalConditions: "", previousTreatments: "", dentalHygieneHabits: "", specificDentalConcerns: "", file: null });
   const [historyData, setHistoryData] = useState(JSON.parse(localStorage.getItem("HistoryData")) || []);
   const [selectedPatientData, setSelectedPatientData] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -50,17 +40,7 @@ const MedicalHistory = () => {
 
     setShowForm(false);
 
-    setFormData({
-      patientName: "",
-      dateOfVisit: "",
-      allergies: "",
-      medicalConditions: "",
-      dentalConditions: "",
-      previousTreatments: "",
-      dentalHygieneHabits: "",
-      specificDentalConcerns: "",
-      file: formData.file,
-    });
+    setFormData({ patientName: "", dateOfVisit: "", allergies: "", medicalConditions: "", dentalConditions: "", previousTreatments: "", dentalHygieneHabits: "", specificDentalConcerns: "", file: formData.file });
   };
 
   const showPatientData = (patientData) => {
@@ -96,9 +76,9 @@ const MedicalHistory = () => {
     setSelectedIndex(null);
   };
 
-  useEffect(() => {
-    localStorage.setItem("HistoryData", JSON.stringify(historyData));
-  }, [historyData]);
+  // useEffect(() => {
+  //   localStorage.setItem("HistoryData", JSON.stringify(historyData));
+  // }, [historyData]);
 
   return (
     <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
@@ -127,8 +107,16 @@ const MedicalHistory = () => {
       ))}
       {showForm ? (
         <Modal show={showForm} onHide={() => setShowForm(false)} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>{editMode ? `Edit ${formData.patientName}'s History` : "Add New Dental History"}</Modal.Title>
+          <Modal.Header closeButton={!editMode}>
+            <Modal.Title>
+              {editMode ? (
+                <h3>
+                  Edit <span className="text-warning">{formData.patientName}</span>'s History
+                </h3>
+              ) : (
+                <h3>Add New Dental History</h3>
+              )}
+            </Modal.Title>
           </Modal.Header>
           <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? "Finish Editing" : "Add New Dental History"} />
         </Modal>

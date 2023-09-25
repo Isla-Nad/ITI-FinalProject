@@ -1,86 +1,69 @@
-.posts-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f7f7f7;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.posts-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.add-post-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.add-post-form input,
-.add-post-form textarea {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.add-post-form button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
+.post--button {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  background: white;
   cursor: pointer;
+  color: grey;
+  width: 70%;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
 }
 
-.posts-list {
-  list-style: none;
+.post--container {
+  max-height: 400px !important;
+  width: 100%;
+  overflow: auto;
+  margin-top: 2rem;
+}
+
+.card-footer {
   padding: 0;
 }
 
-.post-item {
-  background-color: #fff;
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.post--footer {
+  grid-template-columns: repeat(4, 1fr);
+  position: sticky;
+  display: grid;
+  bottom: 0;
 }
-
-.post-title {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.post-body {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.post-item button {
-  padding: 5px 10px;
-  background-color: #ff5555;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
+.post--edit {
+  text-align: center;
+  padding: 0.5rem;
   cursor: pointer;
 }
 
-.loading-skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 4px;
-  height: 200px;
+.post--edit:hover {
+  background-color: rgba(138, 124, 0, 0.495);
 }
 
-@keyframes loading {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+.post--remove {
+  text-align: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.post--remove:hover {
+  background-color: rgba(151, 5, 5, 0.541);
+}
+
+.post--comment {
+  text-align: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.post--comment:hover {
+  background-color: rgba(41, 67, 140, 0.621);
+}
+
+.post--likes {
+  text-align: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.post--likes:hover {
+  background-color: rgba(9, 115, 186, 0.621);
 }

@@ -6,7 +6,7 @@ function ConfirmationModal({ show, onHide, onConfirm }) {
       <Modal.Header closeButton>
         <Modal.Title>Confirm Removal</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to remove this patient's data?</Modal.Body>
+      <Modal.Body>Are you sure you want to remove this...?</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Cancel

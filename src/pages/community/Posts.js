@@ -1,56 +1,105 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button, Card, Container } from "react-bootstrap";
+import CommunityForm from "./CommunityForm";
+import { CgProfile } from "react-icons/cg";
 import "./Posts.css";
+import ConfirmationModal from "../medicalHistory/ConfirmationModal";
 
 const Posts = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [newPost, setNewPost] = useState({ title: "", body: "" });
+  const [posts, setPosts] = useState(JSON.parse(localStorage.getItem("POSTS")) || []);
+  const [newPost, setNewPost] = useState({ title: "", body: "", file: null });
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [likes, setLikes] = useState(0);
 
-  useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => {
-        setPosts(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching posts:", error);
-        setLoading(false);
-      });
-  }, []);
-
-  const handleAddPost = () => {
-    setPosts([...posts, { ...newPost, id: Date.now() }]);
-    setNewPost({ title: "", body: "" });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewPost({ ...newPost, [name]: value });
   };
 
-  const handleRemovePost = (postId) => {
-    const updatedPosts = posts.filter((post) => post.id !== postId);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setNewPost({ ...newPost, file });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (editMode) {
+      const updatedPosts = [...posts];
+      updatedPosts[selectedIndex] = newPost;
+      setPosts(updatedPosts);
+      setShowModal(false);
+      setEditMode(false);
+      setSelectedIndex(null);
+    } else {
+      setPosts([...posts, { ...newPost, id: Date.now() }]);
+    }
+    setNewPost({ title: "", body: "", file: posts.file });
+    setShowModal(false);
+  };
+
+  const editPost = (post, index) => {
+    setEditMode(true);
+    setShowModal(true);
+    setNewPost(post);
+    setSelectedIndex(index);
+  };
+
+  const confirmRemoval = () => {
+    const updatedPosts = [...posts];
+    updatedPosts.splice(selectedIndex, 1);
     setPosts(updatedPosts);
+
+    setShowConfirmationModal(false);
+    setSelectedIndex(null);
   };
+
+  const handleRemovePost = (index) => {
+    setShowConfirmationModal(true);
+    setSelectedIndex(index);
+  };
+
+  const cancelRemoval = () => {
+    setShowConfirmationModal(false);
+    setSelectedIndex(null);
+  };
+
+  // useEffect(() => {
+  //   localStorage.setItem("POSTS", JSON.stringify(posts));
+  // }, [posts]);
 
   return (
-    <div className="posts-container">
-      <h1 className="posts-title">Posts</h1>
-      <div className="add-post-form">
-        <input type="text" placeholder="Title" value={newPost.title} onChange={(e) => setNewPost({ ...newPost, title: e.target.value })} />
-        <textarea placeholder="Body" value={newPost.body} onChange={(e) => setNewPost({ ...newPost, body: e.target.value })} />
-        <button onClick={handleAddPost}>Add Post</button>
-      </div>
-      {loading ? (
-        <div className="loading-skeleton"></div>
-      ) : (
-        <ul className="posts-list">
-          {posts.map((post) => (
-            <li key={post.id} className="post-item">
-              <h2 className="post-title">{post.title}</h2>
-              <p className="post-body">{post.body}</p>
-              <button onClick={() => handleRemovePost(post.id)}>Remove Post</button>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div style={{ flex: "1 0 auto" }}>
+      <Button variant="primary" onClick={() => setShowModal(true)} className="post--button">
+        <CgProfile className="display-3 mx-4" /> What's on your mind?
+      </Button>
+      <CommunityForm posts={newPost} handleChange={handleChange} handleFileChange={handleFileChange} handleAddPost={handleSubmit} handleSubmit={handleSubmit} buttonText="Add New Post" showModal={showModal} onHide={() => setShowModal(false)} ButtonText={editMode ? "Edit" : "post"} closeButton={!editMode} />
+      <Container>
+        {posts.map((post, index) => (
+          <>
+            <Card key={post.id} className="post--container">
+              <Card.Header>{post.title}</Card.Header>
+              <Container>{post.file && <embed src={URL.createObjectURL(post.file)} type={post.file.type} className="file-embed w-100" />}</Container>
+              <Card.Body>
+                <Card.Text>{post.body}</Card.Text>
+              </Card.Body>
+              <Card.Footer className="post--footer bg-light">
+                <span className="post--likes">Like {likes}</span>
+                <span className="post--comment">Comment</span>
+                <span className="post--edit" onClick={() => editPost(post, index)}>
+                  Edit
+                </span>
+                <span className="post--remove" onClick={() => handleRemovePost(index)}>
+                  Remove
+                </span>
+              </Card.Footer>
+            </Card>
+          </>
+        ))}
+      </Container>
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} />
     </div>
   );
 };
