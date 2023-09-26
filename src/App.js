@@ -7,8 +7,8 @@ import Clinics from "./pages/clinics/Clinics";
 import Home from "./pages/home/Home";
 import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Register from "./pages/Registration/Register";
+import Login from "./pages/Login/Login";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import DentistProfile from "./pages/DoctorProfile/Doctor_Profile";
 
