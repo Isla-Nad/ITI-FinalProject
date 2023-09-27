@@ -1,101 +1,83 @@
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
-const colors={
-    orange:"#FFBA5A",
-    gray:"#a9a9a9"
+import { Container, Row, Col, Button, Form, ListGroup, ListGroupItem } from "react-bootstrap";
 
-}
-function CommentandRating(){
-    const stars=Array(5).fill();
-    const [currentValue,setCurrentValue]=useState(0)
-    const [hoverValue,setHoverValue]=useState(undefined);
-   const [posts, setPosts] = useState([]);
-   const [newPost, setNewPost] = useState({ title: "", body: "" });
-    const handleClick=value=>{
-        setCurrentValue(value)
-        console.log(currentValue)
-    };
-    const handleHover=value=>{
-        setHoverValue(value)
-    };
-   
-    const handleAddPost = () => {
-        setPosts([...posts, { ...newPost, id: Date.now() }]);
-        setNewPost({ title: "", body: "" });
-      };
-      const handleRemovePost = (postId) => {
-        const updatedPosts = posts.filter((post) => post.id !== postId);
-        setPosts(updatedPosts);
-      };
-    
+const colors = {
+  orange: "#FFBA5A",
+  gray: "#a9a9a9",
+};
 
-    return (
-        <div style={styles.container}>
-            <h>Write Comment and Rating </h>
-            <div style={styles.stars}>
-                {stars.map((_,index)=>{
-                    return(
-                        <FaStar
-                        key={index}
-                        size={25}
-                        style={{marginRight:"10px",cursor:"pointer"}}
-                        color={(hoverValue || currentValue > index ? colors.orange : colors.gray)}
-                        onClick={()=>handleClick(index+1)}
-                        
-                        onChange={()=>handleHover}
-                        
-                        />
-                    )
-                })}
+function CommentandRating() {
+  const [rating, setRating] = useState(0);
+  const [hoverValue, setHoverValue] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [newPost, setNewPost] = useState({ title: "", body: "" });
+  const [error, setError] = useState("");
 
-            </div>
-            <textarea className="form-contol"
-            placeholder="Whats is Your Comment" 
-            name="Textcomment"
-            style={styles.textarea}
-            value={newPost.body} onChange={(e) => setNewPost({ ...newPost, body: e.target.value })}
-            >
+  const handleRatingClick = (value) => {
+    setRating(value);
+  };
 
-            </textarea>
-            <button  className="btn btn-primary"style={styles.button} onClick={handleAddPost}> Submit</button>
-            <ul className="posts-list "  style={{padding:"20px 0px", paddingRight:"40%"}} >
-          {posts.map((post,index) => (
-            <li key={post.id} className="post-item">
-              <h2 className="post-title">{<FaStar  key={index}
-                 color={( hoverValue ||currentValue > index ? colors.orange : colors.gray)}
-                 value={currentValue.index}
+  const handleRatingHover = (value) => {
+    setHoverValue(value);
+  };
 
-              />}</h2>
-              <p className="post-body">{post.body}</p>
-              <button onClick={() => handleRemovePost(post.id)} className="btn btn-danger">Remove Rating</button>
-            </li>
-          ))}
-        </ul>
+  const handleAddPost = () => {
+    if (rating === 0 || newPost.body.trim() === "") {
+      setError("Please provide a rating and a comment before submitting.");
+      return;
+    }
+
+    setPosts([...posts, { ...newPost, id: Date.now(), rating }]);
+    setNewPost({ title: "", body: "" });
+    setRating(0);
+    setError("");
+  };
+
+  const handleRemovePost = (postId) => {
+    const updatedPosts = posts.filter((post) => post.id !== postId);
+    setPosts(updatedPosts);
+  };
+
+  return (
+    <Container>
+      <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
+        <Form.Control as="textarea" placeholder="What is Your Comment" name="Textcomment" value={newPost.body} onChange={(e) => setNewPost({ ...newPost, body: e.target.value })} />
+        <div className="text-center">
+          {Array(5)
+            .fill()
+            .map((_, index) => (
+              <FaStar key={index} size={25} style={{ marginRight: "10px", cursor: "pointer" }} color={hoverValue >= index + 1 || rating >= index + 1 ? colors.orange : colors.gray} onClick={() => handleRatingClick(index + 1)} onMouseEnter={() => handleRatingHover(index + 1)} onMouseLeave={() => handleRatingHover(0)} />
+            ))}
         </div>
-    )
-
+        <div onClick={handleAddPost} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
+          Add Comment
+        </div>
+      </div>
+      <h5 className="text-danger">{error}</h5>
+      <Row>
+        <Col>
+          <ListGroup style={{ marginTop: "20px" }}>
+            {posts.map((post) => (
+              <ListGroupItem key={post.id}>
+                <h2>
+                  {Array(post.rating)
+                    .fill()
+                    .map((_, i) => (
+                      <FaStar key={i} color={colors.orange} />
+                    ))}
+                </h2>
+                <p>{post.body}</p>
+                <Button variant="danger" onClick={() => handleRemovePost(post.id)}>
+                  Remove Rating
+                </Button>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
-const styles={
-    container:{
-    display:"flex",
-    flexDirection:"column",
-    alginItems:"Center"
-    },
-    textarea :{
-        border:"1px soild #a9a9a9",
-        borderRedius:5,
-        width:300,
-        padding:10
 
-    },
-   
-    button:{
-        border:"1px soild #a9a9a9",
-        borderRedius:5,
-        width:300,
-        padding:10
-
-        }
-  
-}
 export default CommentandRating;
