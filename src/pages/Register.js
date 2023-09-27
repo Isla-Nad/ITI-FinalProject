@@ -63,7 +63,21 @@ const Register = () => {
     // console.log(errorsValues);
     // Check if there are errors and handle accordingly
     if (errorsValues.length === 0) {
-      localStorage.setItem('userRegistration', JSON.stringify(formData));
+      let existingData = JSON.parse(localStorage.getItem('userRegistration')) || [];
+
+      if (!Array.isArray(existingData)) {
+        existingData = [];
+      }
+      // Check for duplicate email
+      const isDuplicate = existingData.some((data) => data.email === formData.email);
+      if(isDuplicate)
+        {
+          console.log('This Email already Taken')
+        }
+        else
+        {
+          localStorage.setItem('userRegistration', JSON.stringify(formData));
+        }
     } else {
       console.log("There are errors");
     }
@@ -133,20 +147,28 @@ const Register = () => {
                   />
                 </div>
                 {errors && <Error error={errors.email} />}
+                {/* for doctors */}
                 {role === 'doctor' && (
+                  <>
                   <div className="form-group">
-                  <label htmlFor="email">Clinic Name: </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Clinic name"
-                    required
-                  />
+                  <label>Select an option:</label>
+                    <select className="form-control">
+                      <option value="">Choose...</option>
+                        <option  value='Cilinc 1'>
+                          Cilinc 1
+                        </option>
+                        <option  value='Cilinc 1'>
+                          Cilinc 2
+                        </option>
+                    </select>
                   </div>
+                  {/* add an image */}
+                  <div className="form-group">
+                      <label htmlFor="customFile">Medical Syndicate Card:</label>
+                      <input type="file" accept="image/*" className="" id="customFile" />
+                      
+                  </div>
+                  </>
                 )}
                 <div className="form-group">
                   <label htmlFor="password">Password:</label>
