@@ -9,8 +9,8 @@ import ClinicDetail from "./pages/clinics/ClinicDetail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/home/Home";
-
-
+import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
+import DentistProfile from "./pages/DoctorProfile/Doctor_Profile";
 
 function App() {
   return (
@@ -24,6 +24,8 @@ function App() {
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
+          <Route path="/medicalHistory" element={<MedicalHistory />} />
+          <Route path="/DoctorProfile/Doctor_Profile" element={<DentistProfile/>} />
         </Routes>
         <Footer />
       </BrowserRouter>

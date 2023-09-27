@@ -2,9 +2,9 @@ import { FaPhoneAlt, FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa"
 
 function Footer() {
   return (
-    <div className="footer">
+    <div className="footer" style={{ flexShrink: "0" }}>
       <div className="text text-wite ">
-        <FaPhoneAlt className="text-white" /> <h className="text-white">:355462236</h>
+        <FaPhoneAlt className="text-white" /> <span className="text-white">:355462236</span>
       </div>
       <div className="icons">
         <FaFacebookF className="text-white mx-2" />

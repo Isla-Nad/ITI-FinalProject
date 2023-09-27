@@ -34,6 +34,16 @@ function Nav() {
                   Posts
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/medicalHistory">
+                  MedicalHistory
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="./DoctorProfile/Doctor_Profile">
+                  Dentist Details
+                </Link>
+              </li>
             </ul>
             <form className="d-flex" role="search">
               <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />

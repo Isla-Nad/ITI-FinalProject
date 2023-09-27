@@ -1,0 +1,33 @@
+.medical-history-container {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.header {
+  color: #007bff;
+}
+
+.grid-header {
+  background-color: #343a40;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.grid-col {
+  padding: 10px;
+}
+
+.grid-row:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.add-button {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+}
+
+.add-button:hover {
+  background-color: #218838;
+}
