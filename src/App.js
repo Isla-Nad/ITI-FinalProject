@@ -4,11 +4,13 @@ import "./App.css";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import Clinics from "./pages/clinics/Clinics";
-import Home from "./pages/home/Home";
 import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Home from "./pages/home/Home";
+
+
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
       <BrowserRouter>
         <Nav />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clinics" element={<Clinics />} />

@@ -1,3 +1,4 @@
+
 function ClinicDetail() {
   return (
     <>
@@ -194,7 +195,9 @@ function ClinicDetail() {
           </div>
         </div>
       </div>
+
     </>
+
   );
 }
 

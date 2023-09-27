@@ -1,0 +1,43 @@
+.container-image {
+    position: relative;
+  }
+  .banner-text {
+    position: absolute;
+    top: 24%;
+    left: 10%;
+    color: aliceblue;
+  }
+  .footer {
+    width: 100%;
+    height: 100px;
+    background-color: rgb(1, 1, 61);
+    position: relative;
+    text-align: center;
+  }
+  
+  .icons {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+  }
+  .icons:hover {
+    color: black;
+  }
+  
+  .text {
+    position: absolute;
+    left: 30px;
+    top: 20px;
+  }
+  .iconns1-come {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .iconns2-come {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 40px 0px;
+  }
+  .row {
+    margin-right: 0px;
+  }
