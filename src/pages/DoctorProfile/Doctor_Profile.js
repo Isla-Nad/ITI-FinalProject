@@ -1,3 +1,4 @@
+import CommentanRating from '../DoctorProfile/CommentandRating'
 import "./Doctor_Profile.css";
 
 
@@ -51,6 +52,7 @@ function DentistProfile(){
                                         </div>
                                         <div id="About" className="mt-5">
                                             <h2 className="text-primary">About The Dentist</h2>
+                                       
                                             <hr/>
                                             <p>
                                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque turpis eu molestie molestie. 
@@ -123,6 +125,8 @@ function DentistProfile(){
                                         </div>
                                         <div id="Rate" className="mt-5">
                                             <h2 className="text-primary">Ratings & Reviews</h2>
+                                            <CommentanRating/>
+                                
                                             <hr/>
                                             <p>
                                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque turpis eu molestie molestie. 
