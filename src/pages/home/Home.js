@@ -2,6 +2,7 @@ import image from "../../icons/Banner.png";
 import Aboutus from "./Aboutus";
 import Cometics from "./Cometics";
 import OurTeam from "./OurTeam";
+import '../home/Home.css'
 
 
 function Home() {

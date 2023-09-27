@@ -38,6 +38,7 @@ const Clinics = () => {
               </Card.Body>
             </Card>
           ))}
+        
     </div>
   );
 };
