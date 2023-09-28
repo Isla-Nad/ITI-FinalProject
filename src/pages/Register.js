@@ -90,7 +90,82 @@ const Register = () => {
   const handleRoleChange = (e) => {
     setRole(e.target.value);
   };
+  ////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////get data and save it in localstorage //////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////
+  function validation(name, email, password) {
+    if (!name) {
+      alert("Enter Name");
+      return false;
+    } else if (!email) {
+      alert("Enter Email");
+      return false;
+    } else if (!password) {
+      alert("Enter Password");
+      return false;
+    } else {
+      return true;
+    }
+  }
+  ///  work first
+  var clinic ="";
+  function registerNow() {
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    try{
+       var clinic = document.getElementById("clinic").value;
+    }
+    catch(error){
+      var clinic=""
+    }
+    var validate = validation(name, email, password);
+    //obj contain name, mail, pass
+    var obj = {
+      name,
+      email,
+      password,
+      clinic,
+    };
+    if (validate) {
+      var getUsers = JSON.parse(localStorage.getItem("users"));
+      if (getUsers === null) { // if no users
+        var allUsers = [];
+        //push data as an obj for every user
+        allUsers.push(obj);
+        // => stringify to save in localstorage
+        localStorage.setItem("users", JSON.stringify(allUsers));
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+        // window.location.href = "../Login.html";
+      } else {
+        allUsers = getUsers; // if already there are users
+        var flag = true;  // no push if flag false
+        for (var i = 0; i < allUsers.length; i++) {
+          // => across over all user to avoid email duplication.
+          if (allUsers[i].email === obj.email) {
+            alert("Email Already used");
+            flag = false;
+          }
+        }
+        //add new user  while flag is true
+        if (flag === true) {
+          allUsers.push(obj);
+          localStorage.setItem("users", JSON.stringify(allUsers));
+          document.getElementById("name").value = "";
+          // document.getElementById("exampleInputEmail1").value = "";
+          // document.getElementById("exampleInputPassword1").value = "";
+          // window.location.href = "../Login.html"; //redirect me
+        }
+      }
+    }
+  }
   
+
+
+  ////////////////////////////////////////////////
+ 
   return (
     <div className="container mt-5 mb-5">
         <div className="row justify-content-center">
@@ -150,9 +225,9 @@ const Register = () => {
                 {/* for doctors */}
                 {role === 'doctor' && (
                   <>
-                  <div className="form-group">
+                  <div className="form-group" >
                   <label>Select an option:</label>
-                    <select className="form-control">
+                    <select className="form-control" id="clinic">
                       <option value="">Choose...</option>
                         <option  value='Cilinc 1'>
                           Cilinc 1
@@ -197,8 +272,10 @@ const Register = () => {
                   />
                   {errors && <Error error={errors.confirmPassword} />}
                 </div>
-                <div class="d-flex justify-content-center align-items-center">
-                <button type="submit" className="btn btn-primary btn-block">
+                <div className="d-flex justify-content-center align-items-center">
+                <button type="submit" className="btn btn-primary btn-block"v 
+                onClick={()=>{registerNow()}}
+                >
                   Create Account
                 </button>
                 </div>
