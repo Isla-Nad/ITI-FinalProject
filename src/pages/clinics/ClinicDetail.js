@@ -50,41 +50,43 @@ function ClinicDetail() {
         <div>
           <h2 style={{ textAlign: "center" }}>Some of our Cases</h2>
         </div>
-        <div className="row mt-5">
-          <div className="row row-cols-1 row-cols-md-2 g-4">
-            <div className="col">
-              <div className="card m-5">
-                <img src="https://www.bangkokdentalimplant.com/wp-content/uploads/2016/01/case-dr-preeda1.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title text-center">Dental Implant</h5>
+        <div className="container">
+          <div className="row mt-5">
+            
+              
+                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
+                  <img src="https://www.bangkokdentalimplant.com/wp-content/uploads/2016/01/case-dr-preeda1.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title text-center">Dental Implant</h5>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card m-5">
-                <img src="https://www.mcintoshdental.co.nz/wp-content/uploads/2015/05/McIntosh-teeth-whitening-1024x683.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title text-center">Teeth Whitining</h5>
+              
+              
+                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
+                  <img src="https://www.mcintoshdental.co.nz/wp-content/uploads/2015/05/McIntosh-teeth-whitening-1024x683.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title text-center">Teeth Whitining</h5>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card m-5">
-                <img src="https://carlyleortho.com/wp-content/uploads/2017/02/iStock-165703401.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title text-center">Dental Ortho</h5>
+              
+              
+                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
+                  <img src="https://carlyleortho.com/wp-content/uploads/2017/02/iStock-165703401.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title text-center">Dental Ortho</h5>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card m-5">
-                <img src="https://www.maltepedentalclinic.com/wp-content/uploads/2022/03/Dental_bridge_before-after-1024x1024.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title text-center">Dental Bridges</h5>
+              
+              
+                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
+                  <img src="https://www.maltepedentalclinic.com/wp-content/uploads/2022/03/Dental_bridge_before-after-1024x1024.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title text-center">Dental Bridges</h5>
+                  </div>
                 </div>
-              </div>
-            </div>
           </div>
+            
+          
         </div>
       </div>
       <div className="mt-5">

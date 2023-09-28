@@ -1,0 +1,50 @@
+#sidebar--container {
+  position: fixed;
+  width: 20%;
+}
+.sidebar--list {
+  width: 100%;
+}
+#profile--container {
+  margin-left: 30%;
+  width: 70%;
+}
+@media only screen and (min-width: 990px) and (max-width: 1400px) {
+  #sidebar--container {
+    width: 25%;
+  }
+}
+
+@media only screen and (max-width: 990px) {
+  #profile--container {
+    margin-left: 0;
+    width: 100%;
+  }
+  #sidebar-nav-1 {
+    flex-direction: inherit;
+    gap: 2px;
+  }
+  #sidebar--container {
+    position: sticky;
+    top: 0;
+    display: flex;
+    height: 10%;
+  }
+  .sidebar--list {
+    display: flex;
+    align-items: center;
+  }
+  .sidebar--text {
+    display: none;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .sidebar--list {
+    font-size: 0.5rem;
+  }
+}
+@media only screen and (max-width: 510px) {
+  .sidebar--list {
+    padding: 5px;
+  }
+}

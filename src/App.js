@@ -10,7 +10,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/home/Home";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
-import DentistProfile from "./pages/DoctorProfile/Doctor_Profile";
+import DentistProfile from "./pages/DoctorProfile/DoctorProfile";
 
 function App() {
   return (
@@ -18,14 +18,14 @@ function App() {
       <BrowserRouter>
         <Nav />
         <Routes>
-          <Route path="/" element={<Home/>}/>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
           <Route path="/medicalHistory" element={<MedicalHistory />} />
-          <Route path="/DoctorProfile/Doctor_Profile" element={<DentistProfile/>} />
+          <Route path="/DoctorProfile" element={<DentistProfile />} />
         </Routes>
         <Footer />
       </BrowserRouter>
