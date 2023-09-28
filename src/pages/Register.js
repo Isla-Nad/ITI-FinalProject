@@ -114,11 +114,14 @@ const Register = () => {
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
+    var type = "doctor"
     try{
        var clinic = document.getElementById("clinic").value;
     }
     catch(error){
-      var clinic=""
+      var clinic="";
+      var type="patient"
+      
     }
     var validate = validation(name, email, password);
     //obj contain name, mail, pass
@@ -127,6 +130,7 @@ const Register = () => {
       email,
       password,
       clinic,
+      type
     };
     if (validate) {
       var getUsers = JSON.parse(localStorage.getItem("users"));
@@ -139,7 +143,7 @@ const Register = () => {
         document.getElementById("name").value = "";
         document.getElementById("email").value = "";
         document.getElementById("password").value = "";
-        // window.location.href = "../Login.html";
+        window.location.href = "./login";
       } else {
         allUsers = getUsers; // if already there are users
         var flag = true;  // no push if flag false
