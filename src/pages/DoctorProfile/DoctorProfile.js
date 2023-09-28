@@ -1,4 +1,4 @@
-import CommentanRating from "../DoctorProfile/CommentandRating";
+import CommentanRating from "./CommentandRating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse } from "@fortawesome/free-solid-svg-icons";
 import { faAddressCard } from "@fortawesome/free-solid-svg-icons";
@@ -6,54 +6,55 @@ import { faCertificate } from "@fortawesome/free-solid-svg-icons";
 import { faBriefcaseMedical } from "@fortawesome/free-solid-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import "./DoctorProfile.css";
 
 function DentistProfile() {
   return (
     <>
       <div className="container">
         <div className="row">
-          <div className="col-lg-3 col-md-5 col-sm-12 position-fixed" id="sidebar">
-            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" />
+          <div id="sidebar--container">
+            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" width={"100%"} />
             <ul className="list-group mb-4" id="sidebar-nav-1">
-              <li className="list-group-item list-group-item-primary" style={{ width: "20rem" }}>
+              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 text-black" href="#profile">
                   <FontAwesomeIcon icon={faUserNurse} size="2xl" />
-                  <span className="ms-4">Profile</span>
+                  <span className="ms-4 sidebar--text">Profile</span>
                 </a>
               </li>
-              <li className="list-group-item list-group-item-primary" style={{ width: "20rem" }}>
+              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 text-black" href="#About">
                   <FontAwesomeIcon icon={faAddressCard} size="2xl" />
-                  <span className="ms-4"> About Dentist</span>
+                  <span className="ms-4 sidebar--text"> About Dentist</span>
                 </a>
               </li>
-              <li className="list-group-item list-group-item-primary" style={{ width: "20rem" }}>
+              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 text-black" href="#Certificates">
                   <FontAwesomeIcon icon={faCertificate} size="2xl" />
-                  <span className="ms-4"> Certificates</span>
+                  <span className="ms-4 sidebar--text"> Certificates</span>
                 </a>
               </li>
-              <li className="list-group-item list-group-item-primary" style={{ width: "20rem" }}>
+              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 text-black" href="#Cases">
                   <FontAwesomeIcon icon={faBriefcaseMedical} size="2xl" />
-                  <span className="ms-4">Cases</span>{" "}
+                  <span className="ms-4 sidebar--text">Cases</span>{" "}
                 </a>
               </li>
-              <li className="list-group-item list-group-item-primary" style={{ width: "20rem" }}>
+              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
                   <FontAwesomeIcon icon={faPhone} size="2xl" />
-                  <span className="ms-4">Contacts</span>{" "}
+                  <span className="ms-4 sidebar--text">Contacts</span>{" "}
                 </a>
               </li>
-              <li className="list-group-item list-group-item-primary" style={{ width: "20rem" }}>
+              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 text-black" href="#Rate">
                   <FontAwesomeIcon icon={faStar} size="2xl" />
-                  <span className="ms-4"> Ratings & Reviews</span>{" "}
+                  <span className="ms-4 sidebar--text"> Ratings & Reviews</span>{" "}
                 </a>
               </li>
             </ul>
           </div>
-          <div className="col-lg-8 col-md-7 col-sm-12 mt-5" style={{ margin: "25rem" }}>
+          <div id="profile--container">
             <div data-bs-spy="scroll" data-bs-target="#sidebar-nav-1" data-bs-smooth-scroll="true" className="scrollspy-example" tabindex="0">
               <div id="profile">
                 <h2 className="text-primary">My Profile</h2>
