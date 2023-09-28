@@ -165,8 +165,7 @@ const Register = () => {
                   {/* add an image */}
                   <div className="form-group">
                       <label htmlFor="customFile">Medical Syndicate Card:</label>
-                      <input type="file" accept="image/*" className="" id="customFile" />
-                      
+                      <input type="file" accept="image/*" className="form-control" id="customFile" />
                   </div>
                   </>
                 )}
