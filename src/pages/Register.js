@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Error from '../components/error';
 import './register.css';
+import { faVrCardboard } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -45,9 +47,9 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // test the 
-    setErrors(validateForm())
-    const errorsValues =Object.values(errors) ;
-    console.log(errorsValues)
+    // setErrors(validateForm())
+    // const errorsValues =Object.values(errors) ;
+    // console.log(errorsValues)
     // if (!errorsKeys === 0) {
     //   console.log("NOooo Erorrsssss");
     // }
@@ -57,31 +59,31 @@ const Register = () => {
   };
 
     // Use useEffect to run code after the state update
-  useEffect(() => {
-    // Now you can safely access the updated errors state
-    const errorsValues = Object.values(errors);
-    // console.log(errorsValues);
-    // Check if there are errors and handle accordingly
-    if (errorsValues.length === 0) {
-      let existingData = JSON.parse(localStorage.getItem('userRegistration')) || [];
+  // useEffect(() => {
+  //   // Now you can safely access the updated errors state
+  //   const errorsValues = Object.values(errors);
+  //   // console.log(errorsValues);
+  //   // Check if there are errors and handle accordingly
+  //   if (errorsValues.length === 0) {
+  //     let existingData = JSON.parse(localStorage.getItem('userRegistration')) || [];
 
-      if (!Array.isArray(existingData)) {
-        existingData = [];
-      }
-      // Check for duplicate email
-      const isDuplicate = existingData.some((data) => data.email === formData.email);
-      if(isDuplicate)
-        {
-          console.log('This Email already Taken')
-        }
-        else
-        {
-          localStorage.setItem('userRegistration', JSON.stringify(formData));
-        }
-    } else {
-      console.log("There are errors");
-    }
-  }, [errors]); // This will run whenever the errors state change
+  //     if (!Array.isArray(existingData)) {
+  //       existingData = [];
+  //     }
+  //     // Check for duplicate email
+  //     const isDuplicate = existingData.some((data) => data.email === formData.email);
+  //     if(isDuplicate)
+  //       {
+  //         console.log('This Email already Taken')
+  //       }
+  //       else
+  //       {
+  //         localStorage.setItem('userRegistration', JSON.stringify(formData));
+  //       }
+  //   } else {
+  //     console.log("There are errors");
+  //   }
+  // }, [errors]); // This will run whenever the errors state change
 
 
   /// register as a doctor or a Patient
@@ -108,8 +110,9 @@ const Register = () => {
     }
   }
   ///  work first
-  var clinic ="";
   function registerNow() {
+    var clinic ="";
+    var type ="doctor";
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
@@ -117,7 +120,8 @@ const Register = () => {
        var clinic = document.getElementById("clinic").value;
     }
     catch(error){
-      var clinic=""
+      var clinic="";
+      var type="patient"
     }
     var validate = validation(name, email, password);
     //obj contain name, mail, pass
@@ -126,6 +130,7 @@ const Register = () => {
       email,
       password,
       clinic,
+      type
     };
     if (validate) {
       var getUsers = JSON.parse(localStorage.getItem("users"));
@@ -153,10 +158,10 @@ const Register = () => {
         if (flag === true) {
           allUsers.push(obj);
           localStorage.setItem("users", JSON.stringify(allUsers));
-          document.getElementById("name").value = "";
+          // document.getElementById("name").value = "";
           // document.getElementById("exampleInputEmail1").value = "";
           // document.getElementById("exampleInputPassword1").value = "";
-          // window.location.href = "../Login.html"; //redirect me
+          window.location.href = "/Login"; //redirect me
         }
       }
     }
@@ -271,9 +276,10 @@ const Register = () => {
                     required
                   />
                   {errors && <Error error={errors.confirmPassword} />}
+                  <p>already registered? <span className='text-info'> <Link to={"/login"}>login</Link> </span></p>
                 </div>
                 <div className="d-flex justify-content-center align-items-center">
-                <button type="submit" className="btn btn-primary btn-block"v 
+                <button type="submit" className="btn btn-info btn-block"v 
                 onClick={()=>{registerNow()}}
                 >
                   Create Account

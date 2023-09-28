@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 // import { useHistory } from "react";
 function Login(){
     const [userdata, setUserData]= useState({
@@ -126,8 +127,8 @@ function validation(email, password) {
                 />
 
                  <p  className="text-danger ">{error.passError}</p>
-                < br />
-               
+                <p align="left">not a member? <span className='text-info'> <Link to={"/register"}>register now</Link> </span></p>
+
                 <button type="submit" className="btn btn-info"
                 onClick={()=>loginNow()}
                 >Login</button>
