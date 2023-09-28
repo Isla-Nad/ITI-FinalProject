@@ -6,14 +6,9 @@ import Footer from "./components/Footer";
 import Clinics from "./pages/clinics/Clinics";
 import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
-<<<<<<< HEAD
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Register from "./pages/log&res/Register";
 import Home from "./pages/home/Home";
-=======
-import Register from "./pages/Registration/Register";
-import Login from "./pages/Login/Login";
->>>>>>> e50e45094c3a709b7a2374f8ac5412112ab30e95
+import Login from "./pages/log&res/Login";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import DentistProfile from "./pages/DoctorProfile/DoctorProfile";
 
