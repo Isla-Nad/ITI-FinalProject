@@ -57,31 +57,32 @@ const Register = () => {
   };
 
     // Use useEffect to run code after the state update
-  useEffect(() => {
-    // Now you can safely access the updated errors state
-    const errorsValues = Object.values(errors);
-    // console.log(errorsValues);
-    // Check if there are errors and handle accordingly
-    if (errorsValues.length === 0) {
-      let existingData = JSON.parse(localStorage.getItem('userRegistration')) || [];
+    ////////////////////
+  // useEffect(() => {
+  //   // Now you can safely access the updated errors state
+  //   const errorsValues = Object.values(errors);
+  //   // console.log(errorsValues);
+  //   // Check if there are errors and handle accordingly
+  //   if (errorsValues.length === 0) {
+  //     let existingData = JSON.parse(localStorage.getItem('userRegistration')) || [];
 
-      if (!Array.isArray(existingData)) {
-        existingData = [];
-      }
-      // Check for duplicate email
-      const isDuplicate = existingData.some((data) => data.email === formData.email);
-      if(isDuplicate)
-        {
-          console.log('This Email already Taken')
-        }
-        else
-        {
-          localStorage.setItem('userRegistration', JSON.stringify(formData));
-        }
-    } else {
-      console.log("There are errors");
-    }
-  }, [errors]); // This will run whenever the errors state change
+  //     if (!Array.isArray(existingData)) {
+  //       existingData = [];
+  //     }
+  //     // Check for duplicate email
+  //     const isDuplicate = existingData.some((data) => data.email === formData.email);
+  //     if(isDuplicate)
+  //       {
+  //         console.log('This Email already Taken')
+  //       }
+  //       else
+  //       {
+  //         localStorage.setItem('userRegistration', JSON.stringify(formData));
+  //       }
+  //   } else {
+  //     console.log("There are errors");
+  //   }
+  // }, [errors]); // This will run whenever the errors state change
 
 
   /// register as a doctor or a Patient
@@ -161,11 +162,9 @@ const Register = () => {
       }
     }
   }
-  
 
+//////////////////////////////////////////////
 
-  ////////////////////////////////////////////////
- 
   return (
     <div className="container mt-5 mb-5">
         <div className="row justify-content-center">
