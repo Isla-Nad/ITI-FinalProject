@@ -40,7 +40,7 @@ function Nav() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="./DoctorProfile/Doctor_Profile">
+                <Link className="nav-link" to="./DoctorProfile">
                   Dentist Details
                 </Link>
               </li>
