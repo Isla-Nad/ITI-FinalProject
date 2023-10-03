@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Home from "./pages/home/Home";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import DentistProfile from "./pages/DoctorProfile/Doctor_Profile";
+import EditComment from './pages/DoctorProfile/EditComment'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
           <Route path="/medicalHistory" element={<MedicalHistory />} />
           <Route path="/DoctorProfile/Doctor_Profile" element={<DentistProfile/>} />
+          <Route path="/EditComment" element={<EditComment/>} />
         </Routes>
         <Footer />
       </BrowserRouter>

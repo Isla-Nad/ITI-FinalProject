@@ -2,21 +2,28 @@ import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Container, Row, Col, Button, Form, ListGroup, ListGroupItem } from "react-bootstrap";
 
+
 const colors = {
   orange: "#FFBA5A",
   gray: "#a9a9a9",
 };
 
 function CommentandRating() {
+  const [Update,setUpdate]=useState(-1)
   const [rating, setRating] = useState(0);
   const [hoverValue, setHoverValue] = useState(0);
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState({ title: "", body: "" });
   const [error, setError] = useState("");
+  
 
   const handleRatingClick = (value) => {
     setRating(value);
   };
+  const Edit=()=>{
+
+  }
+  
 
   const handleRatingHover = (value) => {
     setHoverValue(value);
@@ -58,7 +65,8 @@ function CommentandRating() {
       <Row>
         <Col>
           <ListGroup style={{ marginTop: "20px" }}>
-            {posts.map((post) => (
+            {posts.map((post) => 
+            Update===post.id (
               <ListGroupItem key={post.id}>
                 <h2>
                   {Array(post.rating)
@@ -71,7 +79,10 @@ function CommentandRating() {
                 <Button variant="danger" onClick={() => handleRemovePost(post.id)}>
                   Remove Rating
                 </Button>
-                <button className="btn btn-primary" style={{marginLeft:"10px"}}>Edit</button>
+                <Button className="btn btn-primary" onClick={Edit}>
+                  Edit
+                </Button>
+               
               </ListGroupItem>
             ))}
           </ListGroup>
