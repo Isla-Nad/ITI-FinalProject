@@ -7,6 +7,7 @@ import { faBriefcaseMedical } from "@fortawesome/free-solid-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorProfile.css";
+import AppointmentPicker from "./appointments/AppointmentPicker";
 
 function DentistProfile() {
   return (
@@ -44,6 +45,12 @@ function DentistProfile() {
                 <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
                   <FontAwesomeIcon icon={faPhone} size="2xl" />
                   <span className="ms-4 sidebar--text">Contacts</span>{" "}
+                </a>
+              </li>
+              <li className="list-group-item list-group-item-primary sidebar--list">
+                <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
+                  <FontAwesomeIcon icon={faPhone} size="2xl" />
+                  <span className="ms-4 sidebar--text">Appointment Booking</span>{" "}
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
@@ -122,6 +129,11 @@ function DentistProfile() {
                   rhoncus felis non tellus mollis, vel porttitor ante tincidunt. Sed vulputate volutpat fringilla. Sed varius, magna id eleifend rutrum, velit odio sagittis leo, sit amet egestas orci dui vel ex. Phasellus dapibus tempor orci eget semper. Mauris tincidunt dolor nec ipsum eleifend ullamcorper. Donec sed commodo lorem. Vestibulum finibus quam quis urna venenatis pharetra. Ut suscipit velit sit amet turpis convallis consectetur. Praesent tristique vulputate venenatis. Nam vehicula
                   laoreet elit, eget lacinia sapien dignissim non. Nullam in egestas tortor. Vestibulum sit amet elit bibendum odio congue fermentum. Sed volutpat ultricies magna, facilisis pharetra sapien luctus id. In id maximus nibh. Morbi pulvinar sodales urna, et posuere est vulputate ac. Suspendisse facilisis, lacus non placerat mollis, lectus nisi condimentum mi, imperdiet ultrices mi risus vel sapien. Donec sed ligula non massa congue malesuada.
                 </p>
+              </div>
+              <div id="Contacts" className="mt-5">
+                <h2 className="text-primary">Appointment Booking</h2>
+                <hr />
+                <AppointmentPicker />
               </div>
               <div id="Rate" className="mt-5">
                 <h2 className="text-primary">Ratings & Reviews</h2>
