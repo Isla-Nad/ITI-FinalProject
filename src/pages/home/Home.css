@@ -3,8 +3,8 @@
   }
   .banner-text {
     position: absolute;
-    top: 24%;
-    left: 10%;
+    top: 120cxzpx;
+    left: 8%;
     color: aliceblue;
   }
   .footer {
@@ -41,3 +41,31 @@
   .row {
     margin-right: 0px;
   }
+  @media only screen and (max-width: 700px) {
+    .banner-text{
+      font-size: 20px;
+   
+    }
+    .iconns1-come {
+      padding-left: 20%;
+    }
+    .iconns2-come {
+      padding-left: 20%;
+    }
+  }
+  @media only screen and (max-width: 510px) {
+    .banner-text{
+      padding-bottom: 30px;
+    }
+    .ba-text{
+      font-size: 20px;
+      
+    }
+    .iconns1-come {
+      padding-left: 20%;
+    }
+    .iconns2-come {
+      padding-left: 20%;
+    }
+  }
+  
