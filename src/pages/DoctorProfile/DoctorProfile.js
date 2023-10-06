@@ -1,4 +1,3 @@
-import CommentanRating from "./CommentandRating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse } from "@fortawesome/free-solid-svg-icons";
 import { faAddressCard } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +7,7 @@ import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorProfile.css";
 import AppointmentPicker from "./appointments/AppointmentPicker";
+import CommentsAndRating from "./CommentsAndRating";
 
 function DentistProfile() {
   return (
@@ -138,7 +138,7 @@ function DentistProfile() {
               <div id="Rate" className="mt-5">
                 <h2 className="text-primary">Ratings & Reviews</h2>
                 <hr />
-                <CommentanRating />
+                <CommentsAndRating />
               </div>
             </div>
           </div>
