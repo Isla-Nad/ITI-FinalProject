@@ -11,7 +11,7 @@ import Home from "./pages/home/Home";
 import Login from "./pages/log&res/Login";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import DentistProfile from "./pages/DoctorProfile/DoctorProfile";
-
+import PatientProfile from "./pages/PatientProfile/Patient"
 function App() {
   return (
     <>
@@ -26,6 +26,8 @@ function App() {
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
           <Route path="/medicalHistory" element={<MedicalHistory />} />
           <Route path="/DoctorProfile" element={<DentistProfile />} />
+          <Route path="/patient" element={<PatientProfile />} />
+
         </Routes>
         <Footer />
       </BrowserRouter>
