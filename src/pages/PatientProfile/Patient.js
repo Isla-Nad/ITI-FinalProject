@@ -5,6 +5,7 @@ function PatientDetails() {
   //   var usr = JSON.parse(user);
   // console.log(usr.name)
   ///////////////////////////
+  const [selectedImage, setSelectedImage] = useState(null);
 
   function saveFunc() {
     var input = document.getElementById("newUsername");
@@ -16,7 +17,7 @@ function PatientDetails() {
   }
   var image = "https://bootdey.com/img/Content/avatar/avatar7.png";
 
-  function changeImg() {
+  function changeImg(e) {
     // here i try to change image using user input, img src changed but image still as it, later i will try using useEffect
     // console.log(document.getElementById("file").value)
     // var newImg= document.getElementById("file").value
@@ -25,16 +26,18 @@ function PatientDetails() {
     // img.setAttribute("src", newImg)
     // console.log("hello from change function")
     // console.log(img.src)
+    if (e.target.files[0]) {
+      setSelectedImage(URL.createObjectURL(e.target.files[0]));
+    }
   }
+
   return (
     <>
       <div className="container mb-3 d-flex col-lg-12">
         <div>
-          <img src={image} id="userImg" />
-          <label htmlFor="file">
-            {" "}
-            change image
-            <input type="file" id="file" onChange={() => changeImg()} />
+          <label htmlFor="imgUpload">
+            <img src={selectedImage || image} id="userImg" style={{ cursor: "pointer", width: "100%" }} />
+            <input type="file" accept="image/*" id="imgUpload" onChange={changeImg} className="d-none" />
           </label>
         </div>
         <div className="col-lg-10">
