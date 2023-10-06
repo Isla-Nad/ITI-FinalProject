@@ -1,28 +1,35 @@
+
 function PatientDetails (){
             var user = localStorage.getItem("user")
             var usr = JSON.parse(user)
-            console.log(usr.name)
-            const input = document.getElementById('username');
-            const input2 = document.getElementById('email');
-
+            // console.log(usr.name)
+            
+        
             function editFunc(){
+                var input = document.getElementById('username');
+                var input2 = document.getElementById('email');
                 input.removeAttribute('disabled');
                 input2.removeAttribute('disabled');
+
+                console.log("clicked")
             }
             function saveFunc(){
-                input.setAttribute("disabled","false");
-                input2.setAttribute("disabled","false");
+                var input = document.getElementById('username');
+                var input2 = document.getElementById('email');
+                input.setAttribute('disabled',"true");
+                input2.setAttribute('disabled',"true");
+
+                console.log("save clicked")
             }
     return(
         <>
         
         <div className="container mb-3 d-flex col-lg-12">
             <img src="https://bootdey.com/img/Content/avatar/avatar7.png"
-            // style={{border:"solid red 2px"}}
             />
-            <div className="col-lg-10">
+            <div  className="col-lg-10">
                 <div >
-                    <p className="m-2">Edit your information:</p>
+                    <p className="m-2">Edit your data</p>
                     <div className="mb-3 w-50 m-2">
                         <label htmlFor="username" className="form-label">Name: </label>
                         <input type="text" defaultValue={usr.name}  className="form-control" disabled
