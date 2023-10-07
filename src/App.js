@@ -14,6 +14,7 @@ import DentistProfile from "./pages/DoctorProfile/DoctorProfile";
 import UpdateDoctorProfile from "./pages/DoctorProfile/update";
 
 
+import PatientProfile from "./pages/PatientProfile/Patient"
 function App() {
   return (
     <>
@@ -29,6 +30,9 @@ function App() {
           <Route path="/medicalHistory" element={<MedicalHistory />} />
           <Route path="/DoctorProfile/:id" element={<DentistProfile />} />
           <Route path="/update/:id" element={<UpdateDoctorProfile/>} />
+          {/* <Route path="/DoctorProfile" element={<DentistProfile />} /> */}
+          <Route path="/patient" element={<PatientProfile />} />
+
         </Routes>
         <Footer />
       </BrowserRouter>

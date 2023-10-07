@@ -1,21 +1,11 @@
 import axios from "axios";
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-
-
-
-import CommentanRating from "./CommentandRating";
+import { useState,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserNurse } from "@fortawesome/free-solid-svg-icons";
-import { faAddressCard } from "@fortawesome/free-solid-svg-icons";
-import { faCertificate } from "@fortawesome/free-solid-svg-icons";
-import { faBriefcaseMedical } from "@fortawesome/free-solid-svg-icons";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorProfile.css";
 import { Link, useParams } from "react-router-dom";
-import UpdateDoctorProfile from "./update";
+import AppointmentPicker from "./appointments/AppointmentPicker";
+import CommentsAndRating from "./CommentsAndRating";
 
 function DentistProfile() {
   
@@ -85,6 +75,12 @@ function DentistProfile() {
                 <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
                   <FontAwesomeIcon icon={faPhone} size="2xl" />
                   <span className="ms-4 sidebar--text">Contacts</span>{" "}
+                </a>
+              </li>
+              <li className="list-group-item list-group-item-primary sidebar--list">
+                <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
+                  <FontAwesomeIcon icon={faBookMedical} size="2xl" />
+                  <span className="ms-4 sidebar--text">Appointment Booking</span>{" "}
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
@@ -169,10 +165,15 @@ function DentistProfile() {
                 <hr />
                 <Link className="btn btn-success" to={`/update/${DentData.id}`} >Update Profile</Link>
               </div>
+              <div id="Contacts" className="mt-5">
+                <h2 className="text-primary">Appointment Booking</h2>
+                <hr />
+                <AppointmentPicker />
+              </div>
               <div id="Rate" className="mt-5">
                 <h2 className="text-primary">Ratings & Reviews</h2>
                 <hr />
-                <CommentanRating />
+                <CommentsAndRating />
               </div>
             </div>
           </div>
