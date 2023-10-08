@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen} from "@fortawesome/free-solid-svg-icons";
 import "./DoctorProfile.css";
 import { Link, useParams } from "react-router-dom";
 import AppointmentPicker from "./appointments/AppointmentPicker";
@@ -94,23 +94,16 @@ function DentistProfile() {
           <div id="profile--container">
             <div data-bs-spy="scroll" data-bs-target="#sidebar-nav-1" data-bs-smooth-scroll="true" className="scrollspy-example" tabIndex="0">
               <div id="profile">
-                <h2 className="text-primary">My Profile</h2>
-                <hr />
-                <p>
-                  First Name : {DentData.FirstName}
-                </p>
-                <p>
-                  {/* Last Name : {DentData[0].LastName} */}
-                </p>
-                <p>
-                   {/* Position : {DentData[0].About} */}
-                </p>
+                <h2 className="text-primary" style={{fontSize:"4rem"}}>{DentData.FirstName} {DentData.LastName}</h2>
+                <p>{DentData.dentPosition}</p>
+                <Link className="text-dark" to={`/update/${DentData.id}`}><FontAwesomeIcon icon={faPen} size="lg" /></Link>
+                
               </div>
               <div id="About" className="mt-5">
                 <h2 className="text-primary">About The Dentist</h2>
                 <hr />
                 <p>
-                  {/* {DentData[0].Description} */}
+                  {DentData.dentDescription}
                 </p>
               </div>
               <div id="Certificates" className="mt-5">
@@ -157,14 +150,14 @@ function DentistProfile() {
                 <h2 className="text-primary">Contacts</h2>
                 <hr />
                 <p>
-                  {/* {DentData[0].Contacts} */}
+                  {DentData.Contacts}
+                  {/* <FontAwesomeIcon icon={faWhatsapp} size="2xl" /> */}
+                  {/* <FontAwesomeIcon icon={faFacebook} size="2xl" /> */}
+                  {/* <FontAwesomeIcon icon={faInstagram} size="2xl" /> */}
+
                 </p>
               </div>
-              <div id="Update" className="mt-5">
-                <h2 className="text-primary">Edit profile</h2>
-                <hr />
-                <Link className="btn btn-success" to={`/update/${DentData.id}`} >Update Profile</Link>
-              </div>
+              
               <div id="Contacts" className="mt-5">
                 <h2 className="text-primary">Appointment Booking</h2>
                 <hr />
