@@ -1,10 +1,45 @@
+import axios from "axios";
+import { useState,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen} from "@fortawesome/free-solid-svg-icons";
 import "./DoctorProfile.css";
+import { Link, useParams } from "react-router-dom";
 import AppointmentPicker from "./appointments/AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
 
 function DentistProfile() {
+  
+  const {id} = useParams();
+  const [DentData,setDentData] = useState({})
+  useEffect (()=> {
+    axios.get("https://api-generator.retool.com/9WmJCF/ddata/"+id)
+    .then(res => setDentData(res.data))
+    .catch(err => console.log(err))
+    
+
+  },[])
+  console.log(DentData)
+
+  // const [Mydentist,setMydentist] = useState()
+  // setMydentist(DentData[0])
+  // console.log(Mydentist)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <>
       <div className="container">
@@ -59,21 +94,16 @@ function DentistProfile() {
           <div id="profile--container">
             <div data-bs-spy="scroll" data-bs-target="#sidebar-nav-1" data-bs-smooth-scroll="true" className="scrollspy-example" tabIndex="0">
               <div id="profile">
-                <h2 className="text-primary">My Profile</h2>
-                <hr />
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque turpis eu molestie molestie. Integer tristique quam facilisis urna sagittis pulvinar. Nunc lacinia faucibus nisl, vel sodales elit lobortis nec. Vivamus et odio vel justo dignissim semper. Integer sit amet vehicula est, pellentesque elementum ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a felis eros. Nunc ultricies odio a urna pharetra molestie. Duis vitae arcu nulla. Morbi
-                  rhoncus felis non tellus mollis, vel porttitor ante tincidunt. Sed vulputate volutpat fringilla. Sed varius, magna id eleifend rutrum, velit odio sagittis leo, sit amet egestas orci dui vel ex. Phasellus dapibus tempor orci eget semper. Mauris tincidunt dolor nec ipsum eleifend ullamcorper. Donec sed commodo lorem. Vestibulum finibus quam quis urna venenatis pharetra. Ut suscipit velit sit amet turpis convallis consectetur. Praesent tristique vulputate venenatis. Nam vehicula
-                  laoreet elit, eget lacinia sapien dignissim non. Nullam in egestas tortor. Vestibulum sit amet elit bibendum odio congue fermentum. Sed volutpat ultricies magna, facilisis pharetra sapien luctus id. In id maximus nibh. Morbi pulvinar sodales urna, et posuere est vulputate ac. Suspendisse facilisis, lacus non placerat mollis, lectus nisi condimentum mi, imperdiet ultrices mi risus vel sapien. Donec sed ligula non massa congue malesuada.
-                </p>
+                <h2 className="text-primary" style={{fontSize:"4rem"}}>{DentData.FirstName} {DentData.LastName}</h2>
+                <p>{DentData.dentPosition}</p>
+                <Link className="text-dark" to={`/update/${DentData.id}`}><FontAwesomeIcon icon={faPen} size="lg" /></Link>
+                
               </div>
               <div id="About" className="mt-5">
                 <h2 className="text-primary">About The Dentist</h2>
                 <hr />
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque turpis eu molestie molestie. Integer tristique quam facilisis urna sagittis pulvinar. Nunc lacinia faucibus nisl, vel sodales elit lobortis nec. Vivamus et odio vel justo dignissim semper. Integer sit amet vehicula est, pellentesque elementum ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a felis eros. Nunc ultricies odio a urna pharetra molestie. Duis vitae arcu nulla. Morbi
-                  rhoncus felis non tellus mollis, vel porttitor ante tincidunt. Sed vulputate volutpat fringilla. Sed varius, magna id eleifend rutrum, velit odio sagittis leo, sit amet egestas orci dui vel ex. Phasellus dapibus tempor orci eget semper. Mauris tincidunt dolor nec ipsum eleifend ullamcorper. Donec sed commodo lorem. Vestibulum finibus quam quis urna venenatis pharetra. Ut suscipit velit sit amet turpis convallis consectetur. Praesent tristique vulputate venenatis. Nam vehicula
-                  laoreet elit, eget lacinia sapien dignissim non. Nullam in egestas tortor. Vestibulum sit amet elit bibendum odio congue fermentum. Sed volutpat ultricies magna, facilisis pharetra sapien luctus id. In id maximus nibh. Morbi pulvinar sodales urna, et posuere est vulputate ac. Suspendisse facilisis, lacus non placerat mollis, lectus nisi condimentum mi, imperdiet ultrices mi risus vel sapien. Donec sed ligula non massa congue malesuada.
+                  {DentData.dentDescription}
                 </p>
               </div>
               <div id="Certificates" className="mt-5">
@@ -120,11 +150,14 @@ function DentistProfile() {
                 <h2 className="text-primary">Contacts</h2>
                 <hr />
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque turpis eu molestie molestie. Integer tristique quam facilisis urna sagittis pulvinar. Nunc lacinia faucibus nisl, vel sodales elit lobortis nec. Vivamus et odio vel justo dignissim semper. Integer sit amet vehicula est, pellentesque elementum ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a felis eros. Nunc ultricies odio a urna pharetra molestie. Duis vitae arcu nulla. Morbi
-                  rhoncus felis non tellus mollis, vel porttitor ante tincidunt. Sed vulputate volutpat fringilla. Sed varius, magna id eleifend rutrum, velit odio sagittis leo, sit amet egestas orci dui vel ex. Phasellus dapibus tempor orci eget semper. Mauris tincidunt dolor nec ipsum eleifend ullamcorper. Donec sed commodo lorem. Vestibulum finibus quam quis urna venenatis pharetra. Ut suscipit velit sit amet turpis convallis consectetur. Praesent tristique vulputate venenatis. Nam vehicula
-                  laoreet elit, eget lacinia sapien dignissim non. Nullam in egestas tortor. Vestibulum sit amet elit bibendum odio congue fermentum. Sed volutpat ultricies magna, facilisis pharetra sapien luctus id. In id maximus nibh. Morbi pulvinar sodales urna, et posuere est vulputate ac. Suspendisse facilisis, lacus non placerat mollis, lectus nisi condimentum mi, imperdiet ultrices mi risus vel sapien. Donec sed ligula non massa congue malesuada.
+                  {DentData.Contacts}
+                  {/* <FontAwesomeIcon icon={faWhatsapp} size="2xl" /> */}
+                  {/* <FontAwesomeIcon icon={faFacebook} size="2xl" /> */}
+                  {/* <FontAwesomeIcon icon={faInstagram} size="2xl" /> */}
+
                 </p>
               </div>
+              
               <div id="Contacts" className="mt-5">
                 <h2 className="text-primary">Appointment Booking</h2>
                 <hr />
