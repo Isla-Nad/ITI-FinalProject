@@ -10,6 +10,8 @@ import CommentsAndRating from "./CommentsAndRating";
 function DentistProfile() {
   const { id } = useParams();
   const [DentData, setDentData] = useState({});
+  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
+
   useEffect(() => {
     axios
       .get("https://api-generator.retool.com/9WmJCF/ddata/" + id)
@@ -80,9 +82,11 @@ function DentistProfile() {
                   {DentData.FirstName} {DentData.LastName}
                 </h2>
                 <p>{DentData.dentPosition}</p>
-                <Link className="text-dark" to={`/update/${DentData.id}`}>
-                  <FontAwesomeIcon icon={faPen} size="lg" />
-                </Link>
+                {loggedInUser && loggedInUser.id == id && (
+                  <Link className="text-dark" to={`/update/${DentData.id}`}>
+                    <FontAwesomeIcon icon={faPen} size="lg" />
+                  </Link>
+                )}
               </div>
               <div id="About" className="mt-5">
                 <h2 className="text-primary">About The Dentist</h2>
@@ -143,7 +147,7 @@ function DentistProfile() {
               <div id="Contacts" className="mt-5">
                 <h2 className="text-primary">Appointment Booking</h2>
                 <hr />
-                <AppointmentPicker />
+                <AppointmentPicker id={id} />
               </div>
               <div id="Rate" className="mt-5">
                 <h2 className="text-primary">Ratings & Reviews</h2>

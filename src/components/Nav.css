@@ -1,0 +1,25 @@
+.login--btn {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.login--btn:hover {
+  color: rgb(85, 165, 42);
+  animation: login 1.5s linear infinite;
+}
+
+@keyframes login {
+  0% {
+    transform: scale(1);
+  }
+  33% {
+    transform: scale(0.7);
+  }
+  66% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.3);
+  }
+}

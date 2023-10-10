@@ -5,7 +5,7 @@ import { FaTrash } from "react-icons/fa";
 import { Container, Button, Card, ListGroup, Modal } from "react-bootstrap";
 import { compareAsc } from "date-fns";
 
-const AppointmentPicker = () => {
+const AppointmentPicker = (props) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedAppointmentToRemove, setSelectedAppointmentToRemove] = useState(null);
@@ -21,6 +21,7 @@ const AppointmentPicker = () => {
   const currentCards = sortedDailyTimeRanges.slice(currentPage * 3, (currentPage + 1) * 3);
   const canGoNext = currentPage < totalPages - 1;
   const canGoPrev = currentPage > 0;
+  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
 
   const isTimeRangeExists = (date, start, end) => {
     const card = dailyTimeRanges.find((range) => range.date === date);
@@ -127,25 +128,27 @@ const AppointmentPicker = () => {
 
   return (
     <Container className="mt-2">
-      <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
-        <div className="d-flex justify-content-between flex-wrap">
-          <div>
-            <p>Select Date:</p>
-            <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} dateFormat="MM/dd/yyyy" />
+      {loggedInUser && loggedInUser.type === "doctor" && loggedInUser.id == props.id && (
+        <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
+          <div className="d-flex justify-content-between flex-wrap">
+            <div>
+              <p>Select Date:</p>
+              <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} dateFormat="MM/dd/yyyy" />
+            </div>
+            <div>
+              <p>Select Start Time:</p>
+              <DatePicker selected={startTime} onChange={(time) => setStartTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
+            </div>
+            <div>
+              <p>Select End Time:</p>
+              <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
+            </div>
           </div>
-          <div>
-            <p>Select Start Time:</p>
-            <DatePicker selected={startTime} onChange={(time) => setStartTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
-          </div>
-          <div>
-            <p>Select End Time:</p>
-            <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
+          <div onClick={addAppointment} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
+            Add Appointment
           </div>
         </div>
-        <div onClick={addAppointment} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
-          Add Appointment
-        </div>
-      </div>
+      )}
 
       <div>
         <h2 className="mt-2 text-center">Available Appointments</h2>
