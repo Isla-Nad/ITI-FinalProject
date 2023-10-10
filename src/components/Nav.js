@@ -25,6 +25,11 @@ function Nav() {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to="/contactus">
+                  Contact Us
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/clinics">
                   Clinics
                 </Link>
