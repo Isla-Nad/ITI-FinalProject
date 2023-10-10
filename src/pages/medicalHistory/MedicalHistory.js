@@ -106,7 +106,7 @@ const MedicalHistory = () => {
         </Row>
       ))}
       {showForm ? (
-        <Modal show={showForm} onHide={() => setShowForm(false)} centered>
+        <Modal show={showForm} onHide={() => setShowForm(false)} size="xl">
           <Modal.Header closeButton={!editMode}>
             <Modal.Title>
               {editMode ? (

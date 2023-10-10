@@ -1,9 +1,8 @@
 import { Modal, Button } from "react-bootstrap";
-import "./PatientDataPopup.css";
 
 function PatientDataPopup(props) {
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={props.onHide} size="xl" centered>
       <Modal.Header closeButton>
         <Modal.Title>Patient Data</Modal.Title>
       </Modal.Header>
