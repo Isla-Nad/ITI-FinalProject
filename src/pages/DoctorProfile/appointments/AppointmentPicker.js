@@ -80,6 +80,40 @@ const AppointmentPicker = (props) => {
     setShowConfirmationModal(false);
   };
 
+  // const sgMail = require("@sendgrid/mail");
+  // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  // const sendEmail = (to, subject, text) => {
+  //   const msg = {
+  //     to,
+  //     from: "islamnady95@hotmail.com",
+  //     subject,
+  //     text,
+  //     html: `<strong>${text}</strong>`,
+  //   };
+  //   sgMail
+  //     .send(msg)
+  //     .then(() => {
+  //       console.log("Email sent");
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+  // const accountSid = "AC277c0acb3bc2515a29cb4daff5a639f9";
+  // const authToken = "83da4751b02c4e11e914a07693f5e0ef";
+  // const client = require("twilio")(accountSid, authToken);
+
+  // const sendSMS = (body, to) => {
+  //   client.messages
+  //     .create({
+  //       body,
+  //       from: "+18063041311",
+  //       to,
+  //     })
+  //     .then((message) => console.log(message.sid))
+  //     .done();
+  // };
+
   const bookTimeSlot = () => {
     if (selectedAppointmentToBook) {
       const { date, start, end } = selectedAppointmentToBook;
@@ -87,6 +121,8 @@ const AppointmentPicker = (props) => {
         if (card.date === date) {
           card.ranges = card.ranges.map((range) => {
             if (range.start === start && range.end === end) {
+              // sendEmail("islamnady95@gmail.com", "test", "test");
+              // sendSMS("hello world", "+201110639692");
               return { ...range, booked: true };
             }
             return range;

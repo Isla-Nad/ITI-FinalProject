@@ -103,6 +103,7 @@ const Register = (props) => {
 
     const formIsValid = Object.keys(errors).length === 0;
     if (formIsValid) {
+      setValidatedFields({});
       props.handleSubmit(e);
     }
   };
@@ -111,7 +112,7 @@ const Register = (props) => {
     if (validatedFields[fieldName]) {
       if (errors[fieldName]) {
         return (
-          <Overlay show={true} target={targets[fieldName]} placement="top">
+          <Overlay show={true} target={targets[fieldName]} rootClose={true} placement="top">
             <Popover id="popover-contained">
               <Popover.Header as="h3" className="text-danger">
                 {errors[fieldName]}
@@ -121,7 +122,7 @@ const Register = (props) => {
         );
       } else {
         return (
-          <Overlay show={true} target={targets[fieldName]} placement="top">
+          <Overlay show={true} target={targets[fieldName]} rootClose={true} placement="top">
             <Popover id="popover-contained">
               <Popover.Header as="h3" className="text-success">
                 Looks good!
@@ -144,38 +145,38 @@ const Register = (props) => {
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <FloatingLabel controlId="firstName" label="First Name" className="mb-3" ref={ref}>
-              <Form.Control className={validatedFields.firstName ? (errors.firstName ? "is-invalid" : "is-valid") : ""} type="text" name="firstName" value={props.formData.firstName} onChange={handleChange} placeholder="..." required />
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, firstName: null }))} className={validatedFields.firstName ? (errors.firstName ? "is-invalid" : "is-valid") : ""} type="text" name="firstName" value={props.formData.firstName} onChange={handleChange} placeholder="..." required />
               {renderFeedback("firstName")}
             </FloatingLabel>
 
             <FloatingLabel controlId="lastName" label="Last Name" className="mb-3" ref={ref}>
-              <Form.Control className={validatedFields.lastName ? (errors.lastName ? "is-invalid" : "is-valid") : ""} type="text" name="lastName" value={props.formData.lastName} onChange={handleChange} placeholder="..." required />
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, lastName: null }))} className={validatedFields.lastName ? (errors.lastName ? "is-invalid" : "is-valid") : ""} type="text" name="lastName" value={props.formData.lastName} onChange={handleChange} placeholder="..." required />
               {renderFeedback("lastName")}
             </FloatingLabel>
 
             <FloatingLabel controlId="email" label="Email Address" className="mb-3" ref={ref}>
-              <Form.Control className={validatedFields.email ? (errors.email ? "is-invalid" : "is-valid") : ""} type="email" name="email" value={props.formData.email} onChange={handleChange} placeholder="..." required />
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, email: null }))} className={validatedFields.email ? (errors.email ? "is-invalid" : "is-valid") : ""} type="email" name="email" value={props.formData.email} onChange={handleChange} placeholder="..." required />
               {renderFeedback("email")}
             </FloatingLabel>
 
             <FloatingLabel controlId="phone" label="Phone Number" className="mb-3" ref={ref}>
-              <Form.Control className={validatedFields.phone ? (errors.phone ? "is-invalid" : "is-valid") : ""} type="text" name="phone" value={props.formData.phone} onChange={handleChange} placeholder="..." required />
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, phone: null }))} className={validatedFields.phone ? (errors.phone ? "is-invalid" : "is-valid") : ""} type="text" name="phone" value={props.formData.phone} onChange={handleChange} placeholder="..." required />
               {renderFeedback("phone")}
             </FloatingLabel>
 
             <FloatingLabel controlId="password" label="Password" className="mb-3" ref={ref}>
-              <Form.Control className={validatedFields.password ? (errors.password ? "is-invalid" : "is-valid") : ""} type="password" name="password" value={props.formData.password} onChange={handleChange} placeholder="..." required />
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, password: null }))} className={validatedFields.password ? (errors.password ? "is-invalid" : "is-valid") : ""} type="password" name="password" value={props.formData.password} onChange={handleChange} placeholder="..." required />
               {renderFeedback("password")}
             </FloatingLabel>
 
             <FloatingLabel controlId="confirmPassword" label="Confirm Password" className="mb-3" ref={ref}>
-              <Form.Control className={validatedFields.confirmPassword ? (errors.confirmPassword ? "is-invalid" : "is-valid") : ""} type="Password" name="confirmPassword" value={props.formData.confirmPassword} onChange={handleChange} placeholder="..." required />
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, confirmPassword: null }))} className={validatedFields.confirmPassword ? (errors.confirmPassword ? "is-invalid" : "is-valid") : ""} type="Password" name="confirmPassword" value={props.formData.confirmPassword} onChange={handleChange} placeholder="..." required />
               {renderFeedback("confirmPassword")}
             </FloatingLabel>
 
             {props.userType === "doctor" && (
               <FloatingLabel controlId="clinic" label="Clinic" className="mb-3" ref={ref}>
-                <Form.Control className={validatedFields.clinic ? (errors.clinic ? "is-invalid" : "is-valid") : ""} type="text" name="clinic" value={props.formData.clinic} onChange={handleChange} placeholder="..." required />
+                <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, clinic: null }))} className={validatedFields.clinic ? (errors.clinic ? "is-invalid" : "is-valid") : ""} type="text" name="clinic" value={props.formData.clinic} onChange={handleChange} placeholder="..." required />
                 {renderFeedback("clinic")}
               </FloatingLabel>
             )}

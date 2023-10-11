@@ -12,7 +12,6 @@ import "./Nav.css";
 function Nav() {
   const users = useSelector((state) => state.users.list);
   const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
-  const dispatch = useDispatch();
   const [userType, setUserType] = useState("patient");
   const [regFormData, setRegFormData] = useState({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "", phone: "", clinic: "" });
   const [logFormData, setLogFormData] = useState({ email: "", password: "" });
@@ -20,8 +19,8 @@ function Nav() {
   const [currentPage, setCurrentPage] = useState(1);
   const [errorOverlay, setErrorOverlay] = useState({ show: false, message: "" });
   const [target, setTarget] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setTimeout(() => {
@@ -91,7 +90,6 @@ function Nav() {
       sessionStorage.setItem("loggedInUser", JSON.stringify(user));
       setLoggedInUser(user);
       setErrorOverlay({ show: false, message: "" });
-      setShowDropdown(false);
       if (user.type === "patient") {
         navigate("/patient");
       } else if (user.type === "doctor") {
@@ -103,7 +101,7 @@ function Nav() {
   const handleLogout = () => {
     sessionStorage.removeItem("loggedInUser");
     setLoggedInUser(null);
-    setShowDropdown(false);
+    navigate("/");
   };
 
   return (
@@ -156,15 +154,23 @@ function Nav() {
             </ul>
 
             <div className="btn-group">
-              <FaRegUserCircle className={`dropdown-toggle fs-3 m-2 login--btn ${showDropdown ? "show" : ""}`} onClick={() => setShowDropdown(!showDropdown)} aria-expanded={showDropdown} aria-controls="user-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
-              <Dropdown className={`dropdown-menu p-4 ${showDropdown ? "show" : ""}`} id="user-dropdown" show={showDropdown}>
+              <FaRegUserCircle className="dropdown-toggle fs-3 m-2 login--btn" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
+              <Dropdown className={`dropdown-menu p-4 `} id="user-dropdown">
                 {loggedInUser ? (
                   <>
                     <h3 className="text-center">
                       Hi, {loggedInUser.type === "doctor" && "Dr."}
                       {loggedInUser.firstName}!
                     </h3>
-                    <Form.Control type="submit" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
+                    <Form.Control
+                      type="button"
+                      value="Your profile"
+                      className="mt-3 btn btn-outline-info"
+                      onClick={() => {
+                        loggedInUser.type === "doctor" ? navigate(`/DoctorProfile/${loggedInUser.id}`) : navigate("/patient");
+                      }}
+                    />
+                    <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
                   </>
                 ) : (
                   <Form onSubmit={handleLogSubmit} style={{ width: "18rem" }}>
