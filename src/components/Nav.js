@@ -26,15 +26,6 @@ function Nav() {
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setErrorOverlay((prevOverlay) => ({
-        ...prevOverlay,
-        show: false,
-      }));
-    }, 3000);
-  }, [errorOverlay.show]);
-
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
     setUserType(type);
@@ -205,7 +196,7 @@ function Nav() {
             <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, "patient")} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, "doctor")} userType={userType} onClick={(e) => setTarget(e.target)} />
 
             {errorOverlay.show && (
-              <Overlay show={errorOverlay.show} onHide={errorOverlay.show === false} target={target} placement="bottom">
+              <Overlay show={errorOverlay.show} target={target} placement="bottom" rootClose={true} onHide={() => setErrorOverlay({ show: false, message: "" })}>
                 <Popover id="popover-contained">
                   <Popover.Header as="h3" className="text-danger">
                     {errorOverlay.message}
