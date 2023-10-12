@@ -8,6 +8,9 @@ import { useState, useEffect } from "react";
 import { getUsers } from "../store/actions/GetUsers";
 import { useDispatch, useSelector } from "react-redux";
 import "./Nav.css";
+import ToggleTheme from "./ToggleTheme";
+import { useContext } from "react";
+import { ThemeContext } from "./Theme";
 
 function Nav() {
   const users = useSelector((state) => state.users.list);
@@ -21,6 +24,7 @@ function Nav() {
   const [target, setTarget] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -106,7 +110,7 @@ function Nav() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-white">
+      <nav className={`navbar navbar-expand-lg ${theme === "dark-theme" && "bg-dark text-light"}`}>
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <img src={logo} alt="" style={{ width: "100px", height: "50px" }} />
@@ -157,6 +161,7 @@ function Nav() {
                 </Link>
               </li>
             </ul>
+            <ToggleTheme />
 
             <div className="btn-group">
               <FaRegUserCircle className="dropdown-toggle fs-3 m-2 login--btn" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
