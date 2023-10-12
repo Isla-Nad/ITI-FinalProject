@@ -15,6 +15,7 @@ import UpdateDoctorProfile from "./pages/DoctorProfile/update";
 
 
 import PatientProfile from "./pages/PatientProfile/Patient"
+import ContactUs from "./pages/contactUs/contact";
 function App() {
   return (
     <>
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/contactus" element={<ContactUs />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
