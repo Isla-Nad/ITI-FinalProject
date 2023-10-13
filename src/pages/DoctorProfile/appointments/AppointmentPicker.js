@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaTrash } from "react-icons/fa";
 import { Container, Button, Card, ListGroup, Modal } from "react-bootstrap";
 import { compareAsc } from "date-fns";
+import emailjs from "@emailjs/browser";
 
 const AppointmentPicker = (props) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -80,39 +81,26 @@ const AppointmentPicker = (props) => {
     setShowConfirmationModal(false);
   };
 
-  // const sgMail = require("@sendgrid/mail");
-  // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  // const sendEmail = (to, subject, text) => {
-  //   const msg = {
-  //     to,
-  //     from: "islamnady95@hotmail.com",
-  //     subject,
-  //     text,
-  //     html: `<strong>${text}</strong>`,
-  //   };
-  //   sgMail
-  //     .send(msg)
-  //     .then(() => {
-  //       console.log("Email sent");
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-  // const accountSid = "AC277c0acb3bc2515a29cb4daff5a639f9";
-  // const authToken = "83da4751b02c4e11e914a07693f5e0ef";
-  // const client = require("twilio")(accountSid, authToken);
-
-  // const sendSMS = (body, to) => {
-  //   client.messages
-  //     .create({
-  //       body,
-  //       from: "+18063041311",
-  //       to,
-  //     })
-  //     .then((message) => console.log(message.sid))
-  //     .done();
-  // };
+  const sendEmail = (from_name, to_name, message, to_email) => {
+    emailjs
+      .send(
+        "service_nnndbzw",
+        "template_ce1tb5j",
+        {
+          from_name,
+          to_name,
+          message,
+          to_email,
+        },
+        "lTiqoZrmC_6pX8eLV"
+      )
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const bookTimeSlot = () => {
     if (selectedAppointmentToBook) {
@@ -121,8 +109,7 @@ const AppointmentPicker = (props) => {
         if (card.date === date) {
           card.ranges = card.ranges.map((range) => {
             if (range.start === start && range.end === end) {
-              // sendEmail("islamnady95@gmail.com", "test", "test");
-              // sendSMS("hello world", "+201110639692");
+              sendEmail(loggedInUser.firstName, "Dr.david", `hello Dr.david you have a booked appointment from ${(range, start)} to ${range.end} on ${card.date}`, "islamnady95@gmail.com");
               return { ...range, booked: true };
             }
             return range;

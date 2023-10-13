@@ -7,10 +7,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { getUsers } from "../store/actions/GetUsers";
 import { useDispatch, useSelector } from "react-redux";
-import "./Nav.css";
 import ToggleTheme from "./ToggleTheme";
-import { useContext } from "react";
-import { ThemeContext } from "./Theme";
 
 function Nav() {
   const users = useSelector((state) => state.users.list);
@@ -24,7 +21,6 @@ function Nav() {
   const [target, setTarget] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { theme } = useContext(ThemeContext);
 
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
@@ -101,7 +97,7 @@ function Nav() {
 
   return (
     <>
-      <nav className={`navbar navbar-expand-lg ${theme === "dark-theme" && "bg-dark text-light"}`}>
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <img src={logo} alt="" style={{ width: "100px", height: "50px" }} />
@@ -152,46 +148,48 @@ function Nav() {
                 </Link>
               </li>
             </ul>
-            <ToggleTheme />
 
-            <div className="btn-group">
-              <FaRegUserCircle className="dropdown-toggle fs-3 m-2 login--btn" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
-              <Dropdown className={`dropdown-menu p-4 `} id="user-dropdown">
-                {loggedInUser ? (
-                  <>
-                    <h3 className="text-center">
-                      Hi, {loggedInUser.type === "doctor" && "Dr."}
-                      {loggedInUser.firstName}!
-                    </h3>
-                    <Form.Control
-                      type="button"
-                      value="Your profile"
-                      className="mt-3 btn btn-outline-info"
-                      onClick={() => {
-                        loggedInUser.type === "doctor" ? navigate(`/DoctorProfile/${loggedInUser.id}`) : navigate("/patient");
-                      }}
-                    />
-                    <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
-                  </>
-                ) : (
-                  <Form onSubmit={handleLogSubmit} style={{ width: "18rem" }}>
-                    <FloatingLabel label="Email address" className="mb-3">
-                      <Form.Control type="email" name="email" value={logFormData.email} onChange={handleLogChange} placeholder="..." />
-                    </FloatingLabel>
+            <span className="btn-group fs-2 gap-1 mx-2">
+              <ToggleTheme />
+              <div className="btn-group">
+                <FaRegUserCircle className="dropdown-toggle nav-link" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
+                <Dropdown className={`dropdown-menu p-4 `} id="user-dropdown">
+                  {loggedInUser ? (
+                    <>
+                      <h3 className="text-center">
+                        Hi, {loggedInUser.type === "doctor" && "Dr."}
+                        {loggedInUser.firstName}!
+                      </h3>
+                      <Form.Control
+                        type="button"
+                        value="Your profile"
+                        className="mt-3 btn btn-outline-info"
+                        onClick={() => {
+                          loggedInUser.type === "doctor" ? navigate(`/DoctorProfile/${loggedInUser.id}`) : navigate("/patient");
+                        }}
+                      />
+                      <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
+                    </>
+                  ) : (
+                    <Form onSubmit={handleLogSubmit} style={{ width: "18rem" }}>
+                      <FloatingLabel label="Email address" className="mb-3">
+                        <Form.Control type="email" name="email" value={logFormData.email} onChange={handleLogChange} placeholder="..." />
+                      </FloatingLabel>
 
-                    <FloatingLabel label="Password">
-                      <Form.Control type="password" name="password" value={logFormData.password} onChange={handleLogChange} placeholder="..." />
-                    </FloatingLabel>
+                      <FloatingLabel label="Password">
+                        <Form.Control type="password" name="password" value={logFormData.password} onChange={handleLogChange} placeholder="..." />
+                      </FloatingLabel>
 
-                    <Form.Control type="submit" value="login" className="mt-3 btn btn-outline-success" onClick={(e) => setTarget(e.target)} />
-                    <div className="dropdown-divider"></div>
-                    <Button className="dropdown-item" variant="outline-info" onClick={(e) => setShowRegModal(true)}>
-                      New around here? Sign up
-                    </Button>
-                  </Form>
-                )}
-              </Dropdown>
-            </div>
+                      <Form.Control type="submit" value="login" className="mt-3 btn btn-outline-success" onClick={(e) => setTarget(e.target)} />
+                      <div className="dropdown-divider"></div>
+                      <Button className="dropdown-item" variant="outline-info" onClick={(e) => setShowRegModal(true)}>
+                        New around here? Sign up
+                      </Button>
+                    </Form>
+                  )}
+                </Dropdown>
+              </div>
+            </span>
 
             <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, "patient")} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, "doctor")} userType={userType} onClick={(e) => setTarget(e.target)} />
 

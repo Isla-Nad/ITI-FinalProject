@@ -1,0 +1,106 @@
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+/* Variables */
+:root {
+  --text-primary: 182, 182, 182;
+  --text-secondary: 236, 236, 236;
+  --bg-primary: 35, 35, 46;
+  --bg-secondary: 20, 20, 24;
+  --transition-speed: 600ms;
+  --bg-image: url("../public/theme/dark.jpg");
+  --opacity: 0.3;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-color: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+}
+body:before {
+  content: "";
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: var(--opacity);
+  background-image: var(--bg-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg-primary));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--bg-secondary));
+  border-radius: 2rem;
+  transition: background 600ms ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--text-primary));
+}
+/* -------------themes--------------- */
+.dark {
+  --text-primary: 182, 182, 182;
+  --text-secondary: 236, 236, 236;
+  --bg-primary: 35, 35, 46;
+  --bg-secondary: 20, 20, 24;
+  --bg-image: url("../public/theme/dark.jpg");
+  --opacity: 0.3;
+}
+.light {
+  --text-primary: 31, 31, 31;
+  --text-secondary: 0, 0, 0;
+  --bg-primary: 255, 255, 255;
+  --bg-secondary: 228, 228, 228;
+  --bg-image: url("../public/theme/light.jpg");
+  --opacity: 0.6;
+}
+.solar {
+  --text-primary: 87, 110, 117;
+  --text-secondary: 53, 83, 92;
+  --bg-primary: 253, 246, 227;
+  --bg-secondary: 245, 229, 184;
+  --bg-image: url("../public/theme/solar.jpg");
+  --opacity: 0.5;
+}
+.grass {
+  --text-primary: 0, 0, 0;
+  --text-secondary: 25, 25, 1;
+  --bg-primary: 58, 175, 169;
+  --bg-secondary: 43, 122, 119;
+  --bg-image: url("../public/theme/green.jpg");
+  --opacity: 0.4;
+}
+/* ******************************* */
+/* ======================================================================== */
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+/* Navbar */
+.navbar {
+  background-color: rgba(var(--bg-primary), 0.7);
+  box-shadow: 1px 0 7px;
+  z-index: 2;
+}
+.nav-link {
+  color: rgb(var(--text-primary));
+  filter: grayscale(90%) opacity(0.7);
+  transition: var(--transition-speed);
+  cursor: pointer;
+}
+.nav-link.active {
+  filter: grayscale(0%) opacity(1);
+  background: rgb(var(--bg-secondary));
+  color: rgb(var(--text-secondary));
+}
+.nav-link:hover {
+  filter: grayscale(0%) opacity(1);
+  background: rgb(var(--bg-secondary));
+  color: rgb(var(--text-secondary));
+}
