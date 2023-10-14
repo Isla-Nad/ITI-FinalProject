@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaTrash } from "react-icons/fa";
 import { Container, Button, Card, ListGroup, Modal } from "react-bootstrap";
+import { compareAsc } from "date-fns";
 
 const AppointmentPicker = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -108,13 +109,18 @@ const AppointmentPicker = () => {
 
       const updatedTimeRangesFiltered = updatedTimeRanges.filter((card) => card.ranges.length > 0);
 
-      setDailyTimeRanges(updatedTimeRangesFiltered);
-    }, 1000 * 60);
+      const updatedTimeRangesFilteredPast = updatedTimeRangesFiltered.filter((card) => {
+        const cardDate = new Date(card.date);
+        return cardDate >= now;
+      });
+
+      setDailyTimeRanges(updatedTimeRangesFilteredPast);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [dailyTimeRanges]);
 
-  const sortedDailyTimeRanges = [...dailyTimeRanges].sort((a, b) => a.date.localeCompare(b.date));
+  const sortedDailyTimeRanges = [...dailyTimeRanges].sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
   const totalCards = sortedDailyTimeRanges.length;
   const totalPages = Math.ceil(totalCards / itemsPerPage);
   const currentCards = sortedDailyTimeRanges.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
@@ -147,6 +153,7 @@ const AppointmentPicker = () => {
           Add Appointment
         </div>
       </div>
+
       <div>
         <h2 className="mt-2">Available Appointments:</h2>
         <Container className="d-flex gap-2 flex-wrap flex-lg-nowrap">
@@ -157,6 +164,7 @@ const AppointmentPicker = () => {
                 <ListGroup variant="flush">
                   {card.ranges
                     .sort((a, b) => a.start.localeCompare(b.start))
+                    .sort((a, b) => a.date.localeCompare(b.date))
                     .map((range, i) => (
                       <ListGroup.Item key={i} className="d-flex">
                         <Button
@@ -192,6 +200,7 @@ const AppointmentPicker = () => {
           </Button>
         </div>
       </div>
+
       <Modal show={bookingModalShow} onHide={() => setBookingModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Book Time Slot</Modal.Title>

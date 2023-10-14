@@ -1,6 +1,7 @@
 #sidebar--container {
   position: fixed;
   width: 20%;
+  z-index: 1;
 }
 .sidebar--list {
   width: 100%;
