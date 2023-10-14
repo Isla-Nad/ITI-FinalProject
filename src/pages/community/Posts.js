@@ -5,6 +5,7 @@ import { CgProfile } from "react-icons/cg";
 import "./Posts.css";
 import ConfirmationModal from "../medicalHistory/ConfirmationModal";
 import Comments from "./Comments";
+import { AiFillLike } from "react-icons/ai";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -13,7 +14,7 @@ const Posts = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [likes, setLikes] = useState(0);
+  const [like, setLike] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
   const handleChange = (e) => {
@@ -70,9 +71,9 @@ const Posts = () => {
 
   return (
     <div style={{ flex: "1 0 auto" }}>
-      <Button variant="primary" onClick={() => setShowModal(true)} className="post--button">
+      <div onClick={() => setShowModal(true)} className="post--button">
         <CgProfile className="display-3 mx-4" /> What's on your mind?
-      </Button>
+      </div>
       <CommunityForm posts={newPost} handleChange={handleChange} handleFileChange={handleFileChange} handleAddPost={handleSubmit} handleSubmit={handleSubmit} buttonText="Add New Post" showModal={showModal} onHide={() => setShowModal(false)} ButtonText={editMode ? "Edit" : "post"} closeButton={!editMode} />
       <Container>
         {posts.map((post, index) => (
@@ -87,8 +88,10 @@ const Posts = () => {
               <Card.Body>
                 <Card.Text>{post.body}</Card.Text>
               </Card.Body>
-              <Card.Footer className="post--footer bg-light">
-                <span className="post--likes">Like {likes}</span>
+              <Card.Footer className="post--footer">
+                <span className="post--likes" onClick={() => setLike(!like)}>
+                  Like {like && <AiFillLike />}
+                </span>
                 <span className="post--comment" onClick={() => setShowComments(!showComments)}>
                   Comment
                 </span>

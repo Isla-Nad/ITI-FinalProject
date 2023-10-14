@@ -104,3 +104,32 @@ body:before {
   background: rgb(var(--bg-secondary));
   color: rgb(var(--text-secondary));
 }
+
+/* ================================================== */
+.card {
+  background-color: rgba(var(--bg-primary), 0.7);
+  color: rgb(var(--text-primary));
+}
+.modal-content,
+.dropdown {
+  background-color: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+}
+.modal-content input,
+.modal-content textarea {
+  background-color: rgb(var(--bg-secondary));
+  color: rgb(var(--text-secondary));
+}
+.form-control {
+  background-color: rgb(var(--bg-secondary));
+  color: rgb(var(--text-secondary));
+}
+.form-control:focus {
+  background-color: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+}
+.list-group-item {
+  background-color: rgba(var(--bg-secondary), 0.8);
+  color: rgb(var(--text-primary));
+  border: none;
+}

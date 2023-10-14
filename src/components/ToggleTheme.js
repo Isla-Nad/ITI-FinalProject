@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { FaMoon, FaLightbulb, FaSun, FaTree } from "react-icons/fa";
 import { ThemeContext } from "./Theme";
 

@@ -32,45 +32,45 @@ function DentistProfile() {
             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" width={"100%"} />
             <ul className="list-group mb-4" id="sidebar-nav-1">
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#profile">
+                <a className="nav-link ms-3 my-1 " href="#profile">
                   <FontAwesomeIcon icon={faUserNurse} size="2xl" />
                   <span className="ms-4 sidebar--text">Profile</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#About">
+                <a className="nav-link ms-3 my-1 " href="#About">
                   <FontAwesomeIcon icon={faAddressCard} size="2xl" />
-                  <span className="ms-4 sidebar--text"> About Dentist</span>
+                  <span className="ms-4 sidebar--text">Biography</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#Certificates">
+                <a className="nav-link ms-3 my-1 " href="#Certificates">
                   <FontAwesomeIcon icon={faCertificate} size="2xl" />
-                  <span className="ms-4 sidebar--text"> Certificates</span>
+                  <span className="ms-4 sidebar--text">Certificates</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#Cases">
+                <a className="nav-link ms-3 my-1 " href="#Cases">
                   <FontAwesomeIcon icon={faBriefcaseMedical} size="2xl" />
-                  <span className="ms-4 sidebar--text">Cases</span>{" "}
+                  <span className="ms-4 sidebar--text">Cases</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
+                <a className="nav-link ms-3 my-1 " href="#Contacts">
                   <FontAwesomeIcon icon={faPhone} size="2xl" />
-                  <span className="ms-4 sidebar--text">Contacts</span>{" "}
+                  <span className="ms-4 sidebar--text">Contacts</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#Contacts">
+                <a className="nav-link ms-3 my-1 " href="#Appointments">
                   <FontAwesomeIcon icon={faBookMedical} size="2xl" />
-                  <span className="ms-4 sidebar--text">Appointment Booking</span>{" "}
+                  <span className="ms-4 sidebar--text">Appointments</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 text-black" href="#Rate">
+                <a className="nav-link ms-3 my-1 " href="#Rate">
                   <FontAwesomeIcon icon={faStar} size="2xl" />
-                  <span className="ms-4 sidebar--text"> Ratings & Reviews</span>{" "}
+                  <span className="ms-4 sidebar--text">Reviews</span>
                 </a>
               </li>
             </ul>
@@ -89,7 +89,7 @@ function DentistProfile() {
                 )}
               </div>
               <div id="About" className="mt-5">
-                <h2 className="text-primary">About The Dentist</h2>
+                <h2 className="text-primary">Biography</h2>
                 <hr />
                 <p>{DentData.dentDescription}</p>
               </div>
@@ -144,8 +144,8 @@ function DentistProfile() {
                 </p>
               </div>
 
-              <div id="Contacts" className="mt-5">
-                <h2 className="text-primary">Appointment Booking</h2>
+              <div id="Appointments" className="mt-5">
+                <h2 className="text-primary">Appointments</h2>
                 <hr />
                 <AppointmentPicker id={id} />
               </div>
