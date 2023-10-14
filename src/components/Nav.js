@@ -1,10 +1,103 @@
 import logo from "../icons/logo.png";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import Register from "./Register";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Dropdown, FloatingLabel, Form, Overlay, Popover } from "react-bootstrap";
+import { FaRegUserCircle } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { getUsers } from "../store/actions/GetUsers";
+import { useDispatch, useSelector } from "react-redux";
+import ToggleTheme from "./ToggleTheme";
 
 function Nav() {
+  const users = useSelector((state) => state.users.list);
+  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
+  const [userType, setUserType] = useState("patient");
+  const [regFormData, setRegFormData] = useState({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "", phone: "", clinic: "" });
+  const [logFormData, setLogFormData] = useState({ email: "", password: "" });
+  const [showRegModal, setShowRegModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [errorOverlay, setErrorOverlay] = useState({ show: false, message: "" });
+  const [target, setTarget] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handlePageChange = (page, type) => {
+    setCurrentPage(page);
+    setUserType(type);
+  };
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setRegFormData({
+      ...regFormData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isEmailExists = users.some((user) => user.email === regFormData.email);
+    if (isEmailExists) {
+      setErrorOverlay({ show: true, message: "This email already exists. Please use a different email." });
+    } else {
+      const updatedRegFormData = {
+        ...regFormData,
+        type: userType,
+      };
+      axios
+        .post("https://retoolapi.dev/J8jOPq/users", updatedRegFormData)
+        .then(() => {
+          dispatch(getUsers());
+          setRegFormData({ lastName: "", firstName: "", email: "", password: "", confirmPassword: "", phone: "", clinic: "" });
+          setShowRegModal(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
+  const handleLogChange = (e) => {
+    const { name, value } = e.target;
+    setLogFormData({
+      ...logFormData,
+      [name]: value,
+    });
+  };
+
+  const handleLogSubmit = (e) => {
+    e.preventDefault();
+    const user = users.find((user) => user.email === logFormData.email);
+    if (!user) {
+      setErrorOverlay({ show: true, message: "User not found. Please check your email." });
+    } else if (user.password !== logFormData.password) {
+      setErrorOverlay({ show: true, message: "Incorrect password. Please try again." });
+    } else {
+      sessionStorage.setItem("loggedInUser", JSON.stringify(user));
+      setLoggedInUser(user);
+      setErrorOverlay({ show: false, message: "" });
+      if (user.type === "patient") {
+        navigate("/patient");
+      } else if (user.type === "doctor") {
+        navigate(`/DoctorProfile/${user.id}`);
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("loggedInUser");
+    setLoggedInUser(null);
+    navigate("/");
+  };
+
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-white">
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <img src={logo} alt="" style={{ width: "100px", height: "50px" }} />
@@ -22,6 +115,11 @@ function Nav() {
               <li className="nav-item">
                 <Link className="nav-link" to="/register">
                   Register
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/contactus">
+                  Contact Us
                 </Link>
               </li>
               <li className="nav-item">
@@ -50,6 +148,60 @@ function Nav() {
                 </Link>
               </li>
             </ul>
+
+            <span className="btn-group fs-2 gap-1 mx-2">
+              <ToggleTheme />
+              <div className="btn-group">
+                <FaRegUserCircle className="dropdown-toggle nav-link" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
+                <Dropdown className={`dropdown-menu p-4 `} id="user-dropdown">
+                  {loggedInUser ? (
+                    <>
+                      <h3 className="text-center">
+                        Hi, {loggedInUser.type === "doctor" && "Dr."}
+                        {loggedInUser.firstName}!
+                      </h3>
+                      <Form.Control
+                        type="button"
+                        value="Your profile"
+                        className="mt-3 btn btn-outline-info"
+                        onClick={() => {
+                          loggedInUser.type === "doctor" ? navigate(`/DoctorProfile/${loggedInUser.id}`) : navigate("/patient");
+                        }}
+                      />
+                      <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
+                    </>
+                  ) : (
+                    <Form onSubmit={handleLogSubmit} style={{ width: "18rem" }}>
+                      <FloatingLabel label="Email address" className="mb-3">
+                        <Form.Control type="email" name="email" value={logFormData.email} onChange={handleLogChange} placeholder="..." />
+                      </FloatingLabel>
+
+                      <FloatingLabel label="Password">
+                        <Form.Control type="password" name="password" value={logFormData.password} onChange={handleLogChange} placeholder="..." />
+                      </FloatingLabel>
+
+                      <Form.Control type="submit" value="login" className="mt-3 btn btn-outline-success" onClick={(e) => setTarget(e.target)} />
+                      <div className="dropdown-divider"></div>
+                      <Button className="dropdown-item" variant="outline-info" onClick={(e) => setShowRegModal(true)}>
+                        New around here? Sign up
+                      </Button>
+                    </Form>
+                  )}
+                </Dropdown>
+              </div>
+            </span>
+
+            <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, "patient")} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, "doctor")} userType={userType} onClick={(e) => setTarget(e.target)} />
+
+            {errorOverlay.show && (
+              <Overlay show={errorOverlay.show} target={target} placement="bottom" rootClose={true} onHide={() => setErrorOverlay({ show: false, message: "" })}>
+                <Popover id="popover-contained">
+                  <Popover.Header as="h3" className="text-danger">
+                    {errorOverlay.message}
+                  </Popover.Header>
+                </Popover>
+              </Overlay>
+            )}
             <form className="d-flex" role="search">
               <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
               <button className="btn btn-outline-primary" type="submit">
@@ -62,4 +214,5 @@ function Nav() {
     </>
   );
 }
+
 export default Nav;

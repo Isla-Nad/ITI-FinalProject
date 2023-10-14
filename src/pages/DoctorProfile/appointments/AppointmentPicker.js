@@ -4,18 +4,25 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaTrash } from "react-icons/fa";
 import { Container, Button, Card, ListGroup, Modal } from "react-bootstrap";
 import { compareAsc } from "date-fns";
+import emailjs from "@emailjs/browser";
 
-const AppointmentPicker = () => {
+const AppointmentPicker = (props) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedAppointmentToRemove, setSelectedAppointmentToRemove] = useState(null);
+  const [selectedAppointmentToBook, setSelectedAppointmentToBook] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [dailyTimeRanges, setDailyTimeRanges] = useState([]);
-  const [bookingModalShow, setBookingModalShow] = useState(false);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const sortedDailyTimeRanges = [...dailyTimeRanges].sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3;
+  const totalCards = sortedDailyTimeRanges.length;
+  const totalPages = Math.ceil(totalCards / 3);
+  const currentCards = sortedDailyTimeRanges.slice(currentPage * 3, (currentPage + 1) * 3);
+  const canGoNext = currentPage < totalPages - 1;
+  const canGoPrev = currentPage > 0;
+  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
 
   const isTimeRangeExists = (date, start, end) => {
     const card = dailyTimeRanges.find((range) => range.date === date);
@@ -74,13 +81,35 @@ const AppointmentPicker = () => {
     setShowConfirmationModal(false);
   };
 
+  const sendEmail = (from_name, to_name, message, to_email) => {
+    emailjs
+      .send(
+        "service_nnndbzw",
+        "template_ce1tb5j",
+        {
+          from_name,
+          to_name,
+          message,
+          to_email,
+        },
+        "lTiqoZrmC_6pX8eLV"
+      )
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const bookTimeSlot = () => {
-    if (selectedTimeSlot) {
-      const { date, start, end } = selectedTimeSlot;
+    if (selectedAppointmentToBook) {
+      const { date, start, end } = selectedAppointmentToBook;
       const updatedTimeRanges = dailyTimeRanges.map((card) => {
         if (card.date === date) {
           card.ranges = card.ranges.map((range) => {
             if (range.start === start && range.end === end) {
+              sendEmail(loggedInUser.firstName, "Dr.david", `hello Dr.david you have a booked appointment from ${(range, start)} to ${range.end} on ${card.date}`, "islamnady95@gmail.com");
               return { ...range, booked: true };
             }
             return range;
@@ -90,7 +119,7 @@ const AppointmentPicker = () => {
       });
 
       setDailyTimeRanges(updatedTimeRanges);
-      setBookingModalShow(false);
+      setShowBookingModal(false);
     }
   };
 
@@ -120,100 +149,83 @@ const AppointmentPicker = () => {
     return () => clearInterval(interval);
   }, [dailyTimeRanges]);
 
-  const sortedDailyTimeRanges = [...dailyTimeRanges].sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
-  const totalCards = sortedDailyTimeRanges.length;
-  const totalPages = Math.ceil(totalCards / itemsPerPage);
-  const currentCards = sortedDailyTimeRanges.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const canGoNext = currentPage < totalPages - 1;
-  const canGoPrev = currentPage > 0;
-
   return (
     <Container className="mt-2">
-      <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
-        <div className="d-flex justify-content-between flex-wrap">
-          <div>
-            <p>Select Date:</p>
-            <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} dateFormat="MM/dd/yyyy" />
+      {loggedInUser && loggedInUser.type === "doctor" && loggedInUser.id == props.id && (
+        <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
+          <div className="d-flex justify-content-between flex-wrap">
+            <div>
+              <p>Select Date:</p>
+              <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} dateFormat="MM/dd/yyyy" />
+            </div>
+            <div>
+              <p>Select Start Time:</p>
+              <DatePicker selected={startTime} onChange={(time) => setStartTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
+            </div>
+            <div>
+              <p>Select End Time:</p>
+              <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
+            </div>
           </div>
-          <div>
-            <p>Select Start Time:</p>
-            <DatePicker selected={startTime} onChange={(time) => setStartTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
-          </div>
-          <div>
-            <p>Select End Time:</p>
-            <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
+          <div onClick={addAppointment} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
+            Add Appointment
           </div>
         </div>
-        <div onClick={addAppointment} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
-          Add Appointment
-        </div>
-      </div>
+      )}
 
       <div>
-        <h2 className="mt-2">Available Appointments:</h2>
+        <h2 className="mt-2 text-center">Available Appointments</h2>
         <Container className="d-flex gap-2 flex-wrap flex-lg-nowrap">
           {currentCards.map((card, index) => (
             <Card key={index} className="mb-3">
               <Card.Body>
                 <Card.Title>{card.date}</Card.Title>
                 <ListGroup variant="flush">
-                  {card.ranges
-                    .sort((a, b) => a.start.localeCompare(b.start))
-                    .sort((a, b) => a.date.localeCompare(b.date))
-                    .map((range, i) => (
-                      <ListGroup.Item key={i} className="d-flex">
-                        <Button
-                          className="ml-2"
-                          onClick={() => {
-                            if (!range.booked) {
-                              setSelectedTimeSlot(range);
-                              setBookingModalShow(true);
-                            }
-                          }}
-                          disabled={range.booked}
-                        >
-                          <strong>From:</strong> {range.start}
-                          <br />
-                          <strong>To:</strong> {range.end}
-                        </Button>
-                        <Button className="ml-2" onClick={() => openConfirmationModal(card.date, range.start, range.end)} variant="danger">
-                          <FaTrash />
-                        </Button>
-                      </ListGroup.Item>
-                    ))}
+                  {card.ranges.map((range, i) => (
+                    <ListGroup.Item key={i} className="d-flex">
+                      <Button
+                        className="ml-2"
+                        onClick={() => {
+                          setSelectedAppointmentToBook(range);
+                          setShowBookingModal(true);
+                        }}
+                        disabled={range.booked}
+                      >
+                        <strong>From:</strong> {range.start} <br /> <strong>To:</strong> {range.end}
+                      </Button>
+                      <Button className="ml-2" onClick={() => openConfirmationModal(card.date, range.start, range.end)} variant="danger">
+                        <FaTrash />
+                      </Button>
+                    </ListGroup.Item>
+                  ))}
                 </ListGroup>
               </Card.Body>
             </Card>
           ))}
         </Container>
         <div className="d-flex justify-content-between mt-3">
-          <Button variant="secondary" onClick={() => handlePageChange(currentPage - 1)} disabled={!canGoPrev}>
+          <Button variant="secondary" onClick={() => setCurrentPage(currentPage - 1)} disabled={!canGoPrev}>
             Previous
           </Button>
-          <Button variant="secondary" onClick={() => handlePageChange(currentPage + 1)} disabled={!canGoNext}>
+          <Button variant="secondary" onClick={() => setCurrentPage(currentPage + 1)} disabled={!canGoNext}>
             Next
           </Button>
         </div>
       </div>
 
-      <Modal show={bookingModalShow} onHide={() => setBookingModalShow(false)}>
+      <Modal show={showBookingModal} onHide={() => setShowBookingModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Book Time Slot</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedTimeSlot && (
+          {selectedAppointmentToBook && (
             <p>
-              You are booking from <span className="text-warning">{selectedTimeSlot.start}</span> to <span className="text-warning">{selectedTimeSlot.end}</span> on <span className="text-info">{selectedTimeSlot.date}</span>.
+              You are booking from <span className="text-warning">{selectedAppointmentToBook.start}</span> to <span className="text-warning">{selectedAppointmentToBook.end}</span> on <span className="text-info">{selectedAppointmentToBook.date}</span>.
             </p>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setBookingModalShow(false)}>
+          <Button variant="secondary" onClick={() => setShowBookingModal(false)}>
             Close
           </Button>
           <Button variant="primary" onClick={bookTimeSlot}>

@@ -11,27 +11,30 @@ import Home from "./pages/home/Home";
 import Login from "./pages/log&res/Login";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import DentistProfile from "./pages/DoctorProfile/DoctorProfile";
-import PatientProfile from "./pages/PatientProfile/Patient"
+import UpdateDoctorProfile from "./pages/DoctorProfile/update";
+import PatientProfile from "./pages/PatientProfile/Patient";
+import ContactUs from "./pages/contactUs/contact";
+
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Nav />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/clinics" element={<Clinics />} />
-          <Route path="/posts" element={<Posts />} />
-          <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
-          <Route path="/medicalHistory" element={<MedicalHistory />} />
-          <Route path="/DoctorProfile" element={<DentistProfile />} />
-          <Route path="/patient" element={<PatientProfile />} />
-
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Nav />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/clinics" element={<Clinics />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
+        <Route path="/medicalHistory" element={<MedicalHistory />} />
+        <Route path="/DoctorProfile/:id" element={<DentistProfile />} />
+        <Route path="/update/:id" element={<UpdateDoctorProfile />} />
+        {/* <Route path="/DoctorProfile" element={<DentistProfile />} /> */}
+        <Route path="/patient" element={<PatientProfile />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

@@ -5,7 +5,7 @@ import { Link} from "react-router-dom";
 function Footer() {
  
   return (
-    <div className="footer" style={{ flexShrink: "0" }}>
+    <div className="footer opacity-75" style={{ flexShrink: "0" }}>
       <div className="text text-wite ">
         <FaPhoneAlt className="text-white" /> <span className="text-white">:355462236</span>
         <ul>
