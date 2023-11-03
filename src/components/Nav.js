@@ -5,31 +5,32 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Dropdown, FloatingLabel, Form, Overlay, Popover } from "react-bootstrap";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import { getUsers } from "../store/actions/GetUsers";
+import { getUser } from "../store/actions/GetUser";
 import { useDispatch, useSelector } from "react-redux";
 import ToggleTheme from "./ToggleTheme";
+import { jwtDecode } from "jwt-decode";
 
 function Nav() {
-  const users = useSelector((state) => state.users.list);
-  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
-  const [userType, setUserType] = useState("patient");
-  const [regFormData, setRegFormData] = useState({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "", phone: "", clinic: "" });
+  const currentUser = useSelector((state) => state.user.user);
+  const [authTokens, setAuthTokens] = useState(JSON.parse(localStorage.getItem("authTokens")) || null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [regFormData, setRegFormData] = useState({ first_name: "", last_name: "", email: "", password: "", confirm_password: "", phone: "", is_doctor: false, clinic: "" });
   const [logFormData, setLogFormData] = useState({ email: "", password: "" });
   const [showRegModal, setShowRegModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [errorOverlay, setErrorOverlay] = useState({ show: false, message: "" });
   const [target, setTarget] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
-    setUserType(type);
+    setRegFormData({
+      ...regFormData,
+      is_doctor: type,
+    });
   };
-
-  useEffect(() => {
-    dispatch(getUsers());
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,25 +42,15 @@ function Nav() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isEmailExists = users.some((user) => user.email === regFormData.email);
-    if (isEmailExists) {
-      setErrorOverlay({ show: true, message: "This email already exists. Please use a different email." });
-    } else {
-      const updatedRegFormData = {
-        ...regFormData,
-        type: userType,
-      };
-      axios
-        .post("https://retoolapi.dev/J8jOPq/users", updatedRegFormData)
-        .then(() => {
-          dispatch(getUsers());
-          setRegFormData({ lastName: "", firstName: "", email: "", password: "", confirmPassword: "", phone: "", clinic: "" });
-          setShowRegModal(false);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
+    axios
+      .post("http://127.0.0.1:8000/accounts/register/", regFormData)
+      .then(() => {
+        setRegFormData({ first_name: "", last_name: "", email: "", password: "", confirm_password: "", phone: "", is_doctor: false, clinic: "" });
+        setShowRegModal(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleLogChange = (e) => {
@@ -72,28 +63,70 @@ function Nav() {
 
   const handleLogSubmit = (e) => {
     e.preventDefault();
-    const user = users.find((user) => user.email === logFormData.email);
-    if (!user) {
-      setErrorOverlay({ show: true, message: "User not found. Please check your email." });
-    } else if (user.password !== logFormData.password) {
-      setErrorOverlay({ show: true, message: "Incorrect password. Please try again." });
-    } else {
-      sessionStorage.setItem("loggedInUser", JSON.stringify(user));
-      setLoggedInUser(user);
-      setErrorOverlay({ show: false, message: "" });
-      if (user.type === "patient") {
-        navigate("/patient");
-      } else if (user.type === "doctor") {
-        navigate(`/DoctorProfile/${user.id}`);
-      }
-    }
+    axios
+      .post("http://127.0.0.1:8000/accounts/token/", logFormData)
+      .then((response) => {
+        setAuthTokens(response.data);
+        localStorage.setItem("authTokens", JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorOverlay({ show: true, message: "Incorrect email or password." });
+      });
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("loggedInUser");
-    setLoggedInUser(null);
     navigate("/");
+    setAuthTokens(null);
+    localStorage.removeItem("authTokens");
+    setLoggedInUser(null);
   };
+
+  useEffect(() => {
+    {
+      authTokens &&
+        axios
+          .get("http://127.0.0.1:8000/accounts/user/", {
+            headers: {
+              Authorization: "Bearer " + String(authTokens.access),
+            },
+          })
+          .then((response) => {
+            setLoggedInUser(response.data.user);
+            console.log(response.data.user);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }
+  }, [authTokens]);
+
+  // const updateToken = () => {
+  //   axios
+  //     .post("http://127.0.0.1:8000/api/token/refresh/", { refresh: authTokens.refresh })
+  //     .then((response) => {
+  //       setAuthTokens(response.data);
+  //       localStorage.setItem("authTokens", JSON.stringify(response.data));
+  //       setLoggedInUser(jwtDecode(response.data.access));
+  //     })
+  //     .catch((error) => {
+  //       handleLogout();
+  //       setLoading(false);
+  //       console.log(error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   if (loading) {
+  //     updateToken();
+  //   }
+  //   const interval = setInterval(() => {
+  //     if (authTokens) {
+  //       updateToken();
+  //     }
+  //   }, 1000 * 60 * 4);
+  //   return () => clearInterval(interval);
+  // }, [authTokens, loading]);
 
   return (
     <>
@@ -157,15 +190,15 @@ function Nav() {
                   {loggedInUser ? (
                     <>
                       <h3 className="text-center">
-                        Hi, {loggedInUser.type === "doctor" && "Dr."}
-                        {loggedInUser.firstName}!
+                        Hi, {loggedInUser.is_doctor && "Dr."}
+                        {loggedInUser.first_name}!
                       </h3>
                       <Form.Control
                         type="button"
                         value="Your profile"
                         className="mt-3 btn btn-outline-info"
                         onClick={() => {
-                          loggedInUser.type === "doctor" ? navigate(`/DoctorProfile/${loggedInUser.id}`) : navigate("/patient");
+                          loggedInUser.is_doctor ? navigate(`/doctor/profile/${loggedInUser.id}`) : navigate(`/patient/profile/${loggedInUser.id}`);
                         }}
                       />
                       <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
@@ -191,7 +224,7 @@ function Nav() {
               </div>
             </span>
 
-            <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, "patient")} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, "doctor")} userType={userType} onClick={(e) => setTarget(e.target)} />
+            <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, false)} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, true)} onClick={(e) => setTarget(e.target)} />
 
             {errorOverlay.show && (
               <Overlay show={errorOverlay.show} target={target} placement="bottom" rootClose={true} onHide={() => setErrorOverlay({ show: false, message: "" })}>

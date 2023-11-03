@@ -9,22 +9,22 @@ const Register = (props) => {
     const newErrors = { ...errors };
 
     switch (fieldName) {
-      case "firstName":
+      case "first_name":
         if (!value.trim()) {
-          newErrors.firstName = "First Name is required";
+          newErrors.first_name = "First Name is required";
         } else if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(value)) {
-          newErrors.firstName = "Please use only alphanumeric characters, starting with a letter or underscore.";
+          newErrors.first_name = "Please use only alphanumeric characters, starting with a letter or underscore.";
         } else {
-          delete newErrors.firstName;
+          delete newErrors.first_name;
         }
         break;
-      case "lastName":
+      case "last_name":
         if (!value.trim()) {
-          newErrors.lastName = "Last Name is required";
+          newErrors.last_name = "Last Name is required";
         } else if (!/^[a-zA-Z_][a-zA-Z0-9_]*/.test(value)) {
-          newErrors.lastName = "Please use only alphanumeric characters, starting with a letter or underscore.";
+          newErrors.last_name = "Please use only alphanumeric characters, starting with a letter or underscore.";
         } else {
-          delete newErrors.lastName;
+          delete newErrors.last_name;
         }
         break;
       case "email":
@@ -54,11 +54,11 @@ const Register = (props) => {
           delete newErrors.password;
         }
         break;
-      case "confirmPassword":
+      case "confirm_password":
         if (value !== props.formData.password) {
-          newErrors.confirmPassword = "Passwords do not match";
+          newErrors.confirm_password = "Passwords do not match";
         } else {
-          delete newErrors.confirmPassword;
+          delete newErrors.confirm_password;
         }
         break;
       case "clinic":
@@ -127,14 +127,14 @@ const Register = (props) => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <FloatingLabel controlId="firstName" label="First Name" className="mb-3">
-              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, firstName: null }))} className={errors.firstName || !props.formData.firstName ? "is-invalid" : "is-valid"} type="text" name="firstName" value={props.formData.firstName} onChange={handleChange} placeholder="..." required />
-              {renderFeedback("firstName")}
+            <FloatingLabel controlId="first_name" label="First Name" className="mb-3">
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, first_name: null }))} className={errors.first_name || !props.formData.first_name ? "is-invalid" : "is-valid"} type="text" name="first_name" value={props.formData.first_name} onChange={handleChange} placeholder="..." required />
+              {renderFeedback("first_name")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="lastName" label="Last Name" className="mb-3">
-              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, lastName: null }))} className={errors.lastName || !props.formData.lastName ? "is-invalid" : "is-valid"} type="text" name="lastName" value={props.formData.lastName} onChange={handleChange} placeholder="..." required />
-              {renderFeedback("lastName")}
+            <FloatingLabel controlId="last_name" label="Last Name" className="mb-3">
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, last_name: null }))} className={errors.last_name || !props.formData.last_name ? "is-invalid" : "is-valid"} type="text" name="last_name" value={props.formData.last_name} onChange={handleChange} placeholder="..." required />
+              {renderFeedback("last_name")}
             </FloatingLabel>
 
             <FloatingLabel controlId="email" label="Email Address" className="mb-3">
@@ -152,12 +152,12 @@ const Register = (props) => {
               {renderFeedback("password")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="confirmPassword" label="Confirm Password" className="mb-3">
-              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, confirmPassword: null }))} className={errors.confirmPassword || !props.formData.confirmPassword ? "is-invalid" : "is-valid"} type="Password" name="confirmPassword" value={props.formData.confirmPassword} onChange={handleChange} placeholder="..." required />
-              {renderFeedback("confirmPassword")}
+            <FloatingLabel controlId="confirm_password" label="Confirm Password" className="mb-3">
+              <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, confirm_password: null }))} className={errors.confirm_password || !props.formData.confirm_password ? "is-invalid" : "is-valid"} type="Password" name="confirm_password" value={props.formData.confirm_password} onChange={handleChange} placeholder="..." required />
+              {renderFeedback("confirm_password")}
             </FloatingLabel>
 
-            {props.userType === "doctor" && (
+            {props.formData.is_doctor && (
               <FloatingLabel controlId="clinic" label="Clinic" className="mb-3">
                 <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, clinic: null }))} className={errors.clinic || !props.formData.clinic ? "is-invalid" : "is-valid"} type="text" name="clinic" value={props.formData.clinic} onChange={handleChange} placeholder="..." required />
                 {renderFeedback("clinic")}

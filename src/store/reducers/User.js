@@ -1,13 +1,13 @@
 const INITIAL_VALUE = {
-  list: [],
+  user: {},
 };
 
-export default function Users(state = INITIAL_VALUE, action) {
+export default function User(state = INITIAL_VALUE, action) {
   switch (action.type) {
-    case "GET_USERS":
+    case "GET_USER":
       return {
         ...state,
-        list: action.payload,
+        user: action.payload,
       };
     default:
       return state;

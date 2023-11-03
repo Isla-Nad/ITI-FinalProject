@@ -1,11 +1,11 @@
 import axios from "axios";
 
-export const getUsers = () => (dispatch) => {
+export const getUser = () => (dispatch) => {
   axios
-    .get("https://retoolapi.dev/J8jOPq/users")
+    .get("http://127.0.0.1:8000/accounts/user/")
     .then((response) =>
       dispatch({
-        type: "GET_USERS",
+        type: "GET_USER",
         payload: response.data,
       })
     )

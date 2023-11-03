@@ -28,10 +28,11 @@ function App() {
         <Route path="/posts" element={<Posts />} />
         <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
         <Route path="/medicalHistory" element={<MedicalHistory />} />
-        <Route path="/DoctorProfile/:id" element={<DentistProfile />} />
+        <Route path="/doctor/profile/:id" element={<DentistProfile />} />
         <Route path="/update/:id" element={<UpdateDoctorProfile />} />
         {/* <Route path="/DoctorProfile" element={<DentistProfile />} /> */}
         <Route path="/patient" element={<PatientProfile />} />
+        <Route path="/patient/profile/:id" element={<PatientProfile />} />
       </Routes>
       <Footer />
     </BrowserRouter>
