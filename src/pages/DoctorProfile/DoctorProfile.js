@@ -7,15 +7,22 @@ import { Link, useParams } from "react-router-dom";
 import AppointmentPicker from "./appointments/AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
 import { Button, Form, Modal } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
+import { BiMessageSquareAdd } from "react-icons/bi";
 
 function DentistProfile() {
+  const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
   const { id } = useParams();
   const [dentData, setDentData] = useState({});
   const [dentProf, setDentProf] = useState({});
-  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
-  const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
-  console.log(authTokens);
-
+  const [showModal, setShowModal] = useState(false);
+  const [showCase, setShowCase] = useState(false);
+  const [showCertificate, setShowCertificate] = useState(false);
+  const [caseFile, setCaseFile] = useState({});
+  const [certificateFile, setCertificateFile] = useState({});
+  const [cases, setCases] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const [formData, setFormData] = useState({ info: "", bio: "", contact: "", profile_picture: null });
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/accounts/profile/" + id)
@@ -27,15 +34,110 @@ function DentistProfile() {
       .catch((err) => console.log(err));
   }, []);
 
-  const [formData, setFormData] = useState({
-    info: "",
-    bio: "",
-    contact: "",
-    profile_picture: null,
-    uploaded_certificates: [],
-    uploaded_cases: [],
-  });
-  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/accounts/profile/case/" + id)
+      .then((response) => {
+        console.log(response.data);
+        setCases([...response.data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://127.0.0.1:8000/accounts/profile/certificate/" + id)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setCertificates([...response.data]);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
+
+  const handleCaseChange = (e) => {
+    const file = e.target.files[0];
+    setCaseFile({ case: file, user: dentData.id });
+  };
+
+  const handleCertificateChange = (e) => {
+    const file = e.target.files[0];
+    setCertificateFile({ certificate: file, user: dentData.id });
+  };
+
+  const addCertificate = () => {
+    axios
+      .post("http://127.0.0.1:8000/accounts/profile/certificate/", certificateFile, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setCertificates([...cases, response.data]);
+        setShowCertificate(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const removeCertificate = (certificate_id) => {
+    axios
+      .delete("http://127.0.0.1:8000/accounts/profile/certificate/delete/" + certificate_id, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        const filteredcertificates = certificates.filter((cer) => cer.id !== certificate_id);
+        setCertificates(filteredcertificates);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const addCase = () => {
+    axios
+      .post("http://127.0.0.1:8000/accounts/profile/case/", caseFile, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setCases([...cases, response.data]);
+        setShowCase(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const removeCase = (case_id) => {
+    axios
+      .delete("http://127.0.0.1:8000/accounts/profile/case/delete/" + case_id, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        const filteredCase = cases.filter((cas) => cas.id !== case_id);
+        setCases(filteredCase);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -51,17 +153,17 @@ function DentistProfile() {
       profile_picture: file,
     });
   };
-  const handleFileChange2 = (e) => {
-    const { name, files } = e.target;
-    const formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append(name, files[i]);
-    }
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: formData,
-    }));
+  const fetchExistingData = () => {
+    axios
+      .get("http://127.0.0.1:8000/accounts/profile/" + id)
+      .then((response) => {
+        setFormData(response.data.profile);
+        setShowModal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleSubmit = (e) => {
@@ -70,32 +172,12 @@ function DentistProfile() {
       .put("http://127.0.0.1:8000/accounts/profile/edit/", formData, {
         headers: {
           Authorization: "Bearer " + String(authTokens.access),
-          "Content-Type": "multipart/form-data",
+          "content-type": "multipart/form-data",
         },
       })
       .then((response) => {
         console.log(response.data);
         setShowModal(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const [showCase, setShowCase] = useState(false);
-  const [caseFile, setCaseFile] = useState(null);
-  const handleCaseChange = (e) => {
-    const file = e.target.files[0];
-    setCaseFile(file);
-  };
-  const addCase = () => {
-    axios
-      .post("http://127.0.0.1:8000/accounts/profile/case/", caseFile, {
-        headers: {
-          Authorization: "Bearer " + String(authTokens.access),
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -172,35 +254,63 @@ function DentistProfile() {
                 <p>{dentProf.bio}</p>
               </div>
               <div id="Certificates" className="mt-5">
-                <h2 className="text-primary">Certificates</h2>
+                <div className=" d-flex justify-content-between align-items-center ">
+                  <h2 className="text-primary">Certificates</h2>
+                  <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
+                    <BiMessageSquareAdd />
+                  </Button>
+                </div>
+
                 <hr />
                 <div className="container">
                   <div className="row">
-                    <a href="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" />
-                    </a>
-                    <a href="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" />
-                    </a>
-                    <a href="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" />
-                    </a>
-                    <a href="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://marketplace.canva.com/EAFIEvneNCM/1/0/1600w/canva-golden-elegant-certificate-of-appreciation-0bN-aLORS9U.jpg" />
-                    </a>
+                    {certificates.map((cer, index) => (
+                      <div className="col-4 position-relative ">
+                        <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
+                          <FaTrash />
+                        </Button>
+                        <img src={`http://localhost:8000${cer.certificate}`} alt="" key={index} width="100%" />
+                      </div>
+                    ))}
+                    <Modal centered show={showCertificate} onHide={() => setShowCertificate(false)}>
+                      <Modal.Body>
+                        <Form.Control type="file" name="certificate" onChange={handleCertificateChange} />
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowCertificate(false)}>
+                          Close
+                        </Button>
+                        <Button type="submit" variant="primary" onClick={addCertificate}>
+                          Save Changes
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
                   </div>
                 </div>
               </div>
               <div id="Cases" className="mt-5">
-                <h2 className="text-primary">Cases</h2>
+                <div className=" d-flex justify-content-between align-items-center ">
+                  <h2 className="text-primary">Cases</h2>
+                  <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
+                    <BiMessageSquareAdd />
+                  </Button>
+                </div>
+
                 <hr />
                 <div className="container">
                   <div className="row">
-                    <Button className="btn btn-dark w-25 " onClick={() => setShowCase(true)}>
-                      add a case
-                    </Button>
-                    <Modal show={showCase} onHide={() => setShowCase(false)}>
-                      <Form.Control type="file" name="case" onChange={handleCaseChange} />
+                    {cases.map((cas, index) => (
+                      <div className="col-4 position-relative ">
+                        <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
+                          <FaTrash />
+                        </Button>
+                        <img src={`http://localhost:8000${cas.case}`} alt="" key={index} width="100%" />
+                      </div>
+                    ))}
+                    <Modal centered show={showCase} onHide={() => setShowCase(false)}>
+                      <Modal.Body>
+                        <Form.Control type="file" name="case" onChange={handleCaseChange} />
+                      </Modal.Body>
                       <Modal.Footer>
                         <Button variant="secondary" onClick={() => setShowCase(false)}>
                           Close
@@ -210,19 +320,6 @@ function DentistProfile() {
                         </Button>
                       </Modal.Footer>
                     </Modal>
-
-                    <a href="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" />
-                    </a>
-                    <a href="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" />
-                    </a>
-                    <a href="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" />
-                    </a>
-                    <a href="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" target="blank" className="col-lg-3 col-md-6 col-sm-12">
-                      <img style={{ width: "100%" }} src="https://clinicalmastery.com/wp-content/uploads/2017/12/Copy-of-Pre-op-4-768x644-1.png" />
-                    </a>
                   </div>
                 </div>
               </div>
@@ -256,7 +353,7 @@ function DentistProfile() {
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleSubmit} encType="multipart/form-data">
+        <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <Form.Group>
               <Form.Label>Info</Form.Label>
@@ -270,31 +367,17 @@ function DentistProfile() {
               <Form.Label>Contact</Form.Label>
               <Form.Control type="text" name="contact" value={formData.contact} onChange={handleInputChange} />
             </Form.Group>
-            {/* Add other input fields here */}
             <Form.Group>
               <Form.Label>Profile Picture</Form.Label>
               <Form.Control type="file" name="profile_picture" onChange={handleFileChange} />
             </Form.Group>
-            {/* <Form.Group>
-              <Form.Label>Uploaded Certificates</Form.Label>
-              <Form.Control type="file" name="uploaded_certificates" multiple onChange={handleFileChange2} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Uploaded Cases</Form.Label>
-              <Form.Control type="file" name="uploaded_cases" multiple onChange={handleFileChange2} />
-            </Form.Group> */}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Close
-            </Button>
-            <Button type="submit" variant="primary">
-              Save Changes
-            </Button>
+            <Form.Control value="Save Changes" type="submit" className="btn btn-outline-dark " />
           </Modal.Footer>
         </Form>
       </Modal>
-      <Button className="btn btn-primary" onClick={() => setShowModal(true)}>
+      <Button className="btn btn-primary" onClick={() => fetchExistingData()}>
         Edit Profile
       </Button>
     </>
