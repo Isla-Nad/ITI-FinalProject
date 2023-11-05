@@ -141,16 +141,6 @@ function Nav() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/register">
-                  Register
-                </Link>
-              </li>
-              <li className="nav-item">
                 <Link className="nav-link" to="/contactus">
                   Contact Us
                 </Link>
@@ -162,22 +152,12 @@ function Nav() {
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/posts">
-                  Posts
+                  Community
                 </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/medicalHistory">
                   MedicalHistory
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="./DoctorProfile">
-                  Dentist Details
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="./patient">
-                  Patient Details
                 </Link>
               </li>
             </ul>
@@ -193,14 +173,7 @@ function Nav() {
                         Hi, {loggedInUser.is_doctor && "Dr."}
                         {loggedInUser.first_name}!
                       </h3>
-                      <Form.Control
-                        type="button"
-                        value="Your profile"
-                        className="mt-3 btn btn-outline-info"
-                        onClick={() => {
-                          loggedInUser.is_doctor ? navigate(`/doctor/profile/${loggedInUser.id}`) : navigate(`/patient/profile/${loggedInUser.id}`);
-                        }}
-                      />
+                      <Form.Control type="button" value="Your profile" className="mt-3 btn btn-outline-info" onClick={() => navigate(`/profile/${loggedInUser.id}`)} />
                       <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
                     </>
                   ) : (

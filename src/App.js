@@ -10,10 +10,8 @@ import Register from "./pages/log&res/Register";
 import Home from "./pages/home/Home";
 import Login from "./pages/log&res/Login";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
-import DentistProfile from "./pages/DoctorProfile/DoctorProfile";
-import UpdateDoctorProfile from "./pages/DoctorProfile/update";
-import PatientProfile from "./pages/PatientProfile/Patient";
 import ContactUs from "./pages/contactUs/contact";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -28,11 +26,7 @@ function App() {
         <Route path="/posts" element={<Posts />} />
         <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
         <Route path="/medicalHistory" element={<MedicalHistory />} />
-        <Route path="/doctor/profile/:id" element={<DentistProfile />} />
-        <Route path="/update/:id" element={<UpdateDoctorProfile />} />
-        {/* <Route path="/DoctorProfile" element={<DentistProfile />} /> */}
-        <Route path="/patient" element={<PatientProfile />} />
-        <Route path="/patient/profile/:id" element={<PatientProfile />} />
+        <Route path="/profile/:id" element={<Profile />} />
       </Routes>
       <Footer />
     </BrowserRouter>

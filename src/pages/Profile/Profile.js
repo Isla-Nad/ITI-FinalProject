@@ -2,15 +2,15 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen } from "@fortawesome/free-solid-svg-icons";
-import "./DoctorProfile.css";
-import { Link, useParams } from "react-router-dom";
+import "./Profile.css";
+import { useParams } from "react-router-dom";
 import AppointmentPicker from "./appointments/AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
 import { Button, Container, Form, Image, Modal } from "react-bootstrap";
 import { FaTrash, FaUser } from "react-icons/fa";
 import { BiMessageSquareAdd } from "react-icons/bi";
 
-function DentistProfile() {
+function Profile() {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
   const { id } = useParams();
   const [profileData, setProfileData] = useState({});
@@ -227,7 +227,7 @@ function DentistProfile() {
   };
 
   return (
-    <>
+    <div style={{ flex: "1 0 auto" }}>
       <div className="container">
         <div className="row">
           <div id="sidebar--container">
@@ -276,35 +276,40 @@ function DentistProfile() {
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 " href="#Certificates">
-                  <FontAwesomeIcon icon={faCertificate} size="2xl" />
-                  <span className="ms-4 sidebar--text">Certificates</span>
-                </a>
-              </li>
-              <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 " href="#Cases">
-                  <FontAwesomeIcon icon={faBriefcaseMedical} size="2xl" />
-                  <span className="ms-4 sidebar--text">Cases</span>
-                </a>
-              </li>
-              <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 " href="#Contacts">
                   <FontAwesomeIcon icon={faPhone} size="2xl" />
                   <span className="ms-4 sidebar--text">Contacts</span>
                 </a>
               </li>
-              <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 " href="#Appointments">
-                  <FontAwesomeIcon icon={faBookMedical} size="2xl" />
-                  <span className="ms-4 sidebar--text">Appointments</span>
-                </a>
-              </li>
-              <li className="list-group-item list-group-item-primary sidebar--list">
-                <a className="nav-link ms-3 my-1 " href="#Rate">
-                  <FontAwesomeIcon icon={faStar} size="2xl" />
-                  <span className="ms-4 sidebar--text">Reviews</span>
-                </a>
-              </li>
+              {profileData.is_doctor && (
+                <>
+                  <li className="list-group-item list-group-item-primary sidebar--list">
+                    <a className="nav-link ms-3 my-1 " href="#Certificates">
+                      <FontAwesomeIcon icon={faCertificate} size="2xl" />
+                      <span className="ms-4 sidebar--text">Certificates</span>
+                    </a>
+                  </li>
+                  <li className="list-group-item list-group-item-primary sidebar--list">
+                    <a className="nav-link ms-3 my-1 " href="#Cases">
+                      <FontAwesomeIcon icon={faBriefcaseMedical} size="2xl" />
+                      <span className="ms-4 sidebar--text">Cases</span>
+                    </a>
+                  </li>
+
+                  <li className="list-group-item list-group-item-primary sidebar--list">
+                    <a className="nav-link ms-3 my-1 " href="#Appointments">
+                      <FontAwesomeIcon icon={faBookMedical} size="2xl" />
+                      <span className="ms-4 sidebar--text">Appointments</span>
+                    </a>
+                  </li>
+                  <li className="list-group-item list-group-item-primary sidebar--list">
+                    <a className="nav-link ms-3 my-1 " href="#Rate">
+                      <FontAwesomeIcon icon={faStar} size="2xl" />
+                      <span className="ms-4 sidebar--text">Reviews</span>
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
           <div id="profile--container">
@@ -326,76 +331,6 @@ function DentistProfile() {
                 <hr />
                 <p>{profileData.bio}</p>
               </div>
-              <div id="Certificates" className="mt-5">
-                <div className=" d-flex justify-content-between align-items-center ">
-                  <h2 className="text-primary">Certificates</h2>
-                  <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
-                    <BiMessageSquareAdd />
-                  </Button>
-                </div>
-
-                <hr />
-                <div className="container">
-                  <div className="row">
-                    {certificates.map((cer, index) => (
-                      <div className="col-4 position-relative " key={index}>
-                        <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
-                          <FaTrash />
-                        </Button>
-                        <img src={`http://localhost:8000${cer.certificate}`} alt="" width="100%" />
-                      </div>
-                    ))}
-                    <Modal centered show={showCertificate} onHide={() => setShowCertificate(false)}>
-                      <Modal.Body>
-                        <Form.Control type="file" name="certificate" onChange={handleCertificateChange} />
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowCertificate(false)}>
-                          Close
-                        </Button>
-                        <Button type="submit" variant="primary" onClick={addCertificate}>
-                          Save Changes
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
-                  </div>
-                </div>
-              </div>
-              <div id="Cases" className="mt-5">
-                <div className=" d-flex justify-content-between align-items-center ">
-                  <h2 className="text-primary">Cases</h2>
-                  <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
-                    <BiMessageSquareAdd />
-                  </Button>
-                </div>
-
-                <hr />
-                <div className="container">
-                  <div className="row">
-                    {cases.map((cas, index) => (
-                      <div className="col-4 position-relative " key={index}>
-                        <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
-                          <FaTrash />
-                        </Button>
-                        <img src={`http://localhost:8000${cas.case}`} alt="" width="100%" />
-                      </div>
-                    ))}
-                    <Modal centered show={showCase} onHide={() => setShowCase(false)}>
-                      <Modal.Body>
-                        <Form.Control type="file" name="case" onChange={handleCaseChange} />
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowCase(false)}>
-                          Close
-                        </Button>
-                        <Button type="submit" variant="primary" onClick={addCase}>
-                          Save Changes
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
-                  </div>
-                </div>
-              </div>
               <div id="Contacts" className="mt-5">
                 <h2 className="text-primary">Contacts</h2>
                 <hr />
@@ -406,17 +341,91 @@ function DentistProfile() {
                   {/* <FontAwesomeIcon icon={faInstagram} size="2xl" /> */}
                 </p>
               </div>
+              {profileData.is_doctor && (
+                <>
+                  <div id="Certificates" className="mt-5">
+                    <div className=" d-flex justify-content-between align-items-center ">
+                      <h2 className="text-primary">Certificates</h2>
+                      <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
+                        <BiMessageSquareAdd />
+                      </Button>
+                    </div>
 
-              <div id="Appointments" className="mt-5">
-                <h2 className="text-primary">Appointments</h2>
-                <hr />
-                <AppointmentPicker id={id} />
-              </div>
-              <div id="Rate" className="mt-5">
-                <h2 className="text-primary">Ratings & Reviews</h2>
-                <hr />
-                <CommentsAndRating />
-              </div>
+                    <hr />
+                    <div className="container">
+                      <div className="row">
+                        {certificates.map((cer, index) => (
+                          <div className="col-4 position-relative " key={index}>
+                            <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
+                              <FaTrash />
+                            </Button>
+                            <img src={`http://localhost:8000${cer.certificate}`} alt="" width="100%" />
+                          </div>
+                        ))}
+                        <Modal centered show={showCertificate} onHide={() => setShowCertificate(false)}>
+                          <Modal.Body>
+                            <Form.Control type="file" name="certificate" onChange={handleCertificateChange} />
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowCertificate(false)}>
+                              Close
+                            </Button>
+                            <Button type="submit" variant="primary" onClick={addCertificate}>
+                              Save Changes
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="Cases" className="mt-5">
+                    <div className=" d-flex justify-content-between align-items-center ">
+                      <h2 className="text-primary">Cases</h2>
+                      <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
+                        <BiMessageSquareAdd />
+                      </Button>
+                    </div>
+
+                    <hr />
+                    <div className="container">
+                      <div className="row">
+                        {cases.map((cas, index) => (
+                          <div className="col-4 position-relative " key={index}>
+                            <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
+                              <FaTrash />
+                            </Button>
+                            <img src={`http://localhost:8000${cas.case}`} alt="" width="100%" />
+                          </div>
+                        ))}
+                        <Modal centered show={showCase} onHide={() => setShowCase(false)}>
+                          <Modal.Body>
+                            <Form.Control type="file" name="case" onChange={handleCaseChange} />
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowCase(false)}>
+                              Close
+                            </Button>
+                            <Button type="submit" variant="primary" onClick={addCase}>
+                              Save Changes
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="Appointments" className="mt-5">
+                    <h2 className="text-primary">Appointments</h2>
+                    <hr />
+                    <AppointmentPicker id={id} />
+                  </div>
+                  <div id="Rate" className="mt-5">
+                    <h2 className="text-primary">Ratings & Reviews</h2>
+                    <hr />
+                    <CommentsAndRating />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -452,18 +461,20 @@ function DentistProfile() {
               <Form.Label>Phone</Form.Label>
               <Form.Control type="text" name="phone" value={formData.phone} onChange={handleInputChange} />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Clinic</Form.Label>
-              <Form.Control type="text" name="clinic" value={formData.clinic} onChange={handleInputChange} />
-            </Form.Group>
+            {profileData.is_doctor && (
+              <Form.Group>
+                <Form.Label>Clinic</Form.Label>
+                <Form.Control type="text" name="clinic" value={formData.clinic} onChange={handleInputChange} />
+              </Form.Group>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Form.Control value="Save Changes" type="submit" className="btn btn-outline-dark " />
           </Modal.Footer>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 }
 
-export default DentistProfile;
+export default Profile;
