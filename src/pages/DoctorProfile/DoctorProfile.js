@@ -6,30 +6,31 @@ import "./DoctorProfile.css";
 import { Link, useParams } from "react-router-dom";
 import AppointmentPicker from "./appointments/AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
-import { Button, Form, Modal } from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
+import { Button, Container, Form, Image, Modal } from "react-bootstrap";
+import { FaTrash, FaUser } from "react-icons/fa";
 import { BiMessageSquareAdd } from "react-icons/bi";
 
 function DentistProfile() {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
   const { id } = useParams();
-  const [dentData, setDentData] = useState({});
-  const [dentProf, setDentProf] = useState({});
+  const [profileData, setProfileData] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showPic, setShowPic] = useState(false);
   const [showCase, setShowCase] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [caseFile, setCaseFile] = useState({});
   const [certificateFile, setCertificateFile] = useState({});
   const [cases, setCases] = useState([]);
   const [certificates, setCertificates] = useState([]);
-  const [formData, setFormData] = useState({ info: "", bio: "", contact: "", profile_picture: null });
+  const [formData, setFormData] = useState({ info: "", bio: "", contact: "", first_name: "", last_name: "", phone: "", clinic: "" });
+  const [profilePic, setProfilePic] = useState(null);
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/accounts/profile/" + id)
       .then((res) => {
         console.log(res.data);
-        setDentData(res.data.user);
-        setDentProf(res.data.profile);
+        setProfileData(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -46,26 +47,31 @@ function DentistProfile() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://127.0.0.1:8000/accounts/profile/certificate/" + id)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setCertificates([...response.data]);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/accounts/profile/certificate/" + id)
+      .then((response) => {
+        console.log(response.data);
+        setCertificates([...response.data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleCaseChange = (e) => {
     const file = e.target.files[0];
-    setCaseFile({ case: file, user: dentData.id });
+    setCaseFile({ case: file, user: profileData.id });
   };
 
   const handleCertificateChange = (e) => {
     const file = e.target.files[0];
-    setCertificateFile({ certificate: file, user: dentData.id });
+    setCertificateFile({ certificate: file, user: profileData.id });
+  };
+
+  const handlePicChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePic({ profile_picture: file });
   };
 
   const addCertificate = () => {
@@ -138,6 +144,47 @@ function DentistProfile() {
       });
   };
 
+  const editPic = (e) => {
+    e.preventDefault();
+    axios
+      .put("http://127.0.0.1:8000/accounts/profile/edit/pic/", profilePic, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setShowPic(false);
+        setProfileData({
+          ...profileData,
+          ...response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const deletePic = () => {
+    axios
+      .delete("http://127.0.0.1:8000/accounts/profile/delete/pic/", {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setProfileData({
+          ...profileData,
+          ...response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -146,19 +193,11 @@ function DentistProfile() {
     });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      profile_picture: file,
-    });
-  };
-
   const fetchExistingData = () => {
     axios
       .get("http://127.0.0.1:8000/accounts/profile/" + id)
       .then((response) => {
-        setFormData(response.data.profile);
+        setFormData(response.data);
         setShowModal(true);
       })
       .catch((error) => {
@@ -172,11 +211,14 @@ function DentistProfile() {
       .put("http://127.0.0.1:8000/accounts/profile/edit/", formData, {
         headers: {
           Authorization: "Bearer " + String(authTokens.access),
-          "content-type": "multipart/form-data",
         },
       })
       .then((response) => {
         console.log(response.data);
+        setProfileData({
+          ...profileData,
+          ...response.data,
+        });
         setShowModal(false);
       })
       .catch((error) => {
@@ -189,7 +231,37 @@ function DentistProfile() {
       <div className="container">
         <div className="row">
           <div id="sidebar--container">
-            {dentProf.profile_picture ? <img src={`http://localhost:8000${dentProf.profile_picture}`} alt="" width={"100%"} /> : <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" width={"100%"} />}
+            <Modal centered show={showPic} onHide={() => setShowPic(false)}>
+              <Modal.Body>
+                <Form.Control type="file" name="profile_picture" onChange={handlePicChange} />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowPic(false)}>
+                  Close
+                </Button>
+                <Button type="submit" variant="primary" onClick={editPic}>
+                  Save Changes
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+            <Container className="profile-picture-container">
+              {profileData.profile_picture ? (
+                <Image src={`http://localhost:8000${profileData.profile_picture}`} alt="" className="profile-picture" />
+              ) : (
+                <div className="user-icon">
+                  <FaUser />
+                </div>
+              )}
+              <div className="profile-picture-actions d-flex justify-content-between w-100 p-3 ">
+                <div className=" border-0 btn btn-outline-primary" onClick={() => setShowPic(true)}>
+                  <BiMessageSquareAdd />
+                </div>
+                <div className=" border-0 btn btn-outline-danger" onClick={() => deletePic()}>
+                  <FaTrash />
+                </div>
+              </div>
+            </Container>
             <ul className="list-group mb-4" id="sidebar-nav-1">
               <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 " href="#profile">
@@ -238,20 +310,21 @@ function DentistProfile() {
           <div id="profile--container">
             <div data-bs-spy="scroll" data-bs-target="#sidebar-nav-1" data-bs-smooth-scroll="true" className="scrollspy-example" tabIndex="0">
               <div id="profile">
-                <h2 className="text-primary" style={{ fontSize: "4rem" }}>
-                  {dentData.first_name} {dentData.last_name}
-                </h2>
-                <p>{dentProf.info}</p>
-                {
-                  <Link className="text-dark" to={`/update/${dentData.id}`}>
+                <div className=" d-flex justify-content-between align-items-center ">
+                  <h2 className="text-primary" style={{ fontSize: "4rem" }}>
+                    {profileData.first_name} {profileData.last_name}
+                  </h2>
+                  <Button className=" border-0 " variant="outline-primary" onClick={() => fetchExistingData()}>
                     <FontAwesomeIcon icon={faPen} size="lg" />
-                  </Link>
-                }
+                  </Button>
+                </div>
+                <hr />
+                <p>{profileData.info}</p>
               </div>
               <div id="About" className="mt-5">
                 <h2 className="text-primary">Biography</h2>
                 <hr />
-                <p>{dentProf.bio}</p>
+                <p>{profileData.bio}</p>
               </div>
               <div id="Certificates" className="mt-5">
                 <div className=" d-flex justify-content-between align-items-center ">
@@ -265,11 +338,11 @@ function DentistProfile() {
                 <div className="container">
                   <div className="row">
                     {certificates.map((cer, index) => (
-                      <div className="col-4 position-relative ">
+                      <div className="col-4 position-relative " key={index}>
                         <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
                           <FaTrash />
                         </Button>
-                        <img src={`http://localhost:8000${cer.certificate}`} alt="" key={index} width="100%" />
+                        <img src={`http://localhost:8000${cer.certificate}`} alt="" width="100%" />
                       </div>
                     ))}
                     <Modal centered show={showCertificate} onHide={() => setShowCertificate(false)}>
@@ -300,11 +373,11 @@ function DentistProfile() {
                 <div className="container">
                   <div className="row">
                     {cases.map((cas, index) => (
-                      <div className="col-4 position-relative ">
+                      <div className="col-4 position-relative " key={index}>
                         <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
                           <FaTrash />
                         </Button>
-                        <img src={`http://localhost:8000${cas.case}`} alt="" key={index} width="100%" />
+                        <img src={`http://localhost:8000${cas.case}`} alt="" width="100%" />
                       </div>
                     ))}
                     <Modal centered show={showCase} onHide={() => setShowCase(false)}>
@@ -327,7 +400,7 @@ function DentistProfile() {
                 <h2 className="text-primary">Contacts</h2>
                 <hr />
                 <p>
-                  {dentProf.contact}
+                  {profileData.contact}
                   {/* <FontAwesomeIcon icon={faWhatsapp} size="2xl" /> */}
                   {/* <FontAwesomeIcon icon={faFacebook} size="2xl" /> */}
                   {/* <FontAwesomeIcon icon={faInstagram} size="2xl" /> */}
@@ -368,8 +441,20 @@ function DentistProfile() {
               <Form.Control type="text" name="contact" value={formData.contact} onChange={handleInputChange} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Profile Picture</Form.Label>
-              <Form.Control type="file" name="profile_picture" onChange={handleFileChange} />
+              <Form.Label>First Name</Form.Label>
+              <Form.Control type="text" name="first_name" value={formData.first_name} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control type="text" name="last_name" value={formData.last_name} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Phone</Form.Label>
+              <Form.Control type="text" name="phone" value={formData.phone} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Clinic</Form.Label>
+              <Form.Control type="text" name="clinic" value={formData.clinic} onChange={handleInputChange} />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
@@ -377,9 +462,6 @@ function DentistProfile() {
           </Modal.Footer>
         </Form>
       </Modal>
-      <Button className="btn btn-primary" onClick={() => fetchExistingData()}>
-        Edit Profile
-      </Button>
     </>
   );
 }
