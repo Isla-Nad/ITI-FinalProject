@@ -9,9 +9,11 @@ import CommentsAndRating from "./CommentsAndRating";
 import { Button, Container, Form, Image, Modal } from "react-bootstrap";
 import { FaTrash, FaUser } from "react-icons/fa";
 import { BiMessageSquareAdd } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 function Profile() {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
+  const currentUser = useSelector((state) => state.user.user);
   const { id } = useParams();
   const [profileData, setProfileData] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -84,7 +86,7 @@ function Profile() {
       })
       .then((response) => {
         console.log(response.data);
-        setCertificates([...cases, response.data]);
+        setCertificates([...certificates, response.data]);
         setShowCertificate(false);
       })
       .catch((error) => {
@@ -253,14 +255,16 @@ function Profile() {
                   <FaUser />
                 </div>
               )}
-              <div className="profile-picture-actions d-flex justify-content-between w-100 p-3 ">
-                <div className=" border-0 btn btn-outline-primary" onClick={() => setShowPic(true)}>
-                  <BiMessageSquareAdd />
+              {profileData.id === currentUser.id && (
+                <div className="profile-picture-actions d-flex justify-content-between w-100 p-3 ">
+                  <div className=" border-0 btn btn-outline-primary" onClick={() => setShowPic(true)}>
+                    <BiMessageSquareAdd />
+                  </div>
+                  <div className=" border-0 btn btn-outline-danger" onClick={() => deletePic()}>
+                    <FaTrash />
+                  </div>
                 </div>
-                <div className=" border-0 btn btn-outline-danger" onClick={() => deletePic()}>
-                  <FaTrash />
-                </div>
-              </div>
+              )}
             </Container>
             <ul className="list-group mb-4" id="sidebar-nav-1">
               <li className="list-group-item list-group-item-primary sidebar--list">
@@ -319,9 +323,11 @@ function Profile() {
                   <h2 className="text-primary" style={{ fontSize: "4rem" }}>
                     {profileData.first_name} {profileData.last_name}
                   </h2>
-                  <Button className=" border-0 " variant="outline-primary" onClick={() => fetchExistingData()}>
-                    <FontAwesomeIcon icon={faPen} size="lg" />
-                  </Button>
+                  {profileData.id === currentUser.id && (
+                    <Button className=" border-0 " variant="outline-primary" onClick={() => fetchExistingData()}>
+                      <FontAwesomeIcon icon={faPen} size="lg" />
+                    </Button>
+                  )}
                 </div>
                 <hr />
                 <p>{profileData.info}</p>
@@ -346,9 +352,11 @@ function Profile() {
                   <div id="Certificates" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
                       <h2 className="text-primary">Certificates</h2>
-                      <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
-                        <BiMessageSquareAdd />
-                      </Button>
+                      {profileData.id === currentUser.id && (
+                        <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
+                          <BiMessageSquareAdd />
+                        </Button>
+                      )}
                     </div>
 
                     <hr />
@@ -356,9 +364,12 @@ function Profile() {
                       <div className="row">
                         {certificates.map((cer, index) => (
                           <div className="col-4 position-relative " key={index}>
-                            <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
-                              <FaTrash />
-                            </Button>
+                            {profileData.id === currentUser.id && (
+                              <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
+                                <FaTrash />
+                              </Button>
+                            )}
+
                             <img src={`http://localhost:8000${cer.certificate}`} alt="" width="100%" />
                           </div>
                         ))}
@@ -381,9 +392,11 @@ function Profile() {
                   <div id="Cases" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
                       <h2 className="text-primary">Cases</h2>
-                      <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
-                        <BiMessageSquareAdd />
-                      </Button>
+                      {profileData.id === currentUser.id && (
+                        <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
+                          <BiMessageSquareAdd />
+                        </Button>
+                      )}
                     </div>
 
                     <hr />
@@ -391,9 +404,11 @@ function Profile() {
                       <div className="row">
                         {cases.map((cas, index) => (
                           <div className="col-4 position-relative " key={index}>
-                            <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
-                              <FaTrash />
-                            </Button>
+                            {profileData.id === currentUser.id && (
+                              <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
+                                <FaTrash />
+                              </Button>
+                            )}
                             <img src={`http://localhost:8000${cas.case}`} alt="" width="100%" />
                           </div>
                         ))}
@@ -422,7 +437,7 @@ function Profile() {
                   <div id="Rate" className="mt-5">
                     <h2 className="text-primary">Ratings & Reviews</h2>
                     <hr />
-                    <CommentsAndRating />
+                    <CommentsAndRating reviewed_user={id} />
                   </div>
                 </>
               )}

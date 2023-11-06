@@ -2,9 +2,9 @@ const INITIAL_VALUE = {
   user: {},
 };
 
-export default function User(state = INITIAL_VALUE, action) {
+export default function currentUserReducer(state = INITIAL_VALUE, action) {
   switch (action.type) {
-    case "GET_USER":
+    case "CURRENT_USER":
       return {
         ...state,
         user: action.payload,

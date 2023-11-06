@@ -1,24 +1,42 @@
-import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaEdit, FaStar, FaTrash, FaUser } from "react-icons/fa";
 import { Container, Col, Button, Form, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const colors = {
   orange: "#FFBA5A",
   gray: "#a9a9a9",
 };
 
-function CommentsAndRating() {
+function CommentsAndRating(props) {
+  const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
+  const currentUser = useSelector((state) => state.user.user);
   const [show, setShow] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverValue, setHoverValue] = useState(0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState({ body: "" });
+  const [updateComment, setUpdateComment] = useState({});
   const [error, setError] = useState("");
   const [updateError, setUpdateError] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  const handleShowRemove = () => setShowRemove(true);
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/community/reviews/" + props.reviewed_user)
+      .then((res) => {
+        console.log(res.data);
+        setComments(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const handleShowRemove = (id) => {
+    setShowRemove(true);
+    setSelectedIndex(id);
+  };
   const handleCloseRemove = () => setShowRemove(false);
 
   const handleClose = () => {
@@ -27,10 +45,9 @@ function CommentsAndRating() {
     setNewComment({ body: "" });
   };
 
-  const handleShow = (index, body) => {
-    setSelectedIndex(index);
-    setNewComment({ body });
-    setRating(comments[index].rating);
+  const handleShowUpdate = (comment) => {
+    setUpdateComment(comment);
+    setRating(comment.rating);
     setShow(true);
   };
 
@@ -48,43 +65,78 @@ function CommentsAndRating() {
       return;
     }
 
-    // Get the current date and time
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
-
     const newCommentWithDate = {
-      body: newComment.body,
-      rating,
-      date: formattedDate,
+      reviewed_user: props.reviewed_user,
+      reviewing_user: currentUser.id,
+      comment: newComment.body,
+      rating: rating,
     };
+    axios
+      .post("http://127.0.0.1:8000/community/reviews/add/", newCommentWithDate, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setComments([res.data, ...comments]);
+      })
+      .catch((err) => console.log(err));
 
-    setComments([newCommentWithDate, ...comments]); // Add the new comment at the beginning of the array
     setNewComment({ body: "" });
     setRating(0);
     setError("");
   };
 
   const handleRemoveComment = () => {
-    const updatedComments = [...comments];
-    updatedComments.splice(selectedIndex, 1);
-    setComments(updatedComments);
+    axios
+      .delete("http://127.0.0.1:8000/community/reviews/delete/" + selectedIndex, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const filteredcomments = comments.filter((comment) => comment.review.id !== selectedIndex);
+        setComments(filteredcomments);
+      })
+      .catch((err) => {
+        console.log(err.response.data.detail);
+        setError(err.response.data.detail);
+      });
     setShowRemove(false);
     handleClose();
   };
 
   const handleAddUpdate = () => {
-    if (rating === 0 || newComment.body.trim() === "") {
+    if (rating === 0 || updateComment.comment.trim() === "") {
       setUpdateError("Please provide a rating and a comment before submitting.");
       return;
     }
-
-    const updatedComments = [...comments];
-    updatedComments[selectedIndex] = {
-      body: newComment.body,
-      rating,
-      date: comments[selectedIndex].date,
+    const newCommentWithDate = {
+      reviewed_user: props.reviewed_user,
+      reviewing_user: currentUser.id,
+      comment: updateComment.comment,
+      rating: rating,
     };
-    setComments(updatedComments);
+    axios
+      .put(`http://127.0.0.1:8000/community/reviews/edit/${updateComment.id}`, newCommentWithDate, {
+        headers: {
+          Authorization: `Bearer ${authTokens.access}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const updatedComments = comments.map((comment) => {
+          if (comment.review.id === updateComment.id) {
+            return res.data;
+          }
+          return comment;
+        });
+        setComments(updatedComments);
+      })
+      .catch((err) => console.log(err));
+
     setNewComment({ body: "" });
     setRating(0);
     setUpdateError("");
@@ -108,29 +160,44 @@ function CommentsAndRating() {
           </div>
         </div>
         <h5 className="text-danger">{error}</h5>
+
         <Col>
           <ListGroup style={{ marginTop: "20px" }}>
             {comments.map((comment, index) => (
-              <ListGroupItem key={index} className="mb-2">
-                <small>{comment.date}</small>
-                <h2>
-                  {Array(comment.rating)
+              <ListGroupItem key={index} className="mb-2 ">
+                <div className="list-group bg-dark-subtle shadow">
+                  <div className=" list-group-item w-100 d-flex gap-2 align-items-center ">
+                    <FaUser className="" />
+                    <h4>{comment.reviewing_user.first_name}</h4>
+                  </div>
+                  <small className="text-muted">{new Date(comment.review.created_at).toDateString()}</small>
+                </div>
+
+                <div className="star-rating mt-2">
+                  {Array(comment.review.rating)
                     .fill()
                     .map((_, i) => (
-                      <FaStar key={i} color={colors.orange} />
+                      <FaStar key={i} color="gold" />
                     ))}
-                </h2>
-                <p>{comment.body}</p>
-                <Button variant="danger" onClick={() => handleShowRemove(index)}>
-                  Remove
-                </Button>
-                <button className="btn btn-warning" style={{ marginLeft: "10px" }} onClick={() => handleShow(index, comment.body)}>
-                  Edit
-                </button>
+                </div>
+                <p className="mt-2">{comment.review.comment}</p>
+                <div className="d-flex justify-content-end">
+                  {comment.review.reviewing_user === currentUser.id && (
+                    <>
+                      <Button variant="outline-danger" className=" border-0 " size="sm" onClick={() => handleShowRemove(comment.review.id)}>
+                        <FaTrash />
+                      </Button>
+                      <Button variant="outline-warning" size="sm" className="ml-2 border-0" onClick={() => handleShowUpdate(comment.review)}>
+                        <FaEdit />
+                      </Button>
+                    </>
+                  )}
+                </div>
               </ListGroupItem>
             ))}
           </ListGroup>
         </Col>
+
         <Modal show={showRemove} onHide={handleCloseRemove}>
           <Modal.Header closeButton>
             <Modal.Title>Remove</Modal.Title>
@@ -140,7 +207,7 @@ function CommentsAndRating() {
             <Button variant="secondary" onClick={handleCloseRemove}>
               Close
             </Button>
-            <Button variant="primary" onClick={handleRemoveComment}>
+            <Button variant="primary" onClick={() => handleRemoveComment()}>
               Confirm
             </Button>
           </Modal.Footer>
@@ -152,7 +219,7 @@ function CommentsAndRating() {
           </Modal.Header>
           <Modal.Body>
             <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
-              <Form.Control as="textarea" placeholder="What is Your new Comment" name="Textcomment" onChange={(e) => setNewComment({ ...newComment, body: e.target.value })} value={newComment.body} />
+              <Form.Control as="textarea" placeholder="What is Your new Comment" name="Textcomment" onChange={(e) => setUpdateComment({ ...updateComment, comment: e.target.value })} value={updateComment.comment} />
               <div className="text-center">
                 {Array(5)
                   .fill()

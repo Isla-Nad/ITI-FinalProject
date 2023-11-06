@@ -5,10 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Dropdown, FloatingLabel, Form, Overlay, Popover } from "react-bootstrap";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import { getUser } from "../store/actions/GetUser";
+import { setCurrentUser } from "../store/actions/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
 import ToggleTheme from "./ToggleTheme";
-import { jwtDecode } from "jwt-decode";
 
 function Nav() {
   const currentUser = useSelector((state) => state.user.user);
@@ -93,6 +92,7 @@ function Nav() {
           })
           .then((response) => {
             setLoggedInUser(response.data.user);
+            dispatch(setCurrentUser(response.data.user));
             console.log(response.data.user);
           })
           .catch((error) => {
