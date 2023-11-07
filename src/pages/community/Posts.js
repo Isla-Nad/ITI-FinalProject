@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Button, Card, Container } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import CommunityForm from "./CommunityForm";
 import { CgProfile } from "react-icons/cg";
 import "./Posts.css";
-import ConfirmationModal from "../medicalHistory/ConfirmationModal";
 import Comments from "./Comments";
 import { AiFillLike } from "react-icons/ai";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);

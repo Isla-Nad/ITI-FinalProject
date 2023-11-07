@@ -1,17 +1,17 @@
 import { Modal, Button } from "react-bootstrap";
 
-function ConfirmationModal({ show, onHide, onConfirm, text }) {
+function ConfirmationModal(props) {
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Removal</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to remove this {text}?</Modal.Body>
+      <Modal.Body className="text-danger">{props.text}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+        <Button variant="secondary" onClick={props.onHide}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={onConfirm}>
+        <Button variant="danger" onClick={props.onConfirm}>
           Confirm
         </Button>
       </Modal.Footer>

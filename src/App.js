@@ -6,9 +6,7 @@ import Footer from "./components/Footer";
 import Clinics from "./pages/clinics/Clinics";
 import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
-import Register from "./pages/log&res/Register";
 import Home from "./pages/home/Home";
-import Login from "./pages/log&res/Login";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import ContactUs from "./pages/contactUs/contact";
 import Profile from "./pages/Profile/Profile";
@@ -19,8 +17,6 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/clinics" element={<Clinics />} />
         <Route path="/posts" element={<Posts />} />

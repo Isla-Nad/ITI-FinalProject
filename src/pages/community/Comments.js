@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Button, Card, FloatingLabel, Form, InputGroup, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import ConfirmationModal from "../medicalHistory/ConfirmationModal";
 import { CgProfile } from "react-icons/cg";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 const Comments = () => {
   const [formData, setFormData] = useState("");
@@ -83,7 +83,7 @@ const Comments = () => {
         </InputGroup>
       </Form>
 
-      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="comment" />
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="Are you sure you want to remove this comment?" />
     </>
   );
 };

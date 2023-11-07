@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Container, Form, Modal } from "react-bootstrap";
 
 const CommunityForm = (props) => {

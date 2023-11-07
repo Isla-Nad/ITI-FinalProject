@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MedicalHistoryForm from "./MedicalHistoryForm";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
 import "./MedicalHistory.css";
-import ConfirmationModal from "./ConfirmationModal";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 const MedicalHistory = () => {
   const [showForm, setShowForm] = useState(false);
@@ -76,10 +76,6 @@ const MedicalHistory = () => {
     setSelectedIndex(null);
   };
 
-  // useEffect(() => {
-  //   localStorage.setItem("HistoryData", JSON.stringify(historyData));
-  // }, [historyData]);
-
   return (
     <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
       <h2 className="header text-center">Dental History</h2>
@@ -126,7 +122,7 @@ const MedicalHistory = () => {
         </Button>
       )}
       {selectedPatientData && <PatientDataPopup patientData={selectedPatientData} show={selectedPatientData !== null} onHide={closePatientDataPopup} />}
-      {showConfirmationModal && <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} />}
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="Are you sure you want to remove this history?" />
     </div>
   );
 };

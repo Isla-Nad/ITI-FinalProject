@@ -12,12 +12,17 @@ import { BiMessageSquareAdd } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
 import ToastCom from "../../components/ToastCom";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 function Profile() {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
   const currentUser = useSelector((state) => state.user.user);
   const { id } = useParams();
   const [profileData, setProfileData] = useState({});
+  const [showConfirmationCase, setShowConfirmationCase] = useState(false);
+  const [showConfirmationCertificate, setShowConfirmationCertificate] = useState(false);
+  const [showConfirmationPic, setShowConfirmationPic] = useState(false);
+  const [selectedId, setSelectedId] = useState();
   const [showModal, setShowModal] = useState(false);
   const [showPic, setShowPic] = useState(false);
   const [showCase, setShowCase] = useState(false);
@@ -113,15 +118,16 @@ function Profile() {
       });
   };
 
-  const removeCertificate = (certificate_id) => {
+  const removeCertificate = () => {
     axios
-      .delete("http://127.0.0.1:8000/accounts/profile/certificate/delete/" + certificate_id, {
+      .delete("http://127.0.0.1:8000/accounts/profile/certificate/delete/" + selectedId, {
         headers: {
           Authorization: "Bearer " + String(authTokens.access),
         },
       })
       .then((response) => {
         dispatch(setSignal(!signal));
+        setShowConfirmationCertificate(false);
       })
       .catch((error) => {
         console.log(error);
@@ -145,15 +151,16 @@ function Profile() {
       });
   };
 
-  const removeCase = (case_id) => {
+  const removeCase = () => {
     axios
-      .delete("http://127.0.0.1:8000/accounts/profile/case/delete/" + case_id, {
+      .delete("http://127.0.0.1:8000/accounts/profile/case/delete/" + selectedId, {
         headers: {
           Authorization: "Bearer " + String(authTokens.access),
         },
       })
       .then((response) => {
         dispatch(setSignal(!signal));
+        setShowConfirmationCase(false);
       })
       .catch((error) => {
         console.log(error);
@@ -187,6 +194,7 @@ function Profile() {
       })
       .then((response) => {
         dispatch(setSignal(!signal));
+        setShowConfirmationPic(false);
       })
       .catch((error) => {
         console.log(error);
@@ -224,6 +232,9 @@ function Profile() {
         <div className="row">
           <div id="sidebar--container">
             <Modal centered show={showPic} onHide={() => setShowPic(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add a picture</Modal.Title>
+              </Modal.Header>
               <Modal.Body>
                 <Form.Control type="file" name="profile_picture" onChange={handlePicChange} />
               </Modal.Body>
@@ -250,7 +261,7 @@ function Profile() {
                   <div className=" border-0 btn btn-outline-primary" onClick={() => setShowPic(true)}>
                     <BiMessageSquareAdd />
                   </div>
-                  <div className=" border-0 btn btn-outline-danger" onClick={() => deletePic()}>
+                  <div className=" border-0 btn btn-outline-danger" onClick={() => setShowConfirmationPic(true)}>
                     <FaTrash />
                   </div>
                 </div>
@@ -365,7 +376,14 @@ function Profile() {
                         {certificates.map((cer, index) => (
                           <div className="col-4 position-relative " key={index}>
                             {profileData.id === currentUser.id && (
-                              <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCertificate(cer.id)}>
+                              <Button
+                                className="position-absolute end-0 border-0 "
+                                variant="outline-danger"
+                                onClick={() => {
+                                  setSelectedId(cer.id);
+                                  setShowConfirmationCertificate(true);
+                                }}
+                              >
                                 <FaTrash />
                               </Button>
                             )}
@@ -408,7 +426,14 @@ function Profile() {
                         {cases.map((cas, index) => (
                           <div className="col-4 position-relative " key={index}>
                             {profileData.id === currentUser.id && (
-                              <Button className="position-absolute end-0 border-0 " variant="outline-danger" onClick={() => removeCase(cas.id)}>
+                              <Button
+                                className="position-absolute end-0 border-0 "
+                                variant="outline-danger"
+                                onClick={() => {
+                                  setSelectedId(cas.id);
+                                  setShowConfirmationCase(true);
+                                }}
+                              >
                                 <FaTrash />
                               </Button>
                             )}
@@ -416,6 +441,9 @@ function Profile() {
                           </div>
                         ))}
                         <Modal centered show={showCase} onHide={() => setShowCase(false)}>
+                          <Modal.Header closeButton>
+                            <Modal.Title>Add a Case</Modal.Title>
+                          </Modal.Header>
                           <Modal.Body>
                             <Form.Control type="file" name="case" onChange={handleCaseChange} />
                           </Modal.Body>
@@ -526,6 +554,10 @@ function Profile() {
       </Modal>
 
       <ToastCom delay={3000} showToast={showToast} setShowToast={() => setShowToast(false)} message={errorMessage} />
+
+      <ConfirmationModal show={showConfirmationCase} onHide={() => setShowConfirmationCase(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCase} />
+      <ConfirmationModal show={showConfirmationCertificate} onHide={() => setShowConfirmationCertificate(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCertificate} />
+      <ConfirmationModal show={showConfirmationPic} onHide={() => setShowConfirmationPic(false)} text="Are you sure you want to remove your profile picture?" onConfirm={deletePic} />
     </div>
   );
 }

@@ -18,12 +18,10 @@
   margin-top: 10px;
   transition: all 0.9s;
 }
-
 .profile-picture-container:hover .profile-picture-actions {
   position: absolute;
   bottom: 0;
 }
-
 .profile-picture-actions {
   position: absolute;
   bottom: -60%;
@@ -33,12 +31,10 @@
   max-width: 100%;
   max-height: 100%;
 }
-
 .user-icon {
   color: #333;
   font-size: 9rem;
 }
-
 .sidebar--list {
   width: 100%;
 }

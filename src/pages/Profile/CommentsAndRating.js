@@ -151,9 +151,9 @@ function CommentsAndRating(props) {
                 <FaStar key={index} size={25} style={{ marginRight: "10px", cursor: "pointer" }} color={hoverValue >= index + 1 || rating >= index + 1 ? colors.orange : colors.gray} onClick={() => handleRatingClick(index + 1)} onMouseEnter={() => handleRatingHover(index + 1)} onMouseLeave={() => handleRatingHover(0)} />
               ))}
           </div>
-          <div onClick={handleAddComment} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
+          <Button onClick={handleAddComment} className=" w-100  mt-2" variant="outline-dark">
             Add Comment
-          </div>
+          </Button>
         </div>
         <h5 className="text-danger">{error}</h5>
 

@@ -6,6 +6,7 @@ import emailjs from "@emailjs/browser";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../../store/actions/Signal";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const AppointmentPicker = (props) => {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -82,12 +83,12 @@ const AppointmentPicker = (props) => {
       .then((response) => {
         console.log(response.data);
         dispatch(setSignal(!signal));
+        setShowConfirmationModal(false);
       })
       .catch((error) => {
         console.log(error.response.data.non_field_errors[0]);
         setErrorMessage(error.response.data.non_field_errors[0]);
       });
-    setShowConfirmationModal(false);
   };
 
   const sendEmail = (from_name, to_name, message, to_email) => {
@@ -154,8 +155,7 @@ const AppointmentPicker = (props) => {
                   dispatch(setSignal(!signal));
                 })
                 .catch((error) => {
-                  console.log(error.response.data.non_field_errors[0]);
-                  setErrorMessage(error.response.data.non_field_errors[0]);
+                  console.log(error);
                 });
             }
           }
@@ -260,24 +260,16 @@ const AppointmentPicker = (props) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Removal</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
+      <ConfirmationModal
+        show={showConfirmationModal}
+        onHide={() => setShowConfirmationModal(false)}
+        onConfirm={() => removeAppointment()}
+        text={
+          <>
             Are you sure you want to remove the appointment on <span className="text-info"> {selectedAppointmentToRemove?.appointment_date}</span> from <span className="text-warning">{selectedAppointmentToRemove?.start_time}</span> to <span className="text-warning">{selectedAppointmentToRemove?.end_time}</span>?
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={() => removeAppointment()}>
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </>
+        }
+      />
     </Container>
   );
 };
