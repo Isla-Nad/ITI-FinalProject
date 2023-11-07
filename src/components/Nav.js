@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import { setCurrentUser } from "../store/actions/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
 import ToggleTheme from "./ToggleTheme";
+import { setSignal } from "../store/actions/Signal";
+import ToastCom from "./ToastCom";
 
 function Nav() {
   const currentUser = useSelector((state) => state.user.user);
@@ -21,7 +23,10 @@ function Nav() {
   const [target, setTarget] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const signal = useSelector((state) => state.signal);
   const dispatch = useDispatch();
+  const [showToast, setShowToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
@@ -48,6 +53,7 @@ function Nav() {
         setShowRegModal(false);
       })
       .catch((error) => {
+        setShowToast(true);
         console.error(error);
       });
   };
@@ -70,7 +76,9 @@ function Nav() {
       })
       .catch((error) => {
         console.log(error);
+        setErrorMessage(error.response.data.detail);
         setErrorOverlay({ show: true, message: "Incorrect email or password." });
+        setShowToast(true);
       });
   };
 
@@ -173,7 +181,15 @@ function Nav() {
                         Hi, {loggedInUser.is_doctor && "Dr."}
                         {loggedInUser.first_name}!
                       </h3>
-                      <Form.Control type="button" value="Your profile" className="mt-3 btn btn-outline-info" onClick={() => navigate(`/profile/${loggedInUser.id}`)} />
+                      <Form.Control
+                        type="button"
+                        value="Your profile"
+                        className="mt-3 btn btn-outline-info"
+                        onClick={() => {
+                          navigate(`/profile/${loggedInUser.id}`);
+                          dispatch(setSignal(!signal));
+                        }}
+                      />
                       <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
                     </>
                   ) : (
@@ -217,6 +233,7 @@ function Nav() {
           </div>
         </div>
       </nav>
+      <ToastCom delay={3000} showToast={showToast} setShowToast={() => setShowToast(false)} message={errorMessage} className={"text-danger"} />
     </>
   );
 }

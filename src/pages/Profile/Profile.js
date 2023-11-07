@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen } from "@fortawesome/free-solid-svg-icons";
 import "./Profile.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AppointmentPicker from "./appointments/AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
-import { Button, Container, Form, Image, Modal } from "react-bootstrap";
+import { Button, Card, Container, Form, Image, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { FaTrash, FaUser } from "react-icons/fa";
 import { BiMessageSquareAdd } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSignal } from "../../store/actions/Signal";
+import ToastCom from "../../components/ToastCom";
 
 function Profile() {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -26,6 +28,11 @@ function Profile() {
   const [certificates, setCertificates] = useState([]);
   const [formData, setFormData] = useState({ info: "", bio: "", contact: "", first_name: "", last_name: "", phone: "", clinic: "" });
   const [profilePic, setProfilePic] = useState(null);
+  const signal = useSelector((state) => state.signal);
+  const dispatch = useDispatch();
+  const [bookedAppointments, setBookedAppointments] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     axios
@@ -33,9 +40,10 @@ function Profile() {
       .then((res) => {
         console.log(res.data);
         setProfileData(res.data);
+        setFormData(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [signal]);
 
   useEffect(() => {
     axios
@@ -47,7 +55,7 @@ function Profile() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [signal]);
 
   useEffect(() => {
     axios
@@ -59,7 +67,19 @@ function Profile() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [signal]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/appointments/booked/" + id)
+      .then((response) => {
+        console.log(response.data);
+        setBookedAppointments([...response.data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [signal]);
 
   const handleCaseChange = (e) => {
     const file = e.target.files[0];
@@ -85,8 +105,7 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setCertificates([...certificates, response.data]);
+        dispatch(setSignal(!signal));
         setShowCertificate(false);
       })
       .catch((error) => {
@@ -102,9 +121,7 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        const filteredcertificates = certificates.filter((cer) => cer.id !== certificate_id);
-        setCertificates(filteredcertificates);
+        dispatch(setSignal(!signal));
       })
       .catch((error) => {
         console.log(error);
@@ -120,8 +137,7 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setCases([...cases, response.data]);
+        dispatch(setSignal(!signal));
         setShowCase(false);
       })
       .catch((error) => {
@@ -137,9 +153,7 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        const filteredCase = cases.filter((cas) => cas.id !== case_id);
-        setCases(filteredCase);
+        dispatch(setSignal(!signal));
       })
       .catch((error) => {
         console.log(error);
@@ -156,12 +170,8 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
+        dispatch(setSignal(!signal));
         setShowPic(false);
-        setProfileData({
-          ...profileData,
-          ...response.data,
-        });
       })
       .catch((error) => {
         console.log(error);
@@ -176,18 +186,14 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setProfileData({
-          ...profileData,
-          ...response.data,
-        });
+        dispatch(setSignal(!signal));
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleInputChange = (e) => {
+  const handleEditChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -195,19 +201,7 @@ function Profile() {
     });
   };
 
-  const fetchExistingData = () => {
-    axios
-      .get("http://127.0.0.1:8000/accounts/profile/" + id)
-      .then((response) => {
-        setFormData(response.data);
-        setShowModal(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const handleSubmit = (e) => {
+  const handleEditSubmit = (e) => {
     e.preventDefault();
     axios
       .put("http://127.0.0.1:8000/accounts/profile/edit/", formData, {
@@ -216,11 +210,7 @@ function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setProfileData({
-          ...profileData,
-          ...response.data,
-        });
+        dispatch(setSignal(!signal));
         setShowModal(false);
       })
       .catch((error) => {
@@ -314,6 +304,16 @@ function Profile() {
                   </li>
                 </>
               )}
+              {profileData.is_doctor === false && (
+                <>
+                  <li className="list-group-item list-group-item-primary sidebar--list">
+                    <a className="nav-link ms-3 my-1 " href="#Rate">
+                      <FontAwesomeIcon icon={faBookMedical} size="2xl" />
+                      <span className="ms-4 sidebar--text">Booked Appointments</span>
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
           <div id="profile--container">
@@ -324,7 +324,7 @@ function Profile() {
                     {profileData.first_name} {profileData.last_name}
                   </h2>
                   {profileData.id === currentUser.id && (
-                    <Button className=" border-0 " variant="outline-primary" onClick={() => fetchExistingData()}>
+                    <Button className=" border-0 " variant="outline-primary" onClick={() => setShowModal(true)}>
                       <FontAwesomeIcon icon={faPen} size="lg" />
                     </Button>
                   )}
@@ -374,6 +374,9 @@ function Profile() {
                           </div>
                         ))}
                         <Modal centered show={showCertificate} onHide={() => setShowCertificate(false)}>
+                          <Modal.Header closeButton>
+                            <Modal.Title>Add a Certificate</Modal.Title>
+                          </Modal.Header>
                           <Modal.Body>
                             <Form.Control type="file" name="certificate" onChange={handleCertificateChange} />
                           </Modal.Body>
@@ -432,7 +435,7 @@ function Profile() {
                   <div id="Appointments" className="mt-5">
                     <h2 className="text-primary">Appointments</h2>
                     <hr />
-                    <AppointmentPicker id={id} />
+                    <AppointmentPicker id={id} doctor={id} />
                   </div>
                   <div id="Rate" className="mt-5">
                     <h2 className="text-primary">Ratings & Reviews</h2>
@@ -440,6 +443,39 @@ function Profile() {
                     <CommentsAndRating reviewed_user={id} />
                   </div>
                 </>
+              )}
+              {profileData.is_doctor === false && (
+                <div id="booked-appointments" className="mt-5">
+                  <h2 className="text-primary">Booked Appointments</h2>
+                  <hr />
+                  <div className="d-flex gap-2 flex-wrap flex-lg-nowrap">
+                    {bookedAppointments.map((appointment, index) => (
+                      <Card key={index}>
+                        <Card.Body>
+                          <Card.Title className="text-center">
+                            Appointment Date: <p>{appointment.appointment_date}</p>
+                          </Card.Title>
+                          <ListGroup>
+                            {appointment.appointments.map((app) => (
+                              <ListGroup.Item action variant="primary" key={app.id}>
+                                <p>Start Time: {app.start_time}</p>
+                                <p>End Time: {app.end_time}</p>
+                                <hr />
+                              </ListGroup.Item>
+                            ))}
+                          </ListGroup>
+                        </Card.Body>
+
+                        <Card.Footer>
+                          <h4 className="text-center">
+                            Doctor: {appointment.doctor.first_name} {appointment.doctor.last_name}
+                          </h4>
+                        </Card.Footer>
+                      </Card>
+                    ))}
+                  </div>
+                  <hr />
+                </div>
               )}
             </div>
           </div>
@@ -450,36 +486,36 @@ function Profile() {
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleEditSubmit}>
           <Modal.Body>
             <Form.Group>
               <Form.Label>Info</Form.Label>
-              <Form.Control type="text" name="info" value={formData.info} onChange={handleInputChange} />
+              <Form.Control type="text" name="info" value={formData.info} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
               <Form.Label>Bio</Form.Label>
-              <Form.Control as="textarea" name="bio" value={formData.bio} onChange={handleInputChange} />
+              <Form.Control as="textarea" name="bio" value={formData.bio} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
               <Form.Label>Contact</Form.Label>
-              <Form.Control type="text" name="contact" value={formData.contact} onChange={handleInputChange} />
+              <Form.Control type="text" name="contact" value={formData.contact} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
               <Form.Label>First Name</Form.Label>
-              <Form.Control type="text" name="first_name" value={formData.first_name} onChange={handleInputChange} />
+              <Form.Control type="text" name="first_name" value={formData.first_name} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
               <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" name="last_name" value={formData.last_name} onChange={handleInputChange} />
+              <Form.Control type="text" name="last_name" value={formData.last_name} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
               <Form.Label>Phone</Form.Label>
-              <Form.Control type="text" name="phone" value={formData.phone} onChange={handleInputChange} />
+              <Form.Control type="text" name="phone" value={formData.phone} onChange={handleEditChange} />
             </Form.Group>
             {profileData.is_doctor && (
               <Form.Group>
                 <Form.Label>Clinic</Form.Label>
-                <Form.Control type="text" name="clinic" value={formData.clinic} onChange={handleInputChange} />
+                <Form.Control type="text" name="clinic" value={formData.clinic} onChange={handleEditChange} />
               </Form.Group>
             )}
           </Modal.Body>
@@ -488,6 +524,8 @@ function Profile() {
           </Modal.Footer>
         </Form>
       </Modal>
+
+      <ToastCom delay={3000} showToast={showToast} setShowToast={() => setShowToast(false)} message={errorMessage} />
     </div>
   );
 }

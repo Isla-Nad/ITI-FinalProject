@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #cfcfcfef;
+  background-color: rgb(var(--bg-secondary));
   border-radius: 2rem;
   opacity: 0.75;
   height: 250px;
@@ -58,9 +58,7 @@
     margin-bottom: 0;
     width: 100px;
   }
-
   .user-icon {
-    color: #333;
     font-size: 2rem;
   }
   #profile--container {

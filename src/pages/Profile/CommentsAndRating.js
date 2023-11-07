@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { FaEdit, FaStar, FaTrash, FaUser } from "react-icons/fa";
 import { Container, Col, Button, Form, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSignal } from "../../store/actions/Signal";
 
 const colors = {
   orange: "#FFBA5A",
@@ -22,6 +23,8 @@ function CommentsAndRating(props) {
   const [error, setError] = useState("");
   const [updateError, setUpdateError] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const signal = useSelector((state) => state.signal);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -31,7 +34,7 @@ function CommentsAndRating(props) {
         setComments(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [signal]);
 
   const handleShowRemove = (id) => {
     setShowRemove(true);
@@ -79,7 +82,7 @@ function CommentsAndRating(props) {
       })
       .then((res) => {
         console.log(res.data);
-        setComments([res.data, ...comments]);
+        dispatch(setSignal(!signal));
       })
       .catch((err) => console.log(err));
 
@@ -97,8 +100,7 @@ function CommentsAndRating(props) {
       })
       .then((res) => {
         console.log(res.data);
-        const filteredcomments = comments.filter((comment) => comment.review.id !== selectedIndex);
-        setComments(filteredcomments);
+        dispatch(setSignal(!signal));
       })
       .catch((err) => {
         console.log(err.response.data.detail);
@@ -127,13 +129,7 @@ function CommentsAndRating(props) {
       })
       .then((res) => {
         console.log(res.data);
-        const updatedComments = comments.map((comment) => {
-          if (comment.review.id === updateComment.id) {
-            return res.data;
-          }
-          return comment;
-        });
-        setComments(updatedComments);
+        dispatch(setSignal(!signal));
       })
       .catch((err) => console.log(err));
 

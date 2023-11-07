@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FaTrash } from "react-icons/fa";
 import { Container, Button, Card, ListGroup, Modal } from "react-bootstrap";
-import { compareAsc } from "date-fns";
 import emailjs from "@emailjs/browser";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setSignal } from "../../../store/actions/Signal";
 
 const AppointmentPicker = (props) => {
+  const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
+  const currentUser = useSelector((state) => state.user.user);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedAppointmentToRemove, setSelectedAppointmentToRemove] = useState(null);
@@ -15,69 +18,75 @@ const AppointmentPicker = (props) => {
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [dailyTimeRanges, setDailyTimeRanges] = useState([]);
-  const sortedDailyTimeRanges = [...dailyTimeRanges].sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
   const [currentPage, setCurrentPage] = useState(0);
-  const totalCards = sortedDailyTimeRanges.length;
+  const totalCards = dailyTimeRanges.length;
   const totalPages = Math.ceil(totalCards / 3);
-  const currentCards = sortedDailyTimeRanges.slice(currentPage * 3, (currentPage + 1) * 3);
+  const currentCards = dailyTimeRanges.slice(currentPage * 3, (currentPage + 1) * 3);
   const canGoNext = currentPage < totalPages - 1;
   const canGoPrev = currentPage > 0;
-  const [loggedInUser, setLoggedInUser] = useState(JSON.parse(sessionStorage.getItem("loggedInUser")) || null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const signal = useSelector((state) => state.signal);
+  const dispatch = useDispatch();
 
-  const isTimeRangeExists = (date, start, end) => {
-    const card = dailyTimeRanges.find((range) => range.date === date);
-    if (card) {
-      return card.ranges.some((range) => range.start === start && range.end === end);
-    }
-    return false;
-  };
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/appointments/" + props.doctor)
+      .then((response) => {
+        console.log(response.data);
+        setDailyTimeRanges(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [signal]);
 
   const addAppointment = () => {
-    if (startTime < endTime && !isTimeRangeExists(selectedDate.toDateString(), startTime.toLocaleTimeString(), endTime.toLocaleTimeString())) {
-      const newTimeRange = {
-        date: selectedDate.toDateString(),
-        start: startTime.toLocaleTimeString(),
-        end: endTime.toLocaleTimeString(),
-        booked: false,
-      };
-
-      const existingCardIndex = dailyTimeRanges.findIndex((range) => range.date === newTimeRange.date);
-
-      if (existingCardIndex !== -1) {
-        const updatedTimeRanges = [...dailyTimeRanges];
-        updatedTimeRanges[existingCardIndex].ranges.push(newTimeRange);
-        updatedTimeRanges[existingCardIndex].ranges.sort((a, b) => a.start.localeCompare(b.start));
-
-        setDailyTimeRanges(updatedTimeRanges);
-      } else {
-        setDailyTimeRanges([
-          ...dailyTimeRanges,
-          {
-            date: newTimeRange.date,
-            ranges: [newTimeRange],
-          },
-        ]);
-      }
-    }
+    const formattedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`;
+    const formattedStartTime = startTime.toLocaleTimeString("en-US", { hour12: false });
+    const formattedEndTime = endTime.toLocaleTimeString("en-US", { hour12: false });
+    const newTimeRange = {
+      appointment_date: formattedDate,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
+      doctor: currentUser.id,
+    };
+    axios
+      .post("http://127.0.0.1:8000/appointments/add/", newTimeRange, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        dispatch(setSignal(!signal));
+        setErrorMessage("");
+      })
+      .catch((error) => {
+        console.log(error.response.data.non_field_errors[0]);
+        setErrorMessage(error.response.data.non_field_errors[0]);
+      });
   };
 
-  const openConfirmationModal = (date, start, end) => {
-    setSelectedAppointmentToRemove({ date, start, end });
+  const openConfirmationModal = (appointment) => {
+    setSelectedAppointmentToRemove(appointment);
     setShowConfirmationModal(true);
   };
 
-  const removeAppointment = (date, start, end) => {
-    const updatedTimeRanges = dailyTimeRanges.map((card) => {
-      if (card.date === date) {
-        card.ranges = card.ranges.filter((range) => range.start !== start || range.end !== end);
-      }
-      return card;
-    });
-
-    const updatedTimeRangesFiltered = updatedTimeRanges.filter((card) => card.ranges.length > 0);
-
-    setDailyTimeRanges(updatedTimeRangesFiltered);
-
+  const removeAppointment = () => {
+    axios
+      .delete("http://127.0.0.1:8000/appointments/delete/" + selectedAppointmentToRemove.id, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        dispatch(setSignal(!signal));
+      })
+      .catch((error) => {
+        console.log(error.response.data.non_field_errors[0]);
+        setErrorMessage(error.response.data.non_field_errors[0]);
+      });
     setShowConfirmationModal(false);
   };
 
@@ -103,55 +112,67 @@ const AppointmentPicker = (props) => {
   };
 
   const bookTimeSlot = () => {
-    if (selectedAppointmentToBook) {
-      const { date, start, end } = selectedAppointmentToBook;
-      const updatedTimeRanges = dailyTimeRanges.map((card) => {
-        if (card.date === date) {
-          card.ranges = card.ranges.map((range) => {
-            if (range.start === start && range.end === end) {
-              sendEmail(loggedInUser.firstName, "Dr.david", `hello Dr.david you have a booked appointment from ${(range, start)} to ${range.end} on ${card.date}`, "islamnady95@gmail.com");
-              return { ...range, booked: true };
-            }
-            return range;
-          });
+    axios
+      .put(
+        "http://127.0.0.1:8000/appointments/book/" + selectedAppointmentToBook.id,
+        { ...selectedAppointmentToBook, is_booked: true, patient: currentUser.id },
+        {
+          headers: {
+            Authorization: "Bearer " + String(authTokens.access),
+          },
         }
-        return card;
+      )
+      .then((response) => {
+        console.log("book", response.data);
+        dispatch(setSignal(!signal));
+        setShowBookingModal(false);
+        sendEmail("islam", "ahmed", "fao", "islamnady95@gmail.com");
+      })
+      .catch((error) => {
+        console.log(error.response.data.non_field_errors[0]);
+        setErrorMessage(error.response.data.non_field_errors[0]);
       });
-
-      setDailyTimeRanges(updatedTimeRanges);
-      setShowBookingModal(false);
-    }
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const updatedTimeRanges = dailyTimeRanges.map((card) => {
-        if (card.date === now.toDateString()) {
-          card.ranges = card.ranges.filter((range) => {
-            const end = new Date(range.end);
-            return end > now;
-          });
+    const checkAndDeleteAppointments = () => {
+      const formattedDate = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, "0")}-${new Date().getDate().toString().padStart(2, "0")}`;
+      const formattedTime = new Date().toLocaleTimeString("en-US", { hour12: false });
+      for (const card of dailyTimeRanges) {
+        if (card.appointment_date === formattedDate) {
+          for (const range of card.appointments) {
+            console.log(range.start_time, formattedTime);
+            if (range.start_time < formattedTime) {
+              axios
+                .delete("http://127.0.0.1:8000/appointments/delete/" + range.id, {
+                  headers: {
+                    Authorization: "Bearer " + String(authTokens.access),
+                  },
+                })
+                .then((response) => {
+                  console.log(response.data);
+                  dispatch(setSignal(!signal));
+                })
+                .catch((error) => {
+                  console.log(error.response.data.non_field_errors[0]);
+                  setErrorMessage(error.response.data.non_field_errors[0]);
+                });
+            }
+          }
         }
-        return card;
-      });
+      }
+    };
+    checkAndDeleteAppointments();
+    const intervalId = setInterval(checkAndDeleteAppointments, 20 * 1000);
 
-      const updatedTimeRangesFiltered = updatedTimeRanges.filter((card) => card.ranges.length > 0);
-
-      const updatedTimeRangesFilteredPast = updatedTimeRangesFiltered.filter((card) => {
-        const cardDate = new Date(card.date);
-        return cardDate >= now;
-      });
-
-      setDailyTimeRanges(updatedTimeRangesFilteredPast);
-    }, 10000);
-
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [dailyTimeRanges]);
 
   return (
     <Container className="mt-2">
-      {loggedInUser && loggedInUser.type === "doctor" && loggedInUser.id == props.id && (
+      {props.doctor == currentUser.id && (
         <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
           <div className="d-flex justify-content-between flex-wrap">
             <div>
@@ -167,36 +188,41 @@ const AppointmentPicker = (props) => {
               <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
             </div>
           </div>
-          <div onClick={addAppointment} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
+          <Button onClick={addAppointment} className=" w-100  mt-2" variant="outline-dark">
             Add Appointment
-          </div>
+          </Button>
+          <div className="text-danger text-center ">{errorMessage}</div>
         </div>
       )}
 
       <div>
-        <h2 className="mt-2 text-center">Available Appointments</h2>
+        <hr />
+
         <Container className="d-flex gap-2 flex-wrap flex-lg-nowrap">
           {currentCards.map((card, index) => (
             <Card key={index} className="mb-3">
               <Card.Body>
-                <Card.Title>{card.date}</Card.Title>
-                <ListGroup variant="flush">
-                  {card.ranges.map((range, i) => (
-                    <ListGroup.Item key={i} className="d-flex">
-                      <Button
-                        className="ml-2"
+                <Card.Title className="text-center">
+                  Appointment Date: <p>{card.appointment_date}</p>
+                </Card.Title>
+                <ListGroup className="opacity-75">
+                  {card.appointments.map((range, i) => (
+                    <div className=" position-relative " key={i}>
+                      <ListGroup.Item
+                        action
+                        variant="primary"
                         onClick={() => {
                           setSelectedAppointmentToBook(range);
                           setShowBookingModal(true);
                         }}
-                        disabled={range.booked}
+                        disabled={range.is_booked || currentUser.is_doctor}
+                        className={`text-truncate ${range.is_booked && "text-decoration-line-through"}`}
                       >
-                        <strong>From:</strong> {range.start} <br /> <strong>To:</strong> {range.end}
-                      </Button>
-                      <Button className="ml-2" onClick={() => openConfirmationModal(card.date, range.start, range.end)} variant="danger">
-                        <FaTrash />
-                      </Button>
-                    </ListGroup.Item>
+                        <strong>From:</strong> {range.start_time} <br /> <strong>To:</strong> {range.end_time}
+                      </ListGroup.Item>
+                      <hr />
+                      {props.doctor == currentUser.id && <Button className="btn-close position-absolute end-0 top-0 " onClick={() => openConfirmationModal(range)} variant="danger"></Button>}
+                    </div>
                   ))}
                 </ListGroup>
               </Card.Body>
@@ -220,7 +246,7 @@ const AppointmentPicker = (props) => {
         <Modal.Body>
           {selectedAppointmentToBook && (
             <p>
-              You are booking from <span className="text-warning">{selectedAppointmentToBook.start}</span> to <span className="text-warning">{selectedAppointmentToBook.end}</span> on <span className="text-info">{selectedAppointmentToBook.date}</span>.
+              You are booking from <span className="text-warning">{selectedAppointmentToBook.start_time}</span> to <span className="text-warning">{selectedAppointmentToBook.end_time}</span> on <span className="text-info">{selectedAppointmentToBook.appointment_date}</span>.
             </p>
           )}
         </Modal.Body>
@@ -240,14 +266,14 @@ const AppointmentPicker = (props) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Are you sure you want to remove the appointment on <span className="text-info"> {selectedAppointmentToRemove?.date}</span> from <span className="text-warning">{selectedAppointmentToRemove?.start}</span> to <span className="text-warning">{selectedAppointmentToRemove?.end}</span>?
+            Are you sure you want to remove the appointment on <span className="text-info"> {selectedAppointmentToRemove?.appointment_date}</span> from <span className="text-warning">{selectedAppointmentToRemove?.start_time}</span> to <span className="text-warning">{selectedAppointmentToRemove?.end_time}</span>?
           </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => removeAppointment(selectedAppointmentToRemove.date, selectedAppointmentToRemove.start, selectedAppointmentToRemove.end)}>
+          <Button variant="danger" onClick={() => removeAppointment()}>
             Confirm
           </Button>
         </Modal.Footer>
