@@ -10,6 +10,7 @@ import Home from "./pages/home/Home";
 import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import ContactUs from "./pages/contactUs/contact";
 import Profile from "./pages/Profile/Profile";
+import DoctorSearch from "./pages/search/DoctorSearch";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/clinics/clinicDetails" element={<ClinicDetail />} />
         <Route path="/medicalHistory" element={<MedicalHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/doctor/search" element={<DoctorSearch />} />
       </Routes>
       <Footer />
     </BrowserRouter>

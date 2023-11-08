@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ToggleTheme from "./ToggleTheme";
 import { setSignal } from "../store/actions/Signal";
 import ToastCom from "./ToastCom";
+import { setSearchQuery } from "../store/actions/SearchQuery";
 
 function Nav() {
   const currentUser = useSelector((state) => state.user.user);
@@ -27,7 +28,13 @@ function Nav() {
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    dispatch(setSearchQuery(searchValue));
+    navigate("/doctor/search");
+  };
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
     setRegFormData({
@@ -224,8 +231,8 @@ function Nav() {
                 </Popover>
               </Overlay>
             )}
-            <form className="d-flex" role="search">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <form className="d-flex" onSubmit={handleSearchSubmit}>
+              <input className="form-control me-2" name="search" placeholder="Search" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
               <button className="btn btn-outline-primary" type="submit">
                 Search
               </button>

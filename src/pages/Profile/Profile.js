@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen } from "@fortawesome/free-solid-svg-icons";
 import "./Profile.css";
-import { useNavigate, useParams } from "react-router-dom";
-import AppointmentPicker from "./appointments/AppointmentPicker";
+import { useParams } from "react-router-dom";
+import AppointmentPicker from "./AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
 import { Button, Card, Container, Form, Image, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { FaTrash, FaUser } from "react-icons/fa";
@@ -114,7 +114,8 @@ function Profile() {
         setShowCertificate(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data.certificate[0]);
+        setErrorMessage(error.response.data.certificate[0]);
       });
   };
 
@@ -148,6 +149,7 @@ function Profile() {
       })
       .catch((error) => {
         console.log(error);
+        setErrorMessage(error.response.data.case[0]);
       });
   };
 
@@ -178,10 +180,14 @@ function Profile() {
       })
       .then((response) => {
         dispatch(setSignal(!signal));
-        setShowPic(false);
+        {
+          setShowPic(false);
+          setErrorMessage("");
+        }
       })
       .catch((error) => {
         console.log(error);
+        setErrorMessage(error.response.data.profile_picture[0]);
       });
   };
 
@@ -231,15 +237,29 @@ function Profile() {
       <div className="container">
         <div className="row">
           <div id="sidebar--container">
-            <Modal centered show={showPic} onHide={() => setShowPic(false)}>
+            <Modal
+              centered
+              show={showPic}
+              onHide={() => {
+                setShowPic(false);
+                setErrorMessage("");
+              }}
+            >
               <Modal.Header closeButton>
                 <Modal.Title>Add a picture</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Control type="file" name="profile_picture" onChange={handlePicChange} />
+                <p className="text-danger">{errorMessage}</p>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowPic(false)}>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setShowPic(false);
+                    setErrorMessage("");
+                  }}
+                >
                   Close
                 </Button>
                 <Button type="submit" variant="primary" onClick={editPic}>
@@ -256,7 +276,7 @@ function Profile() {
                   <FaUser />
                 </div>
               )}
-              {profileData.id === currentUser.id && (
+              {currentUser && profileData.id === currentUser.id && (
                 <div className="profile-picture-actions d-flex justify-content-between w-100 p-3 ">
                   <div className=" border-0 btn btn-outline-primary" onClick={() => setShowPic(true)}>
                     <BiMessageSquareAdd />
@@ -334,7 +354,7 @@ function Profile() {
                   <h2 className="text-primary" style={{ fontSize: "4rem" }}>
                     {profileData.first_name} {profileData.last_name}
                   </h2>
-                  {profileData.id === currentUser.id && (
+                  {currentUser && profileData.id === currentUser.id && (
                     <Button className=" border-0 " variant="outline-primary" onClick={() => setShowModal(true)}>
                       <FontAwesomeIcon icon={faPen} size="lg" />
                     </Button>
@@ -363,7 +383,7 @@ function Profile() {
                   <div id="Certificates" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
                       <h2 className="text-primary">Certificates</h2>
-                      {profileData.id === currentUser.id && (
+                      {currentUser && profileData.id === currentUser.id && (
                         <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
                           <BiMessageSquareAdd />
                         </Button>
@@ -375,7 +395,7 @@ function Profile() {
                       <div className="row">
                         {certificates.map((cer, index) => (
                           <div className="col-4 position-relative " key={index}>
-                            {profileData.id === currentUser.id && (
+                            {currentUser && profileData.id === currentUser.id && (
                               <Button
                                 className="position-absolute end-0 border-0 "
                                 variant="outline-danger"
@@ -391,15 +411,29 @@ function Profile() {
                             <img src={`http://localhost:8000${cer.certificate}`} alt="" width="100%" />
                           </div>
                         ))}
-                        <Modal centered show={showCertificate} onHide={() => setShowCertificate(false)}>
+                        <Modal
+                          centered
+                          show={showCertificate}
+                          onHide={() => {
+                            setShowCertificate(false);
+                            setErrorMessage("");
+                          }}
+                        >
                           <Modal.Header closeButton>
                             <Modal.Title>Add a Certificate</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <Form.Control type="file" name="certificate" onChange={handleCertificateChange} />
+                            <p className="text-danger">{errorMessage}</p>
                           </Modal.Body>
                           <Modal.Footer>
-                            <Button variant="secondary" onClick={() => setShowCertificate(false)}>
+                            <Button
+                              variant="secondary"
+                              onClick={() => {
+                                setShowCertificate(false);
+                                setErrorMessage("");
+                              }}
+                            >
                               Close
                             </Button>
                             <Button type="submit" variant="primary" onClick={addCertificate}>
@@ -413,7 +447,7 @@ function Profile() {
                   <div id="Cases" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
                       <h2 className="text-primary">Cases</h2>
-                      {profileData.id === currentUser.id && (
+                      {currentUser && profileData.id === currentUser.id && (
                         <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
                           <BiMessageSquareAdd />
                         </Button>
@@ -425,7 +459,7 @@ function Profile() {
                       <div className="row">
                         {cases.map((cas, index) => (
                           <div className="col-4 position-relative " key={index}>
-                            {profileData.id === currentUser.id && (
+                            {currentUser && profileData.id === currentUser.id && (
                               <Button
                                 className="position-absolute end-0 border-0 "
                                 variant="outline-danger"
@@ -440,15 +474,29 @@ function Profile() {
                             <img src={`http://localhost:8000${cas.case}`} alt="" width="100%" />
                           </div>
                         ))}
-                        <Modal centered show={showCase} onHide={() => setShowCase(false)}>
+                        <Modal
+                          centered
+                          show={showCase}
+                          onHide={() => {
+                            setShowCase(false);
+                            setErrorMessage("");
+                          }}
+                        >
                           <Modal.Header closeButton>
                             <Modal.Title>Add a Case</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <Form.Control type="file" name="case" onChange={handleCaseChange} />
+                            <p className="text-danger">{errorMessage}</p>
                           </Modal.Body>
                           <Modal.Footer>
-                            <Button variant="secondary" onClick={() => setShowCase(false)}>
+                            <Button
+                              variant="secondary"
+                              onClick={() => {
+                                setShowCase(false);
+                                setErrorMessage("");
+                              }}
+                            >
                               Close
                             </Button>
                             <Button type="submit" variant="primary" onClick={addCase}>
@@ -553,7 +601,15 @@ function Profile() {
         </Form>
       </Modal>
 
-      <ToastCom delay={3000} showToast={showToast} setShowToast={() => setShowToast(false)} message={errorMessage} />
+      <ToastCom
+        delay={3000}
+        showToast={showToast}
+        onClose={() => {
+          setShowToast(false);
+          setErrorMessage("");
+        }}
+        message={errorMessage}
+      />
 
       <ConfirmationModal show={showConfirmationCase} onHide={() => setShowConfirmationCase(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCase} />
       <ConfirmationModal show={showConfirmationCertificate} onHide={() => setShowConfirmationCertificate(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCertificate} />

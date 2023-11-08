@@ -4,6 +4,7 @@ import { Container, Col, Button, Form, ListGroup, ListGroupItem, Modal } from "r
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
+import ToastCom from "../../components/ToastCom";
 
 const colors = {
   orange: "#FFBA5A",
@@ -25,6 +26,8 @@ function CommentsAndRating(props) {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const signal = useSelector((state) => state.signal);
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     axios
@@ -63,6 +66,11 @@ function CommentsAndRating(props) {
   };
 
   const handleAddComment = () => {
+    if (!currentUser) {
+      setShowToast(true);
+      setErrorMessage("Must be logged");
+      return;
+    }
     if (rating === 0 || newComment.body.trim() === "") {
       setError("Please provide a rating and a comment before submitting.");
       return;
@@ -178,7 +186,7 @@ function CommentsAndRating(props) {
                 </div>
                 <p className="mt-2">{comment.review.comment}</p>
                 <div className="d-flex justify-content-end">
-                  {comment.review.reviewing_user === currentUser.id && (
+                  {currentUser && comment.review.reviewing_user === currentUser.id && (
                     <>
                       <Button variant="outline-danger" className=" border-0 " size="sm" onClick={() => handleShowRemove(comment.review.id)}>
                         <FaTrash />
@@ -236,6 +244,17 @@ function CommentsAndRating(props) {
           </Modal.Footer>
         </Modal>
       </Container>
+
+      <ToastCom
+        position="bottom-center"
+        delay={3000}
+        showToast={showToast}
+        onClose={() => {
+          setShowToast(false);
+          setErrorMessage("");
+        }}
+        message={<p className="text-danger">{errorMessage}</p>}
+      />
     </>
   );
 }

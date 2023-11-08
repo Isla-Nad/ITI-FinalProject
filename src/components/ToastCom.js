@@ -2,8 +2,8 @@ import { Toast, ToastContainer } from "react-bootstrap";
 
 const ToastCom = (props) => {
   return (
-    <ToastContainer className="p-3" style={{ zIndex: 5 }}>
-      <Toast onClose={props.setShowToast} show={props.showToast} delay={props.delay} autohide>
+    <ToastContainer position={props.position} className="p-3" style={{ zIndex: 5 }}>
+      <Toast onClose={props.onClose} show={props.showToast} delay={props.delay} autohide>
         <Toast.Header>
           <strong className="me-auto">Message</strong>
         </Toast.Header>

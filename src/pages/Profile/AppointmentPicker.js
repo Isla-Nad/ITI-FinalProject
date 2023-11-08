@@ -5,8 +5,9 @@ import { Container, Button, Card, ListGroup, Modal } from "react-bootstrap";
 import emailjs from "@emailjs/browser";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setSignal } from "../../../store/actions/Signal";
-import ConfirmationModal from "../../../components/ConfirmationModal";
+import { setSignal } from "../../store/actions/Signal";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import ToastCom from "../../components/ToastCom";
 
 const AppointmentPicker = (props) => {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -25,9 +26,10 @@ const AppointmentPicker = (props) => {
   const currentCards = dailyTimeRanges.slice(currentPage * 3, (currentPage + 1) * 3);
   const canGoNext = currentPage < totalPages - 1;
   const canGoPrev = currentPage > 0;
-  const [errorMessage, setErrorMessage] = useState("");
   const signal = useSelector((state) => state.signal);
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     axios
@@ -172,7 +174,7 @@ const AppointmentPicker = (props) => {
 
   return (
     <Container className="mt-2">
-      {props.doctor == currentUser.id && (
+      {currentUser && props.doctor == currentUser.id && (
         <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
           <div className="d-flex justify-content-between flex-wrap">
             <div>
@@ -212,16 +214,21 @@ const AppointmentPicker = (props) => {
                         action
                         variant="primary"
                         onClick={() => {
+                          if (!currentUser) {
+                            setShowToast(true);
+                            setErrorMessage("Must be logged");
+                            return;
+                          }
                           setSelectedAppointmentToBook(range);
                           setShowBookingModal(true);
                         }}
-                        disabled={range.is_booked || currentUser.is_doctor}
+                        disabled={range.is_booked || (currentUser && currentUser.is_doctor)}
                         className={`text-truncate ${range.is_booked && "text-decoration-line-through"}`}
                       >
                         <strong>From:</strong> {range.start_time} <br /> <strong>To:</strong> {range.end_time}
                       </ListGroup.Item>
                       <hr />
-                      {props.doctor == currentUser.id && <Button className="btn-close position-absolute end-0 top-0 " onClick={() => openConfirmationModal(range)} variant="danger"></Button>}
+                      {currentUser && props.doctor == currentUser.id && <Button className="btn-close position-absolute end-0 top-0 " onClick={() => openConfirmationModal(range)} variant="danger"></Button>}
                     </div>
                   ))}
                 </ListGroup>
@@ -269,6 +276,17 @@ const AppointmentPicker = (props) => {
             Are you sure you want to remove the appointment on <span className="text-info"> {selectedAppointmentToRemove?.appointment_date}</span> from <span className="text-warning">{selectedAppointmentToRemove?.start_time}</span> to <span className="text-warning">{selectedAppointmentToRemove?.end_time}</span>?
           </>
         }
+      />
+
+      <ToastCom
+        position="bottom"
+        delay={3000}
+        showToast={showToast}
+        onClose={() => {
+          setShowToast(false);
+          setErrorMessage("");
+        }}
+        message={<p className="text-danger">{errorMessage}</p>}
       />
     </Container>
   );
