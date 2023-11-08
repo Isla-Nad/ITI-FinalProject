@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Image } from "react-bootstrap";
 
 function PatientDataPopup(props) {
   return (
@@ -12,29 +12,29 @@ function PatientDataPopup(props) {
             <div className="col-md-6">
               <h4>Patient Information</h4>
               <p>
-                <strong>Patient Name:</strong> {props.patientData.patientName}
+                <strong>Patient Name:</strong> {props.patientData.patient_name}
               </p>
               <p>
-                <strong>Date of Visit:</strong> {props.patientData.dateOfVisit}
+                <strong>Date of Visit:</strong> {props.patientData.date_of_visit}
               </p>
               <p>
                 <strong>Allergies:</strong> {props.patientData.allergies}
               </p>
               <p>
-                <strong>Medical Conditions:</strong> {props.patientData.medicalConditions}
+                <strong>Medical Conditions:</strong> {props.patientData.medical_conditions}
               </p>
               <p>
-                <strong>Dental Conditions:</strong> {props.patientData.dentalConditions}
+                <strong>Dental Conditions:</strong> {props.patientData.dental_conditions}
               </p>
               <p>
-                <strong>Previous Dental Treatments:</strong> {props.patientData.previousTreatments}
+                <strong>Previous Dental Treatments:</strong> {props.patientData.previous_dental_treatments}
               </p>
             </div>
             <div className="col-md-6">
-              <h4>Uploaded File</h4>
-              {props.patientData.file && (
+              <h4>Uploaded Image</h4>
+              {props.patientData.image && (
                 <div className="file-section">
-                  <embed src={URL.createObjectURL(props.patientData.file)} type={props.patientData.file.type} className="file-embed w-100" />
+                  <Image src={`http://localhost:8000${props.patientData.image}`} alt="" className="patient-picture file-embed w-100" />
                 </div>
               )}
             </div>

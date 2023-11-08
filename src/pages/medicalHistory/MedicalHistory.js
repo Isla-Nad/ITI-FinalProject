@@ -1,20 +1,52 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MedicalHistoryForm from "./MedicalHistoryForm";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
 import "./MedicalHistory.css";
 import axios from "axios";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { useDispatch, useSelector } from "react-redux";
+import { setSignal } from "../../store/actions/Signal";
 
 const MedicalHistory = () => {
-  const [MediicalHistory, setMedicalHistory] = useState([]);
+  const signal = useSelector((state) => state.signal);
+  const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
+  const currentUser = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ patientName: "", dateOfVisit: "", allergies: "", medicalConditions: "", dentalConditions: "", previousTreatments: "", dentalHygieneHabits: "", specificDentalConcerns: "", file: null });
-  const [historyData, setHistoryData] = useState(JSON.parse(localStorage.getItem("HistoryData")) || []);
+  const [formData, setFormData] = useState({
+    patient_name: "",
+    date_of_visit: "",
+    allergies: "",
+    medical_conditions: "",
+    dental_conditions: "",
+    previous_dental_treatments: "",
+    dental_hygiene_habits: "",
+    specific_dental_concerns: "",
+    image: null,
+  });
+  const [historyData, setHistoryData] = useState([]);
   const [selectedPatientData, setSelectedPatientData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      axios
+        .get(`http://127.0.0.1:8000/medical/history/${currentUser.id}`, {
+          headers: {
+            Authorization: "Bearer " + authTokens.access,
+          },
+        })
+        .then((response) => {
+          setHistoryData(response.data);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [signal, currentUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,26 +55,49 @@ const MedicalHistory = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFormData({ ...formData, file });
+    setFormData({ ...formData, image: file });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formDataWithDoctor = { ...formData, doctor: currentUser.id };
 
     if (editMode) {
-      const updatedHistoryData = [...historyData];
-      updatedHistoryData[selectedIndex] = formData;
-      setHistoryData(updatedHistoryData);
-      setShowForm(false);
-      setEditMode(false);
-      setSelectedIndex(null);
+      const formDataWithDoctor = { ...formData, doctor: currentUser.id, image: historyData.image };
+      axios
+        .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
+          headers: {
+            Authorization: "Bearer " + authTokens.access,
+            "content-type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          dispatch(setSignal(!signal));
+          setErrorMessage("");
+          setShowForm(false);
+          setEditMode(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else {
-      setHistoryData([...historyData, formData]);
+      axios
+        .post("http://127.0.0.1:8000/medical/history", formDataWithDoctor, {
+          headers: {
+            Authorization: "Bearer " + authTokens.access,
+            "content-type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          dispatch(setSignal(!signal));
+
+          setErrorMessage("");
+          setShowForm(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
-
-    setShowForm(false);
-
-    setFormData({ patientName: "", dateOfVisit: "", allergies: "", medicalConditions: "", dentalConditions: "", previousTreatments: "", dentalHygieneHabits: "", specificDentalConcerns: "", file: formData.file });
   };
 
   const showPatientData = (patientData) => {
@@ -61,35 +116,45 @@ const MedicalHistory = () => {
   };
 
   const confirmRemoval = () => {
-    const updatedHistoryData = [...historyData];
-    updatedHistoryData.splice(selectedIndex, 1);
-    setHistoryData(updatedHistoryData);
-
-    setShowConfirmationModal(false);
-    setSelectedIndex(null);
+    axios
+      .delete(`http://127.0.0.1:8000/medical/history/delete/${selectedIndex}`, {
+        headers: {
+          Authorization: "Bearer " + authTokens.access,
+        },
+      })
+      .then((response) => {
+        dispatch(setSignal(!signal));
+        setShowConfirmationModal(false);
+        setSelectedIndex(null);
+      })
+      .catch((err) => console.error(err));
   };
 
   const removePatientData = (index) => {
     setShowConfirmationModal(true);
     setSelectedIndex(index);
   };
+
   const cancelRemoval = () => {
     setShowConfirmationModal(false);
     setSelectedIndex(null);
   };
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/medicalhistory/medicalhistoryapi/")
-      .then((response) => {
-        setMedicalHistory(response.data);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem("HistoryData", JSON.stringify(historyData));
-  // }, [historyData]);
+  const onHideForm = () => {
+    setShowForm(false);
+    setEditMode(false);
+    setFormData({
+      patient_name: "",
+      date_of_visit: "",
+      allergies: "",
+      medical_conditions: "",
+      dental_conditions: "",
+      previous_dental_treatments: "",
+      dental_hygiene_habits: "",
+      specific_dental_concerns: "",
+      image: null,
+    });
+  };
 
   return (
     <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
@@ -100,45 +165,30 @@ const MedicalHistory = () => {
         <Col className="grid-col">Date of Visit</Col>
         <Col className="grid-col">Actions</Col>
       </Row>
-      {/* {historyData.map((history, index) => (
+      {historyData.map((history, index) => (
         <Row key={index} className="grid-row">
           <Col className="grid-col col-1">{index + 1}</Col>
-          <Col className="grid-col">{history.patientName}</Col>
-          <Col className="grid-col">{history.dateOfVisit}</Col>
+          <Col className="grid-col">{history.patient_name}</Col>
+          <Col className="grid-col">{history.date_of_visit}</Col>
           <Col className="grid-col gap-2 d-flex">
             <Button onClick={() => showPatientData(history)}>View</Button>
-            <Button variant="warning" onClick={() => editPatientData(history, index)}>
+            <Button variant="warning" onClick={() => editPatientData(history, history.id)}>
               Edit
             </Button>
-            <Button variant="danger" onClick={() => removePatientData(index)}>
-              Remove
-            </Button>
-          </Col>
-        </Row>
-      ))} */}
-      {MediicalHistory.map((Medical, id) => (
-        <Row key={id} className="grid-row">
-          <Col className="grid-col col-1">{Medical.id}</Col>
-          <Col className="grid-col">{Medical.patient_name}</Col>
-          <Col className="grid-col">{Medical.date_of_visit}</Col>
-          <Col className="grid-col gap-2 d-flex">
-            <Button onClick={() => showPatientData(Medical.id)}>View</Button>
-            <Button variant="warning" onClick={() => editPatientData(Medical.id)}>
-              Edit
-            </Button>
-            <Button variant="danger" onClick={() => removePatientData(Medical.id)}>
+            <Button variant="danger" onClick={() => removePatientData(history.id)}>
               Remove
             </Button>
           </Col>
         </Row>
       ))}
+
       {showForm ? (
-        <Modal show={showForm} onHide={() => setShowForm(false)} size="xl">
+        <Modal show={showForm} onHide={() => onHideForm()} size="xl">
           <Modal.Header closeButton={!editMode}>
             <Modal.Title>
               {editMode ? (
                 <h3>
-                  Edit <span className="text-warning">{formData.patientName}</span>'s History
+                  Edit <span className="text-warning">{formData.patient_name}</span>'s History
                 </h3>
               ) : (
                 <h3>Add New Dental History</h3>
