@@ -63,7 +63,43 @@ const MedicalHistory = () => {
     const formDataWithDoctor = { ...formData, doctor: currentUser.id };
 
     if (editMode) {
-      const formDataWithDoctor = { ...formData, doctor: currentUser.id, image: historyData.image };
+      if (formData.image === null) {
+        const formDataWithDoctor = { ...formData, doctor: currentUser.id, image: historyData.image };
+        axios
+          .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
+            headers: {
+              Authorization: "Bearer " + authTokens.access,
+              "content-type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            dispatch(setSignal(!signal));
+            setErrorMessage("");
+            setShowForm(false);
+            setEditMode(false);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        const formDataWithDoctor = { ...formData, doctor: currentUser.id };
+        axios
+          .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
+            headers: {
+              Authorization: "Bearer " + authTokens.access,
+              "content-type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            dispatch(setSignal(!signal));
+            setErrorMessage("");
+            setShowForm(false);
+            setEditMode(false);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
       axios
         .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
           headers: {
@@ -96,8 +132,20 @@ const MedicalHistory = () => {
         })
         .catch((error) => {
           console.error(error);
+          setErrorMessage(error.response.data.detail);
         });
     }
+    setFormData({
+      patient_name: "",
+      date_of_visit: "",
+      allergies: "",
+      medical_conditions: "",
+      dental_conditions: "",
+      previous_dental_treatments: "",
+      dental_hygiene_habits: "",
+      specific_dental_concerns: "",
+      image: null,
+    });
   };
 
   const showPatientData = (patientData) => {
@@ -110,8 +158,9 @@ const MedicalHistory = () => {
 
   const editPatientData = (history, index) => {
     setEditMode(true);
-    setFormData(history);
+    setFormData({ ...history, image: null });
     setShowForm(true);
+    setErrorMessage("");
     setSelectedIndex(index);
   };
 
@@ -196,6 +245,7 @@ const MedicalHistory = () => {
             </Modal.Title>
           </Modal.Header>
           <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? "Finish Editing" : "Add New Dental History"} />
+          <p className="text-danger">{errorMessage}</p>
         </Modal>
       ) : (
         <Button onClick={() => setShowForm(true)} className="add-button m-3">

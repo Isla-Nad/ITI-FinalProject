@@ -240,7 +240,7 @@ function Nav() {
           </div>
         </div>
       </nav>
-      <ToastCom delay={3000} showToast={showToast} setShowToast={() => setShowToast(false)} message={errorMessage} className={"text-danger"} />
+      <ToastCom delay={3000} showToast={showToast} onClose={() => setShowToast(false)} message={errorMessage} className={"text-danger"} />
     </>
   );
 }
