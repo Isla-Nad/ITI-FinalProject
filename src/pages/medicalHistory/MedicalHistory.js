@@ -3,8 +3,8 @@ import MedicalHistoryForm from "./MedicalHistoryForm";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
 import "./MedicalHistory.css";
-import ConfirmationModal from "./ConfirmationModal";
 import axios from "axios";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 const MedicalHistory = () => {
   const [MediicalHistory, setMedicalHistory] = useState([]);
@@ -82,8 +82,7 @@ const MedicalHistory = () => {
       .get("http://127.0.0.1:8000/medicalhistory/medicalhistoryapi/")
       .then((response) => {
         setMedicalHistory(response.data);
-        console.log(response)
-      
+        console.log(response);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -117,7 +116,7 @@ const MedicalHistory = () => {
           </Col>
         </Row>
       ))} */}
-       {MediicalHistory.map((Medical,id) => (
+      {MediicalHistory.map((Medical, id) => (
         <Row key={id} className="grid-row">
           <Col className="grid-col col-1">{Medical.id}</Col>
           <Col className="grid-col">{Medical.patient_name}</Col>
@@ -154,7 +153,7 @@ const MedicalHistory = () => {
         </Button>
       )}
       {selectedPatientData && <PatientDataPopup patientData={selectedPatientData} show={selectedPatientData !== null} onHide={closePatientDataPopup} />}
-      {showConfirmationModal && <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} />}
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text={"Are you sure you want to delete this history?"} />
     </div>
   );
 };
