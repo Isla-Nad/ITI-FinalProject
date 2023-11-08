@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MedicalHistoryForm from "./MedicalHistoryForm";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
 import "./MedicalHistory.css";
-import ConfirmationModal from "../../components/ConfirmationModal";
+import ConfirmationModal from "./ConfirmationModal";
+import axios from "axios";
 
 const MedicalHistory = () => {
+  const [MediicalHistory, setMedicalHistory] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ patientName: "", dateOfVisit: "", allergies: "", medicalConditions: "", dentalConditions: "", previousTreatments: "", dentalHygieneHabits: "", specificDentalConcerns: "", file: null });
   const [historyData, setHistoryData] = useState(JSON.parse(localStorage.getItem("HistoryData")) || []);
@@ -75,6 +77,20 @@ const MedicalHistory = () => {
     setShowConfirmationModal(false);
     setSelectedIndex(null);
   };
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/medicalhistory/medicalhistoryapi/")
+      .then((response) => {
+        setMedicalHistory(response.data);
+        console.log(response)
+      
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("HistoryData", JSON.stringify(historyData));
+  // }, [historyData]);
 
   return (
     <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
@@ -85,7 +101,7 @@ const MedicalHistory = () => {
         <Col className="grid-col">Date of Visit</Col>
         <Col className="grid-col">Actions</Col>
       </Row>
-      {historyData.map((history, index) => (
+      {/* {historyData.map((history, index) => (
         <Row key={index} className="grid-row">
           <Col className="grid-col col-1">{index + 1}</Col>
           <Col className="grid-col">{history.patientName}</Col>
@@ -96,6 +112,22 @@ const MedicalHistory = () => {
               Edit
             </Button>
             <Button variant="danger" onClick={() => removePatientData(index)}>
+              Remove
+            </Button>
+          </Col>
+        </Row>
+      ))} */}
+       {MediicalHistory.map((Medical,id) => (
+        <Row key={id} className="grid-row">
+          <Col className="grid-col col-1">{Medical.id}</Col>
+          <Col className="grid-col">{Medical.patient_name}</Col>
+          <Col className="grid-col">{Medical.date_of_visit}</Col>
+          <Col className="grid-col gap-2 d-flex">
+            <Button onClick={() => showPatientData(Medical.id)}>View</Button>
+            <Button variant="warning" onClick={() => editPatientData(Medical.id)}>
+              Edit
+            </Button>
+            <Button variant="danger" onClick={() => removePatientData(Medical.id)}>
               Remove
             </Button>
           </Col>
@@ -122,7 +154,7 @@ const MedicalHistory = () => {
         </Button>
       )}
       {selectedPatientData && <PatientDataPopup patientData={selectedPatientData} show={selectedPatientData !== null} onHide={closePatientDataPopup} />}
-      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="Are you sure you want to remove this history?" />
+      {showConfirmationModal && <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} />}
     </div>
   );
 };
