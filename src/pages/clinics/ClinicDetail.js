@@ -1,49 +1,36 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from 'react-router-dom';
+
 
 function ClinicDetail() {
+  const [clinic, setClinic] = useState([]);
+  const [cases, setCases] = useState([]);
+  const { id } = useParams();
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/clinics/show/${id}`)
+      .then((response) => {
+        setClinic(response.data.clinic);
+        setCases(response.data.cases);
+        // console.log(response.data)
+        
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+  // console.log(clinic)
+  // console.log(cases)
   return (
     <>
-      <div className="container">
+      <div className="container mt-5">
         <div className="row">
-          <div className="text text-center mt-5 mb-5">
-            <h2 style={{ fontSize: "3rem", color: "darkblue" }} className="mb-5">
-              Elegance Dental Clinic
-            </h2>
-          </div>
-          <div className="mt-5">
-            <div id="carouselExampleAutoplaying" className="carousel slide" data-bs-ride="carousel">
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <img src="https://www.designmantic.com/blog/wp-content/uploads/2018/04/Dental-Clinic-Logo-1280x720.png" className="d-block w-100" alt="..." />
-                  <div className="carousel-caption d-none d-md-block">
-                    <h3>Quality</h3>
-                    <p>Here at Elegance DC, We are committed to providing the highest quality of clinical care and personalized service in a warm and compassionate atmosphere. Our doctors and staff enjoy getting to know each patient and their families, and love creating relationships that last multiple generations.</p>
-                  </div>
-                </div>
-                <div className="carousel-item">
-                  <img src="https://endetadental.com/wp-content/uploads/2022/02/Endeta-Dental-13.jpeg" className="d-block w-100" alt="..." />
-                  <div className="carousel-caption d-none d-md-block">
-                    <h3>Equipments and Devices</h3>
-                    <p>We use the latest Equipments</p>
-                  </div>
-                </div>
-                <div className="carousel-item">
-                  <img src="https://www.spmswiss.com/wp-content/uploads/2019/08/dental-tools.png" className="d-block w-100" alt="..." />
-                  <div className="carousel-caption d-none d-md-block">
-                    <h3>Hygiene</h3>
-                    <p>hygiene and sanitation is a high priority in our clinic, there is no room for germs</p>
-                  </div>
-                </div>
+            <div className="jumbotron">
+              <h1 className="display-4 text-center">{clinic.name}</h1>
+              <p className="lead text-center">{clinic.desc}</p>
+              <div className="jumbotron-image">
+                <img src={`http://127.0.0.1:8000${clinic.image}`} style={{width:"100%",height:"50rem"}} alt="Image Description" />
               </div>
-              <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Previous</span>
-              </button>
-              <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Next</span>
-              </button>
             </div>
-          </div>
         </div>
       </div>
       <div className=" mt-5">
@@ -52,41 +39,18 @@ function ClinicDetail() {
         </div>
         <div className="container">
           <div className="row mt-5">
-            
-              
-                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
-                  <img src="https://www.bangkokdentalimplant.com/wp-content/uploads/2016/01/case-dr-preeda1.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
+          {cases.map(mycase => (
+                <div className="card col-4 ms-3">
+                  <img src={`http://127.0.0.1:8000${mycase.image}`} style={{height:"15rem"}} class="card-img-top" alt="..."/>
                   <div className="card-body">
-                    <h5 className="card-title text-center">Dental Implant</h5>
+                    <h5 className="card-title">Card title</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   </div>
-                </div>
+            </div>
+              ))}
               
-              
-                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
-                  <img src="https://www.mcintoshdental.co.nz/wp-content/uploads/2015/05/McIntosh-teeth-whitening-1024x683.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                  <div className="card-body">
-                    <h5 className="card-title text-center">Teeth Whitining</h5>
-                  </div>
-                </div>
-              
-              
-                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
-                  <img src="https://carlyleortho.com/wp-content/uploads/2017/02/iStock-165703401.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                  <div className="card-body">
-                    <h5 className="card-title text-center">Dental Ortho</h5>
-                  </div>
-                </div>
-              
-              
-                <div className="col-lg-6 col-md-12 col-sm-12 card m-5">
-                  <img src="https://www.maltepedentalclinic.com/wp-content/uploads/2022/03/Dental_bridge_before-after-1024x1024.jpg" style={{ height: "30rem", width: "100%" }} className="card-img-top" alt="..." />
-                  <div className="card-body">
-                    <h5 className="card-title text-center">Dental Bridges</h5>
-                  </div>
-                </div>
+                
           </div>
-            
-          
         </div>
       </div>
       <div className="mt-5">

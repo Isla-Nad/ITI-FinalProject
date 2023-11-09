@@ -3,42 +3,45 @@ import axios from "axios";
 import { Button, Card } from "react-bootstrap";
 import "./Clinics.css";
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const Clinics = () => {
   const [clinics, setClinics] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("https://retoolapi.dev/NxioV4/data")
+      .get("http://127.0.0.1:8000/clinics/")
       .then((response) => {
-        setClinics(response.data);
-        setLoading(false);
+        setClinics(response.data.clinics);
+        
       })
       .catch((err) => console.log(err));
   }, []);
-
-  const handleClick = () => {
-    navigate("/clinics/clinicDetails");
-  };
+console.log(clinics)
+  // const handleClick = () => {
+  //   navigate("/clinics/clinicDetails/");
+  // };
 
   return (
-    <div className="container--clinic">
-      {loading
-        ? [...Array(30)].map((_, index) => <div key={index} className="card loading-skeleton"></div>)
-        : clinics.map((clinic) => (
-            <Card key={clinic.id} className="card" style={{ width: "18rem" }}>
-              <Card.Img variant="top" src={clinic.image} />
+    <div className="container mt-5 --clinic">
+      <div class="row">
+      {clinics.map(clinic => (
+          <div class="col-lg-3 col-md-4 col-sm-6 mt-3 mb-3">
+            <Card>
+              <Card.Img variant="top" src={`http://127.0.0.1:8000${clinic.image}`} alt="" style={{height:"15rem"}} />
               <Card.Body>
-                <Card.Text>{clinic.name}</Card.Text>
-                <Button variant="primary" onClick={handleClick}>
-                  Details
-                </Button>
+                <Card.Title>{clinic.name}</Card.Title>
+                <Card.Text>{clinic.desc}</Card.Text>
+                <Link to={`/clinics/clinicDetails/${clinic.id}`}>
+                  <button class="btn btn-primary">Details</button>
+                </Link>
               </Card.Body>
             </Card>
-          ))}
-        
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
