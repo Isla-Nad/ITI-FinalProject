@@ -511,7 +511,7 @@ function Profile() {
                   <div id="Appointments" className="mt-5">
                     <h2 className="text-primary">Appointments</h2>
                     <hr />
-                    <AppointmentPicker id={id} doctor={id} />
+                    <AppointmentPicker profileData={profileData} id={id} doctor={id} />
                   </div>
                   <div id="Rate" className="mt-5">
                     <h2 className="text-primary">Ratings & Reviews</h2>

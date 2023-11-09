@@ -170,11 +170,13 @@ function Nav() {
                   Community
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/medicalHistory">
-                  MedicalHistory
-                </Link>
-              </li>
+              {loggedInUser && loggedInUser.is_doctor && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/medicalHistory">
+                    MedicalHistory
+                  </Link>
+                </li>
+              )}
             </ul>
 
             <span className="btn-group fs-2 gap-1 mx-2">

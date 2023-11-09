@@ -129,7 +129,7 @@ const AppointmentPicker = (props) => {
         console.log("book", response.data);
         dispatch(setSignal(!signal));
         setShowBookingModal(false);
-        sendEmail("islam", "ahmed", "fao", "islamnady95@gmail.com");
+        sendEmail(currentUser.first_name, props.profileData.first_name, `hello Dr. ${props.profileData.first_name}. ${currentUser.first_name} booked appointment on ${selectedAppointmentToBook.appointment_date} from ${selectedAppointmentToBook.start_time} to ${selectedAppointmentToBook.end_time}`, "islamnady95@gmail.com");
       })
       .catch((error) => {
         console.log(error.response.data.non_field_errors[0]);
