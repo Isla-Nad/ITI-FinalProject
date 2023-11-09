@@ -246,7 +246,7 @@ function CommentsAndRating(props) {
       </Container>
 
       <ToastCom
-        position="bottom-center"
+        position="bottom"
         delay={3000}
         showToast={showToast}
         onClose={() => {
