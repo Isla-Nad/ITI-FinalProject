@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom';
 function ClinicDetail() {
   const [clinic, setClinic] = useState([]);
   const [cases, setCases] = useState([]);
+  const [images, setImages] = useState([]);
+  
   const { id } = useParams();
   useEffect(() => {
     axios
@@ -13,6 +15,7 @@ function ClinicDetail() {
       .then((response) => {
         setClinic(response.data.clinic);
         setCases(response.data.cases);
+        setImages(response.data.images);
         // console.log(response.data)
         
       })
@@ -24,13 +27,32 @@ function ClinicDetail() {
     <>
       <div className="container mt-5">
         <div className="row">
-            <div className="jumbotron">
-              <h1 className="display-4 text-center">{clinic.name}</h1>
-              <p className="lead text-center">{clinic.desc}</p>
-              <div className="jumbotron-image">
-                <img src={`http://127.0.0.1:8000${clinic.image}`} style={{width:"100%",height:"50rem"}} alt="Image Description" />
+                      <div id="carouselExampleCaptions" class="carousel slide">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                {images.map(myimage => (
+                  <div class="carousel-item active">
+                    <img src={`http://127.0.0.1:8000${myimage.image}`} style={{height:"50rem",width:"100%"}}class="d-block w-100" alt="..."/>
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>{myimage.desc}</h5>
+                      
+                    </div>
+                  </div>
+                  ))}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
               </div>
-            </div>
         </div>
       </div>
       <div className=" mt-5">
@@ -43,8 +65,8 @@ function ClinicDetail() {
                 <div className="card col-4 ms-3">
                   <img src={`http://127.0.0.1:8000${mycase.image}`} style={{height:"15rem"}} class="card-img-top" alt="..."/>
                   <div className="card-body">
-                    <h5 className="card-title">Card title</h5>
-                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h5 className="card-title">{mycase.title}</h5>
+                    <p className="card-text">{mycase.desc}</p>
                   </div>
             </div>
               ))}
