@@ -190,7 +190,7 @@ const AppointmentPicker = (props) => {
               <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
             </div>
           </div>
-          <Button onClick={addAppointment} className=" w-100  mt-2" variant="outline-dark">
+          <Button onClick={addAppointment} className=" w-100  mt-2" variant={localStorage.getItem("theme") === "dark" ? "outline-light" : "outline-dark"}>
             Add Appointment
           </Button>
           <div className="text-danger text-center ">{errorMessage}</div>

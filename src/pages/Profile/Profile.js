@@ -1,3 +1,4 @@
+import emailjs from "@emailjs/browser";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,7 +7,7 @@ import "./Profile.css";
 import { useParams } from "react-router-dom";
 import AppointmentPicker from "./AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
-import { Button, Card, Container, Form, Image, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
+import { Button, Card, Container, Form, Image, ListGroup, ListGroupItem, Modal, NavLink, Offcanvas } from "react-bootstrap";
 import { FaTrash, FaUser } from "react-icons/fa";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,8 +37,14 @@ function Profile() {
   const signal = useSelector((state) => state.signal);
   const dispatch = useDispatch();
   const [bookedAppointments, setBookedAppointments] = useState([]);
+  const [bookedAppointmentsDoctor, setBookedAppointmentsDoctor] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [showCanvas, setShowCanvas] = useState(false);
+  const [showReject, setShowReject] = useState(false);
+  const [showAccept, setShowAccept] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [selectedAppointments, setSelectedAppointments] = useState(null);
 
   useEffect(() => {
     axios
@@ -80,6 +87,18 @@ function Profile() {
       .then((response) => {
         console.log(response.data);
         setBookedAppointments([...response.data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [signal]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/appointments/booked/doctor/" + id)
+      .then((response) => {
+        console.log(response.data);
+        setBookedAppointmentsDoctor([...response.data]);
       })
       .catch((error) => {
         console.log(error);
@@ -232,6 +251,71 @@ function Profile() {
       });
   };
 
+  const sendEmail = (from_name, to_name, message, to_email) => {
+    emailjs
+      .send(
+        "service_nnndbzw",
+        "template_ce1tb5j",
+        {
+          from_name,
+          to_name,
+          message,
+          to_email,
+        },
+        "lTiqoZrmC_6pX8eLV"
+      )
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const acceptAppointment = () => {
+    axios
+      .put(
+        "http://127.0.0.1:8000/appointments/book/accept/" + selectedAppointment.id,
+        { ...selectedAppointment, is_accepted: true },
+        {
+          headers: {
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+        }
+      )
+      .then((response) => {
+        console.log("book", response.data);
+        dispatch(setSignal(!signal));
+        setShowAccept(false);
+        sendEmail(currentUser.first_name, selectedAppointments.patient.first_name, `hello ${selectedAppointments.patient.first_name}. Dr. ${currentUser.first_name} accepted your booked appointment on ${selectedAppointment.appointment_date} from ${selectedAppointment.start_time} to ${selectedAppointment.end_time}`, "islamnady95@gmail.com");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const rejectAppointment = () => {
+    axios
+      .put(
+        "http://127.0.0.1:8000/appointments/book/reject/" + selectedAppointment.id,
+        { ...selectedAppointment, is_booked: false, patient: null },
+        {
+          headers: {
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+        }
+      )
+      .then((response) => {
+        console.log("book", response.data);
+        dispatch(setSignal(!signal));
+        setShowReject(false);
+        sendEmail(currentUser.first_name, selectedAppointments.patient.first_name, `hello ${selectedAppointments.patient.first_name}. Dr. ${currentUser.first_name} rejected your booked appointment on ${selectedAppointment.appointment_date} from ${selectedAppointment.start_time} to ${selectedAppointment.end_time}`, "islamnady95@gmail.com");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div style={{ flex: "1 0 auto" }}>
       <div className="container">
@@ -351,7 +435,7 @@ function Profile() {
             <div data-bs-spy="scroll" data-bs-target="#sidebar-nav-1" data-bs-smooth-scroll="true" className="scrollspy-example" tabIndex="0">
               <div id="profile">
                 <div className=" d-flex justify-content-between align-items-center ">
-                  <h2 className="text-primary" style={{ fontSize: "4rem" }}>
+                  <h2 className="profile--header" style={{ fontSize: "4rem" }}>
                     {profileData.first_name} {profileData.last_name}
                   </h2>
                   {currentUser && profileData.id === currentUser.id && (
@@ -364,12 +448,12 @@ function Profile() {
                 <p>{profileData.info}</p>
               </div>
               <div id="About" className="mt-5">
-                <h2 className="text-primary">Biography</h2>
+                <h2 className="profile--header">Biography</h2>
                 <hr />
                 <p>{profileData.bio}</p>
               </div>
               <div id="Contacts" className="mt-5">
-                <h2 className="text-primary">Contacts</h2>
+                <h2 className="profile--header">Contacts</h2>
                 <hr />
                 <p>
                   {profileData.contact}
@@ -382,7 +466,7 @@ function Profile() {
                 <>
                   <div id="Certificates" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
-                      <h2 className="text-primary">Certificates</h2>
+                      <h2 className="profile--header">Certificates</h2>
                       {currentUser && profileData.id === currentUser.id && (
                         <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
                           <BiMessageSquareAdd />
@@ -446,7 +530,7 @@ function Profile() {
                   </div>
                   <div id="Cases" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
-                      <h2 className="text-primary">Cases</h2>
+                      <h2 className="profile--header">Cases</h2>
                       {currentUser && profileData.id === currentUser.id && (
                         <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
                           <BiMessageSquareAdd />
@@ -509,12 +593,14 @@ function Profile() {
                   </div>
 
                   <div id="Appointments" className="mt-5">
-                    <h2 className="text-primary">Appointments</h2>
+                    <h2 className="profile--header" onClick={() => setShowCanvas(true)}>
+                      Appointments
+                    </h2>
                     <hr />
                     <AppointmentPicker profileData={profileData} id={id} doctor={id} />
                   </div>
                   <div id="Rate" className="mt-5">
-                    <h2 className="text-primary">Ratings & Reviews</h2>
+                    <h2 className="profile--header">Ratings & Reviews</h2>
                     <hr />
                     <CommentsAndRating reviewed_user={id} />
                   </div>
@@ -522,7 +608,7 @@ function Profile() {
               )}
               {profileData.is_doctor === false && (
                 <div id="booked-appointments" className="mt-5">
-                  <h2 className="text-primary">Booked Appointments</h2>
+                  <h2 className="profile--header">Booked Appointments</h2>
                   <hr />
                   <div className="d-flex gap-2 flex-wrap flex-lg-nowrap">
                     {bookedAppointments.map((appointment, index) => (
@@ -599,6 +685,107 @@ function Profile() {
             <Form.Control value="Save Changes" type="submit" className="btn btn-outline-dark " />
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      <Offcanvas show={showCanvas} onHide={() => setShowCanvas(false)}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Booked Appointments</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          {bookedAppointmentsDoctor.map((appointment, index) => (
+            <Card key={index} className=" m-2 ">
+              <Card.Body>
+                <Card.Title className="text-center">
+                  Appointment Date: <p>{appointment.appointment_date}</p>
+                </Card.Title>
+                <ListGroup>
+                  {appointment.appointments.map((app) => (
+                    <ListGroup.Item action variant="primary" key={app.id}>
+                      <p>Start Time: {app.start_time}</p>
+                      <p>End Time: {app.end_time}</p>
+                      {currentUser && currentUser.id == profileData.id && (
+                        <div className="d-flex justify-content-around">
+                          <button
+                            disabled={app.is_accepted}
+                            className="btn btn-danger"
+                            onClick={() => {
+                              setShowReject(true);
+                              setSelectedAppointment(app);
+                              setSelectedAppointments(appointment);
+                            }}
+                          >
+                            Reject
+                          </button>
+                          <button
+                            disabled={app.is_accepted}
+                            className="btn btn-primary"
+                            onClick={() => {
+                              setShowAccept(true);
+                              setSelectedAppointment(app);
+                              setSelectedAppointments(appointment);
+                            }}
+                          >
+                            Accept
+                          </button>
+                        </div>
+                      )}
+
+                      <hr />
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Card.Body>
+
+              <Card.Footer>
+                <h4 className="text-center">
+                  Patient: {appointment.patient.first_name} {appointment.patient.last_name}
+                </h4>
+              </Card.Footer>
+            </Card>
+          ))}
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      <Modal show={showReject} onHide={() => setShowReject(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reject Time Slot</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedAppointment && (
+            <p>
+              You are booking from <span className="text-warning">{selectedAppointment.start_time}</span> to <span className="text-warning">{selectedAppointment.end_time}</span> on <span className="text-info">{selectedAppointment.appointment_date}</span>.
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowReject(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={rejectAppointment}>
+            Reject
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showAccept} onHide={() => setShowAccept(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Accept Time Slot</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedAppointment && (
+            <p>
+              You are booking from <span className="text-warning">{selectedAppointment.start_time}</span> to <span className="text-warning">{selectedAppointment.end_time}</span> on <span className="text-info">{selectedAppointment.appointment_date}</span>.
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAccept(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={acceptAppointment}>
+            Accept
+          </Button>
+        </Modal.Footer>
       </Modal>
 
       <ToastCom

@@ -52,7 +52,7 @@
   .profile-picture-container {
     height: 100px;
     margin-bottom: 0;
-    width: 100px;
+    border-radius: 5rem 5rem 0 0;
   }
   .user-icon {
     font-size: 2rem;
@@ -71,7 +71,6 @@
     width: 100%;
     height: 10%;
     align-items: baseline;
-    display: flex;
   }
   .sidebar--list {
     display: flex;
@@ -81,7 +80,7 @@
     display: none;
   }
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 780px) {
   .sidebar--list {
     font-size: 0.5rem;
   }
@@ -90,4 +89,42 @@
   .sidebar--list {
     padding: 5px;
   }
+}
+#profile,
+#About,
+#Contacts,
+#Certificates,
+#Cases,
+#Appointments,
+#Rate,
+#booked-appointments {
+  margin-top: 1rem;
+  background-color: rgba(var(--bg-secondary), 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+h2.profile--header:hover {
+  color: #42b817;
+  cursor: pointer;
+}
+.modal-content {
+  background-color: rgb(var(--bg-secondary));
+  border-radius: 10px;
+  padding: 20px;
+}
+.modal-header {
+  border-radius: 10px;
+  box-shadow: 0 0 2px;
+}
+.modal-footer {
+  border-radius: 10px;
+  box-shadow: 0 0 2px;
+}
+.offcanvas {
+  background-color: rgba(var(--bg-secondary), 0.8);
+  color: rgb(var(--text-secondary));
+}
+.offcanvas .btn-close {
+  color: rgb(var(--text-secondary));
 }

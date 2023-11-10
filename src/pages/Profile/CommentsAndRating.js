@@ -159,7 +159,7 @@ function CommentsAndRating(props) {
                 <FaStar key={index} size={25} style={{ marginRight: "10px", cursor: "pointer" }} color={hoverValue >= index + 1 || rating >= index + 1 ? colors.orange : colors.gray} onClick={() => handleRatingClick(index + 1)} onMouseEnter={() => handleRatingHover(index + 1)} onMouseLeave={() => handleRatingHover(0)} />
               ))}
           </div>
-          <Button onClick={handleAddComment} className=" w-100  mt-2" variant="outline-dark">
+          <Button onClick={handleAddComment} className="w-100 mt-2" variant={localStorage.getItem("theme") === "dark" ? "outline-light" : "outline-dark"}>
             Add Comment
           </Button>
         </div>

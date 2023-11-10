@@ -121,7 +121,11 @@ body:before {
   color: rgb(var(--text-secondary));
 }
 .form-control {
-  background-color: rgb(var(--bg-secondary));
+  background-color: rgba(var(--bg-secondary), 0.7);
+  color: rgb(var(--text-primary));
+  border: 1px solid rgb(var(--text-secondary));
+}
+.form-control::placeholder {
   color: rgb(var(--text-secondary));
 }
 .form-control:focus {
