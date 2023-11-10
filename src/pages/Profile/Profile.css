@@ -128,3 +128,13 @@ h2.profile--header:hover {
 .offcanvas .btn-close {
   color: rgb(var(--text-secondary));
 }
+.adding--button {
+  color: rgb(var(--text-secondary));
+  background-color: rgba(var(--bg-secondary), 0.8);
+  border: 1px solid rgb(var(--text-primary));
+}
+.adding--button:hover {
+  color: rgb(var(--bg-secondary));
+  border: 1px solid rgb(var(--text-primary));
+  background-color: rgba(var(--text-primary), 0.8);
+}

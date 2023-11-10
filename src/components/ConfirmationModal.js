@@ -6,7 +6,7 @@ function ConfirmationModal(props) {
       <Modal.Header closeButton>
         <Modal.Title>Confirm Removal</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="text-danger">{props.text}</Modal.Body>
+      <Modal.Body>{props.text}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
           Cancel

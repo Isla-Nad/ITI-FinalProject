@@ -235,7 +235,7 @@ function Nav() {
             )}
             <form className="d-flex" onSubmit={handleSearchSubmit}>
               <input className="form-control me-2" name="search" placeholder="Search" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
-              <button className="btn btn-outline-primary" type="submit">
+              <button className="btn btn-outline-secondary" type="submit">
                 Search
               </button>
             </form>
