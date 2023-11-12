@@ -11,17 +11,17 @@ const PostsForm = (props) => {
           <Form onSubmit={props.handleSubmit}>
             <Form.Group controlId="title">
               <Form.Label>Title:</Form.Label>
-              <Form.Control type="text" name="title" value={props.posts.title} onChange={props.handleChange} required />
+              <Form.Control type="text" name="title" value={props.post.title} onChange={props.handleChange} required />
             </Form.Group>
 
-            <Form.Group controlId="body">
-              <Form.Label>Body:</Form.Label>
-              <Form.Control as="textarea" rows={4} name="body" value={props.posts.body} onChange={props.handleChange} required />
+            <Form.Group controlId="content">
+              <Form.Label>Content:</Form.Label>
+              <Form.Control as="textarea" rows={4} name="content" value={props.post.content} onChange={props.handleChange} required />
             </Form.Group>
 
-            <Form.Group controlId="file">
+            <Form.Group controlId="image">
               <Form.Label>Add Media:</Form.Label>
-              <Form.Control type="file" accept=".pdf, .jpg, .jpeg, .png" onChange={props.handleFileChange} />
+              <Form.Control type="file" accept=".jpg, .jpeg, .png" onChange={props.handleFileChange} />
             </Form.Group>
           </Form>
         </Modal.Body>

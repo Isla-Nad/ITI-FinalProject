@@ -73,43 +73,7 @@ const MedicalHistory = () => {
     const formDataWithDoctor = { ...formData, doctor: currentUser.id };
 
     if (editMode) {
-      if (formData.image === null) {
-        const formDataWithDoctor = { ...formData, doctor: currentUser.id, image: historyData.image };
-        axios
-          .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
-            headers: {
-              Authorization: "Bearer " + authTokens.access,
-              "content-type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            dispatch(setSignal(!signal));
-            setErrorMessage("");
-            setShowForm(false);
-            setEditMode(false);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        const formDataWithDoctor = { ...formData, doctor: currentUser.id };
-        axios
-          .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
-            headers: {
-              Authorization: "Bearer " + authTokens.access,
-              "content-type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            dispatch(setSignal(!signal));
-            setErrorMessage("");
-            setShowForm(false);
-            setEditMode(false);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
+      const formDataWithDoctor = { ...formData, doctor: currentUser.id };
       axios
         .put(`http://127.0.0.1:8000/medical/history/edit/${selectedIndex}`, formDataWithDoctor, {
           headers: {
