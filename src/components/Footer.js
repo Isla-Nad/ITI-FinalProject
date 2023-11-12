@@ -15,17 +15,17 @@ function Footer() {
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
               <h6 class="text-uppercase mb-4 font-weight-bold">Useful links</h6>
               <p>
-                <Link to="/" class="text-decoration-none text-info-emphasis">
+                <Link to="/" class="text-decoration-none  text-dark">
                   Home
                 </Link>
               </p>
               <p>
-                <Link href="/about" class="text-decoration-none text-info-emphasis">
+                <Link to="/#about" class="text-decoration-none text-dark ">
                   About
                 </Link>
               </p>
               <p>
-                <a href="/posts" class="text-decoration-none text-info-emphasis">
+                <a href="/posts" class="text-decoration-none text-dark">
                   Community
                 </a>
               </p>
@@ -37,13 +37,13 @@ function Footer() {
                 <i class="fas fa-home mr-3"></i> Teraat El Daswt Street, El Menia
               </p>
               <p>
-                <a href="mailto:islamnady95@gmail.com" class="custom-link text-decoration-none" target="_blank">
+                <a href="mailto:islamnady95@gmail.com" class="text-decoration-none text-info-emphasis" target="_blank">
                   <FaEnvelope />
                   islamnady95@gmail.com
                 </a>
               </p>
               <p>
-                <a href="tel:(+20)1110639692" class="custom-link text-decoration-none" target="_blank">
+                <a href="tel:(+20)1110639692" class="text-decoration-none text-info-emphasis" target="_blank">
                   <FaPhoneAlt />
                   (+20)111 0639692
                 </a>
@@ -55,9 +55,9 @@ function Footer() {
         <section class="p-3 pt-0">
           <div class="row d-flex align-items-center">
             <div class="col-md-7 col-lg-8 text-center text-md-start">
-              <div class="p-3">
-                © 2023 Copyright:
-                <a href="https://iti.gov.eg/iti/home" class="text-decoration-none text-danger" target="_blank">
+              <div class="p-3 ">
+                © 2023 Copyright:  
+                <a href="https://iti.gov.eg/iti/home" class="text-decoration-none text-info-emphasis" target="_blank">
                   iti.gov.eg
                 </a>
               </div>

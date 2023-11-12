@@ -7,87 +7,83 @@ import icon6 from '../../icons/993248.png'
 
 function Cometics(){
 return (
-    < div className=' text-center ' >
-    <div style={{padding:"40px 0px"}}>
-    <h1 className="text-center">We offer a compelte array of general and </h1>
-     <h1 className='text-center'> cosmetic services for your oral care </h1>
-     </div>
-     <div className='Cometics' style={{padding:"30px 0px"}}>
-     <div className='iconns1-come row  text-center ' >
-     <div className="Icon2-come  col-lg-3 col-sm-12  text-center">
-    <div className="card text-center" style={{width:"18rem"}}>
-  <div className="card-body">
-    <img src={icon1} alt="" style={{width:'100px', height:'100px'}}/>
-    <h1>Cera Crown</h1>
-    <p>Important replace missing teeth and act just like your natural teeth</p>
-    </div>
-    
+  <>
+   <>
+    <h1 className='text-center' style={{padding:"30px 0px"}}>We offer a compelte array of general and <br/>
+cosmetic services for your oral care </h1>
    
-  </div>
-</div>
-<div className="Icon2-come col-lg-3 col-sm-12 text-center ">
-    <div className="card text-center" style={{width:"18rem"}}>
+    <div className='iconns1-come  row ' style={{padding:"30px 0px"}}>
+     <div className="Icon2-come col-sm-6  col-lg-4 text-center">
+
   <div className="card-body">
-    <img src={icon2} alt="" style={{width:'100px', height:'100px'}}/>
-    <h1>Root Canals</h1>
-    <p>Important replace missing teeth and act just like your natural teeth</p>
+    <h1>Cera Crown </h1>
+    <img src={icon1} alt="" style={{width:'200px', height:'200px'}}/>
+    <p>Unversity of Harved Master of Dentistry</p>
+    <i className="fa-brands fa-facebook fa-xl text-dark"></i>
+    <i className="fa-brands fa-instagram fa-xl text-dark" style={{paddingLeft:"20px"}}></i>
+    <i className="fa-brands fa-twitter fa-xl" style={{color: "black", paddingLeft:"20px"}}></i>
     </div>
-    
-   
-  </div>
-</div>
-<div className="Icon3-come  col-sm-12 col-lg-3 text-center ">
-    <div className="card text-center" style={{width:"18rem"}}>
-  <div className="card-body">
-    <img src={icon3} alt="" style={{width:'100px', height:'100px'}}/>
-    <h1>Regular Exam </h1>
-    <p>Important replace missing teeth and act just like your natural teeth</p>
-    </div>
-    
-   
-  </div>
 </div>
 
-
+<div className="Icon2-come  col-sm-6 col-lg-4 text-center">
+  <div className="card-body"> 
+  <h1>Root Canals</h1>
+    <img src={icon2} alt="" style={{width:'200px', height:'200px'}}/>
+   
+    <p>Unversity of Harved Master of Dentistry</p>
+    <i className="fa-brands fa-facebook fa-xl text-dark"></i>
+    <i className="fa-brands fa-instagram fa-xl text-dark" style={{paddingLeft:"20px"}}></i>
+    <i className="fa-brands fa-twitter fa-xl" style={{color: "black", paddingLeft:"20px"}}></i>
     </div>
-    <div className='iconns2-come row  text-center '>
-    <div className="Icon1-come col-sm-12  col-lg-3">
-    <div className="card text-center" style={{width:"18rem"}}>
-  <div className="card-body">
-    <img src={icon4} alt="" style={{width:'100px', height:'100px'}}/>
-    <h1>White Fillings</h1>
-    <p>Important replace missing teeth and act just like your natural teeth</p>
-    </div> 
-  </div>
 </div>
-<div className="Icon2-come col-sm-12  col-lg-3">
-    <div className="card text-center" style={{width:"18rem"}}>
+
+<div className="Icon3-come  col-sm-6 col-lg-4 text-center">
   <div className="card-body">
-    <img src={icon5} alt="" style={{width:'100px', height:'100px'}}/>
+    <h1>Reg-exam</h1>
+    <img src={icon3} alt="" style={{width:'200px', height:'200px'}}/>
+    
+    <p>Unversity of Harved Master of Dentistry</p>
+    <i className="fa-brands fa-facebook fa-xl text-dark"></i>
+    <i className="fa-brands fa-instagram fa-xl text-dark" style={{paddingLeft:"20px"}}></i>
+    <i className="fa-brands fa-twitter fa-xl" style={{color: "black", paddingLeft:"20px"}}></i>
+    </div>
+</div>
+<div className="Icon2-come  col-sm-6 col-lg-4 text-center">
+  <div className="card-body">
+    <h1>White fillings</h1>
+    <img src={icon4} alt="" style={{width:'200px', height:'200px'}}/>
+    <p>Unversity of Harved Master of Dentistry</p>
+    <i className="fa-brands fa-facebook fa-xl text-dark"></i>
+    <i className="fa-brands fa-instagram fa-xl text-dark" style={{paddingLeft:"20px"}}></i>
+    <i className="fa-brands fa-twitter fa-xl" style={{color: "black", paddingLeft:"20px"}}></i>
+    </div>
+</div>
+<div className="Icon2-come  col-sm-6 col-lg-4 text-center">
+  <div className="card-body">
     <h1>Dental Care</h1>
-    <p>Important replace missing teeth and act just like your natural teeth</p>
+    <img src={icon5} alt="" style={{width:'200px', height:'200px'}}/>
+    <p>Unversity of Harved Master of Dentistry</p>
+    <i className="fa-brands fa-facebook fa-xl text-dark"></i>
+    <i className="fa-brands fa-instagram fa-xl text-dark" style={{paddingLeft:"20px"}}></i>
+    <i className="fa-brands fa-twitter fa-xl" style={{color: "black", paddingLeft:"20px"}}></i>
     </div>
-    
-   
-  </div>
 </div>
-<div className="Icon2-come col-sm-12  col-lg-3">
-    <div className="card text-center" style={{width:"18rem"}}>
+<div className="Icon2-come  col-sm-6 col-lg-4 text-center">
   <div className="card-body">
-    <img src={icon6} alt="" style={{width:'100px', height:'100px'}}/>
-    <h1>Den Implants</h1>
-    <p>Important replace missing teeth and act just like your natural teeth</p>
+    <h1>Den implants</h1>
+    <img src={icon6} alt="" style={{width:'200px', height:'200px'}}/>
+    <p>Unversity of Harved Master of Dentistry</p>
+    <i className="fa-brands fa-facebook fa-xl text-dark"></i>
+    <i className="fa-brands fa-instagram fa-xl text-dark" style={{paddingLeft:"20px"}}></i>
+    <i className="fa-brands fa-twitter fa-xl" style={{color: "black", paddingLeft:"20px"}}></i>
     </div>
-    
-   
-  </div>
+</div>
 </div>
 
 
-    </div>
-    </div>
-    
-    </ div>
+
+    </>
+  </>
 )
 }
 export default Cometics;
