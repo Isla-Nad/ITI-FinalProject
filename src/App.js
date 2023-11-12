@@ -11,6 +11,7 @@ import MedicalHistory from "./pages/medicalHistory/MedicalHistory";
 import ContactUs from "./pages/contactUs/contact";
 import Profile from "./pages/Profile/Profile";
 import DoctorSearch from "./pages/search/DoctorSearch";
+import PageNotFound  from "./pages/errors/NotFound";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/medicalHistory" element={<MedicalHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/doctor/search" element={<DoctorSearch />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>
