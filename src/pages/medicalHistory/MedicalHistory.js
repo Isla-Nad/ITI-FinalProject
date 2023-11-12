@@ -205,7 +205,7 @@ const MedicalHistory = () => {
           </Row>
         ))}
       </Container>
-      <Pagination className="justify-content-center my-2 ">
+      <Pagination className="justify-content-center my-2 custom-pagination">
         <Pagination.Prev disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
           Previous
         </Pagination.Prev>

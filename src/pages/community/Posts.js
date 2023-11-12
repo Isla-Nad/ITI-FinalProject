@@ -9,6 +9,7 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
+import { FaUser } from "react-icons/fa";
 
 const Posts = () => {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -128,8 +129,15 @@ const Posts = () => {
           <>
             <Card key={post.id} className="post--container">
               <Card.Header>
-                <CgProfile className="m-2" />
-                email, date
+                <div className="list-group  ">
+                  <div className=" list-group-item w-100 d-flex gap-2 align-items-center ">
+                    <FaUser className="" />
+                    <h4>
+                      {post.user.first_name} {post.user.last_name}
+                    </h4>
+                  </div>
+                  <small>{new Date(post.created_at).toDateString()}</small>
+                </div>
               </Card.Header>
               <Card.Text className="text-center">{post.title}</Card.Text>
               <Container>{post.image && <Image src={`http://localhost:8000${post.image}`} alt="" className="file-embed w-100" />}</Container>
