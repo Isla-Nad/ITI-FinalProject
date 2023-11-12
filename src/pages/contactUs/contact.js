@@ -21,8 +21,8 @@ const ContactForm = () => {
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
-        <div className="card custom-card">
-          <div className="card-body">
+        <div className="card custom-card  w-50 ">
+          <div className="card-body ">
             <h2 className="card-title text-center mb-4">Contact Us</h2>
             <form ref={form} onSubmit={sendEmail}>
               <div className="mb-3">

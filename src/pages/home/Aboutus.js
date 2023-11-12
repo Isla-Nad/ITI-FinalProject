@@ -2,12 +2,12 @@ import about from '../../icons/about_us.png'
 function Aboutus(){
 return(
     <>
-    <div className='container mt-5'>
+    <div className='container mt-5' id='about'>
   <div className='row'>
     <div className='col-sm-12 col-lg-6 text-center'>
       <img src={about} alt='' className='img-fluid' style={{width:"600px", height:'500px'}} />
     </div>
-    <div className='col-sm-12 col-lg-6 border border-2 border-secondary p-4 py-lg-5'>
+    <div className='col-sm-12 col-lg-6 border border-2 border-secondary rounded-1 p-4 py-lg-5'>
       <h1 className='text-center'>About us</h1>
       <p className='fs-4 text-center'>
         Doctor On Demand is the trusted provider of<span style={{color:'aqua'}}> 24/7 </span>virtual healthcare for

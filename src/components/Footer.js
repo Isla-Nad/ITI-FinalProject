@@ -15,17 +15,17 @@ function Footer() {
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
               <h6 class="text-uppercase mb-4 font-weight-bold">Useful links</h6>
               <p>
-                <Link to="/" class="text-decoration-none  text-light">
+                <Link to="/" class="text-decoration-none  text-dark">
                   Home
                 </Link>
               </p>
               <p>
-                <Link href="/about" class="text-decoration-none  text-light">
+                <Link to="/#about" class="text-decoration-none text-dark ">
                   About
                 </Link>
               </p>
               <p>
-                <a href="/posts" class="text-decoration-none text-light">
+                <a href="/posts" class="text-decoration-none text-dark">
                   Community
                 </a>
               </p>
