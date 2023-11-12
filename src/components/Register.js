@@ -1,9 +1,21 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Form, Modal, Pagination, FloatingLabel, Popover, Overlay } from "react-bootstrap";
 
 const Register = (props) => {
   const [errors, setErrors] = useState({});
+  const [clinics, setClinics] = useState([]);
   const [targets, setTargets] = useState({});
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/clinics/")
+      .then((response) => {
+        console.log(response.data.clinics);
+        setClinics(response.data.clinics);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const validateField = (fieldName, value) => {
     const newErrors = { ...errors };
@@ -159,7 +171,16 @@ const Register = (props) => {
 
             {props.formData.is_doctor && (
               <FloatingLabel controlId="clinic" label="Clinic" className="mb-3">
-                <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, clinic: null }))} className={errors.clinic || !props.formData.clinic ? "is-invalid" : "is-valid"} type="text" name="clinic" value={props.formData.clinic} onChange={handleChange} placeholder="..." required />
+                <Form.Select onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, clinic: null }))} name="clinic" value={props.formData.clinic} onChange={handleChange} required>
+                  <option value="" disabled>
+                    Select Clinic
+                  </option>
+                  {clinics.map((clinic) => (
+                    <option key={clinic.id} value={clinic.id}>
+                      {clinic.name}
+                    </option>
+                  ))}
+                </Form.Select>
                 {renderFeedback("clinic")}
               </FloatingLabel>
             )}

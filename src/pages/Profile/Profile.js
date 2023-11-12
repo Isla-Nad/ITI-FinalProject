@@ -45,6 +45,17 @@ function Profile() {
   const [showAccept, setShowAccept] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState(null);
+  const [clinics, setClinics] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/clinics/")
+      .then((response) => {
+        console.log(response.data.clinics);
+        setClinics(response.data.clinics);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   useEffect(() => {
     axios
@@ -677,7 +688,16 @@ function Profile() {
             {profileData.is_doctor && (
               <Form.Group>
                 <Form.Label>Clinic</Form.Label>
-                <Form.Control type="text" name="clinic" value={formData.clinic} onChange={handleEditChange} />
+                <Form.Select name="clinic" value={formData.clinic} onChange={handleEditChange}>
+                  <option value="" disabled>
+                    Select Clinic
+                  </option>
+                  {clinics.map((clinic) => (
+                    <option key={clinic.id} value={clinic.id}>
+                      {clinic.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </Form.Group>
             )}
           </Modal.Body>

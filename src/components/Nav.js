@@ -29,6 +29,7 @@ function Nav() {
   const [showToast, setShowToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [searchCategory, setSearchCategory] = useState("clinics");
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -234,10 +235,23 @@ function Nav() {
               </Overlay>
             )}
             <form className="d-flex" onSubmit={handleSearchSubmit}>
-              <input className="form-control me-2" name="search" placeholder="Search" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
-              <button className="btn btn-outline-secondary" type="submit">
-                Search
-              </button>
+              <div className="input-group">
+                <input className="form-control me-2" name="search" placeholder="Search" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+                <button className="btn btn-outline-secondary" type="submit">
+                  Search
+                </button>
+              </div>
+
+              <Dropdown>
+                <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+                  {searchCategory === "clinics" ? "Clinics" : "Doctors"}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => setSearchCategory("clinics")}>Clinics</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setSearchCategory("doctors")}>Doctors</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </form>
           </div>
         </div>
