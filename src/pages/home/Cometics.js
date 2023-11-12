@@ -7,6 +7,7 @@ import icon6 from '../../icons/993248.png'
 
 function Cometics(){
 return (
+  <>
     < div className=' text-center ' >
     <div style={{padding:"40px 0px"}}>
     <h1 className="text-center">We offer a compelte array of general and </h1>
@@ -86,8 +87,8 @@ return (
 
     </div>
     </div>
-    
     </ div>
+    </>
 )
 }
 export default Cometics;
