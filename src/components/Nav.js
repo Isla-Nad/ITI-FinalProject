@@ -2,8 +2,8 @@ import logo from "../icons/logo.png";
 import axios from "axios";
 import Register from "./Register";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Dropdown, FloatingLabel, Form, Overlay, Popover } from "react-bootstrap";
-import { FaRegUserCircle } from "react-icons/fa";
+import { Button, Dropdown, FloatingLabel, Form, FormControl, InputGroup, Overlay, Popover } from "react-bootstrap";
+import { FaBuilding, FaClipboardList, FaHome, FaRegUserCircle, FaSearch, FaStethoscope, FaUsers } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { setCurrentUser } from "../store/actions/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import ToggleTheme from "./ToggleTheme";
 import { setSignal } from "../store/actions/Signal";
 import ToastCom from "./ToastCom";
 import { setSearchQuery } from "../store/actions/SearchQuery";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 function Nav() {
   const currentUser = useSelector((state) => state.user.user);
@@ -30,11 +31,16 @@ function Nav() {
   const [errorMessage, setErrorMessage] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchCategory, setSearchCategory] = useState("clinics");
+  const [activeLink, setActiveLink] = useState("/");
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     dispatch(setSearchQuery(searchValue));
-    navigate("/doctor/search");
+    if (searchCategory === "clinics") {
+      navigate("/clinics/search");
+    } else {
+      navigate("/doctor/search");
+    }
   };
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
@@ -146,7 +152,7 @@ function Nav() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg">
+      <nav className="navbar navbar-expand-lg ">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <img src={logo} alt="" style={{ width: "100px", height: "50px" }} />
@@ -155,31 +161,25 @@ function Nav() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link" to="/contactus">
-                  Contact Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/clinics">
-                  Clinics
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/posts">
-                  Community
-                </Link>
-              </li>
-              {loggedInUser && loggedInUser.is_doctor && (
-                <li className="nav-item">
-                  <Link className="nav-link" to="/medicalHistory">
-                    MedicalHistory
-                  </Link>
-                </li>
-              )}
-            </ul>
+            <form className="d-flex search-bar" onSubmit={handleSearchSubmit}>
+              <InputGroup>
+                <Dropdown>
+                  <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" className="category-toggle">
+                    {searchCategory === "clinics" ? "Clinics" : "Doctors"}
+                  </Dropdown.Toggle>
 
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => setSearchCategory("clinics")}>Clinics</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSearchCategory("doctors")}>Doctors</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+
+                <FormControl required placeholder="Search for Clinics or Doctors..." value={searchValue} onChange={(e) => setSearchValue(e.target.value)} className="search-input" />
+                <Button type="submit" variant="outline-secondary" className="search-button">
+                  <FaSearch />
+                </Button>
+              </InputGroup>
+            </form>
             <span className="btn-group fs-2 gap-1 mx-2">
               <ToggleTheme />
               <div className="btn-group">
@@ -223,6 +223,40 @@ function Nav() {
               </div>
             </span>
 
+            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link to="/" className={`nav-link ${activeLink === "/" ? "active" : ""}`} onClick={() => setActiveLink("/")}>
+                  <FaHome className="me-2" /> Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/contactus" className={`nav-link ${activeLink === "/contactus" ? "active" : ""}`} onClick={() => setActiveLink("/contactus")}>
+                  <IoChatboxEllipsesOutline className="me-2" /> Contact Us
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/doctor/search" className={`nav-link ${activeLink === "/doctor/search" ? "active" : ""}`} onClick={() => setActiveLink("/doctor/search")}>
+                  <FaStethoscope className="me-2" /> Doctors
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/clinics" className={`nav-link ${activeLink === "/clinics" ? "active" : ""}`} onClick={() => setActiveLink("/clinics")}>
+                  <FaBuilding className="me-2" /> Clinics
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/posts" className={`nav-link ${activeLink === "/posts" ? "active" : ""}`} onClick={() => setActiveLink("/posts")}>
+                  <FaClipboardList className="me-2" /> Community
+                </Link>
+              </li>
+              {loggedInUser && loggedInUser.is_doctor && (
+                <li className="nav-item">
+                  <Link to="/medicalHistory" className={`nav-link ${activeLink === "/medicalHistory" ? "active" : ""}`} onClick={() => setActiveLink("/medicalHistory")}>
+                    <FaUsers className="me-2" /> Medical History
+                  </Link>
+                </li>
+              )}
+            </ul>
             <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, false)} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, true)} onClick={(e) => setTarget(e.target)} />
 
             {errorOverlay.show && (
@@ -234,25 +268,6 @@ function Nav() {
                 </Popover>
               </Overlay>
             )}
-            <form className="d-flex" onSubmit={handleSearchSubmit}>
-              <div className="input-group">
-                <input className="form-control me-2" name="search" placeholder="Search" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
-                <button className="btn btn-outline-secondary" type="submit">
-                  Search
-                </button>
-              </div>
-
-              <Dropdown>
-                <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
-                  {searchCategory === "clinics" ? "Clinics" : "Doctors"}
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => setSearchCategory("clinics")}>Clinics</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setSearchCategory("doctors")}>Doctors</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </form>
           </div>
         </div>
       </nav>
