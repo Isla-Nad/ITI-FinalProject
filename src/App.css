@@ -140,7 +140,9 @@ body:before {
   color: rgb(var(--text-primary));
   border: none;
 }
-
+.toast-container {
+  position: fixed;
+}
 footer {
   background-color: rgba(var(--bg-secondary), 0.7);
   box-shadow: 0 -1px 7px;

@@ -29,7 +29,7 @@ const DoctorSearch = () => {
         {doctors.map((doctor) => (
           <Card key={doctor.id} className="col-md-3 col-sm-6 mb-3">
             {doctor.profile_picture ? (
-              <Card.Img variant="top" src={`http://localhost:8000${doctor.profile_picture}`} alt="" className="profile-picture p-3 " height={"250px"} />
+              <Card.Img variant="top" src={`http://localhost:8000${doctor.profile_picture}`} alt="" className="profile-picture p-3 " height={"300px"} />
             ) : (
               <div className="user-icon d-flex justify-content-center align-items-center p-3 h-100">
                 <FaUser />

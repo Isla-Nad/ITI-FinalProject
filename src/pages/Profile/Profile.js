@@ -51,7 +51,6 @@ function Profile() {
     axios
       .get("http://127.0.0.1:8000/clinics/")
       .then((response) => {
-        console.log(response.data.clinics);
         setClinics(response.data.clinics);
       })
       .catch((err) => console.log(err));
@@ -61,7 +60,6 @@ function Profile() {
     axios
       .get("http://127.0.0.1:8000/accounts/profile/" + id)
       .then((res) => {
-        console.log(res.data);
         setProfileData(res.data);
         setFormData(res.data);
       })
@@ -72,7 +70,6 @@ function Profile() {
     axios
       .get("http://127.0.0.1:8000/accounts/profile/case/" + id)
       .then((response) => {
-        console.log(response.data);
         setCases([...response.data]);
       })
       .catch((error) => {
@@ -84,7 +81,6 @@ function Profile() {
     axios
       .get("http://127.0.0.1:8000/accounts/profile/certificate/" + id)
       .then((response) => {
-        console.log(response.data);
         setCertificates([...response.data]);
       })
       .catch((error) => {
@@ -96,7 +92,6 @@ function Profile() {
     axios
       .get("http://127.0.0.1:8000/appointments/booked/" + id)
       .then((response) => {
-        console.log(response.data);
         setBookedAppointments([...response.data]);
       })
       .catch((error) => {
@@ -108,7 +103,6 @@ function Profile() {
     axios
       .get("http://127.0.0.1:8000/appointments/booked/doctor/" + id)
       .then((response) => {
-        console.log(response.data);
         setBookedAppointmentsDoctor([...response.data]);
       })
       .catch((error) => {
@@ -367,7 +361,7 @@ function Profile() {
               {profileData.profile_picture ? (
                 <Image src={`http://localhost:8000${profileData.profile_picture}`} alt="" className="profile-picture" />
               ) : (
-                <div className="user-icon">
+                <div className="user--icon">
                   <FaUser />
                 </div>
               )}

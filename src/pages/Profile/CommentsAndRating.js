@@ -33,8 +33,8 @@ function CommentsAndRating(props) {
     axios
       .get("http://127.0.0.1:8000/community/reviews/" + props.reviewed_user)
       .then((res) => {
-        console.log(res.data);
         setComments(res.data);
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, [signal]);
@@ -164,7 +164,7 @@ function CommentsAndRating(props) {
           </Button>
         </div>
         <h5 className="text-danger">{error}</h5>
-
+        <small>Overall rating: {comments[0]?.overall_rating}</small>
         <Col>
           <ListGroup style={{ marginTop: "20px" }}>
             {comments.map((comment, index) => (
@@ -246,7 +246,8 @@ function CommentsAndRating(props) {
       </Container>
 
       <ToastCom
-        position="bottom"
+        position="top-start"
+        className="text-danger"
         delay={3000}
         showToast={showToast}
         onClose={() => {

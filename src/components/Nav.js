@@ -115,7 +115,6 @@ function Nav() {
           .then((response) => {
             setLoggedInUser(response.data.user);
             dispatch(setCurrentUser(response.data.user));
-            console.log(response.data.user);
           })
           .catch((error) => {
             console.log(error);
@@ -180,7 +179,7 @@ function Nav() {
                 </Button>
               </InputGroup>
             </form>
-            <span className="btn-group fs-2 gap-1 mx-2">
+            <span className="btn-group fs-2 gap-1 mx-2  ">
               <ToggleTheme />
               <div className="btn-group">
                 <FaRegUserCircle className="dropdown-toggle nav-link" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
@@ -225,34 +224,34 @@ function Nav() {
 
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link to="/" className={`nav-link ${activeLink === "/" ? "active" : ""}`} onClick={() => setActiveLink("/")}>
-                  <FaHome className="me-2" /> Home
+                <Link to="/" className={`nav-link text-center ${activeLink === "/" ? "active" : ""}`} onClick={() => setActiveLink("/")}>
+                  <FaHome className="me-2" /> <small>Home</small>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contactus" className={`nav-link ${activeLink === "/contactus" ? "active" : ""}`} onClick={() => setActiveLink("/contactus")}>
-                  <IoChatboxEllipsesOutline className="me-2" /> Contact Us
+                <Link to="/contactus" className={`nav-link text-center ${activeLink === "/contactus" ? "active" : ""}`} onClick={() => setActiveLink("/contactus")}>
+                  <IoChatboxEllipsesOutline className="me-2" /> <small>Contact Us</small>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/doctor/search" className={`nav-link ${activeLink === "/doctor/search" ? "active" : ""}`} onClick={() => setActiveLink("/doctor/search")}>
-                  <FaStethoscope className="me-2" /> Doctors
+                <Link to="/doctor/search" className={`nav-link text-center ${activeLink === "/doctor/search" ? "active" : ""}`} onClick={() => setActiveLink("/doctor/search")}>
+                  <FaStethoscope className="me-2" /> <small>Doctors</small>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/clinics" className={`nav-link ${activeLink === "/clinics" ? "active" : ""}`} onClick={() => setActiveLink("/clinics")}>
-                  <FaBuilding className="me-2" /> Clinics
+                <Link to="/clinics" className={`nav-link text-center ${activeLink === "/clinics" ? "active" : ""}`} onClick={() => setActiveLink("/clinics")}>
+                  <FaBuilding className="me-2" /> <small>Clinics</small>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/posts" className={`nav-link ${activeLink === "/posts" ? "active" : ""}`} onClick={() => setActiveLink("/posts")}>
-                  <FaClipboardList className="me-2" /> Community
+                <Link to="/posts" className={`nav-link text-center ${activeLink === "/posts" ? "active" : ""}`} onClick={() => setActiveLink("/posts")}>
+                  <FaClipboardList className="me-2" /> <small>Community</small>
                 </Link>
               </li>
               {loggedInUser && loggedInUser.is_doctor && (
                 <li className="nav-item">
-                  <Link to="/medicalHistory" className={`nav-link ${activeLink === "/medicalHistory" ? "active" : ""}`} onClick={() => setActiveLink("/medicalHistory")}>
-                    <FaUsers className="me-2" /> Medical History
+                  <Link to="/medicalHistory" className={`nav-link text-center  ${activeLink === "/medicalHistory" ? "active" : ""}`} onClick={() => setActiveLink("/medicalHistory")}>
+                    <FaUsers className="me-2" /> <small>Medical History</small>
                   </Link>
                 </li>
               )}

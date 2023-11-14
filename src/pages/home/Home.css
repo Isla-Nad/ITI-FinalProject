@@ -1,18 +1,24 @@
 .container-image {
   position: relative;
+  width: 90%;
+  margin: auto;
+  box-shadow: 1px 1px 1rem;
+  border-bottom-left-radius: 5rem;
+  border-bottom-right-radius: 20rem;
+  opacity: 60%;
 }
+.container-image img {
+  width: 100%;
+  border-bottom-left-radius: 5rem;
+  border-bottom-right-radius: 20rem;
+}
+
 .banner-text {
   position: absolute;
-  top: 120px;
+  color: black;
+  text-shadow: 2px 2px 4px;
+  top: 8%;
   left: 8%;
-  color: aliceblue;
-}
-.footer {
-  width: 100%;
-  height: 120px;
-  background-color: rgb(1, 1, 61);
-  position: relative;
-  text-align: center;
 }
 
 .icons {
@@ -29,7 +35,7 @@
   left: 30px;
   top: 20px;
 }
-.imaage{
+.imaage {
   border: 2px;
   border-radius: 50px;
 }
@@ -69,4 +75,24 @@
   .iconns2-come {
     padding-left: 20%;
   }
+}
+.Icon2-come,
+#about {
+  margin-top: 1rem;
+  background-color: rgba(var(--bg-primary), 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.Icon2-head {
+  margin-top: 1rem;
+  background-color: rgba(var(--bg-secondary), 0.5);
+  box-shadow: 0 0 5px;
+  border-radius: 2rem;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+h2.profile--header:hover {
+  color: #42b817;
+  cursor: pointer;
 }

@@ -10,10 +10,7 @@ const Register = (props) => {
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/clinics/")
-      .then((response) => {
-        console.log(response.data.clinics);
-        setClinics(response.data.clinics);
-      })
+      .then((response) => setClinics(response.data.clinics))
       .catch((err) => console.log(err));
   }, []);
 

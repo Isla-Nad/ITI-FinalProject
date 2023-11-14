@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Card, Container, Button, Row, Col } from "react-bootstrap";
+import { FaUser } from "react-icons/fa";
+import { setSignal } from "../../store/actions/Signal";
+import { useDispatch, useSelector } from "react-redux";
+import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaWhatsapp, FaMapMarker } from "react-icons/fa";
+import "./Clinics.css";
 
 function ClinicDetail() {
-  const [clinic, setClinic] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [clinic, setClinic] = useState({});
   const [cases, setCases] = useState([]);
   const [images, setImages] = useState([]);
-
+  const signal = useSelector((state) => state.signal);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
+
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/clinics/show/${id}`)
       .then((response) => {
+        console.log(response.data);
         setClinic(response.data.clinic);
+        setDoctors(response.data.doctors);
         setCases(response.data.cases);
         setImages(response.data.images);
-        // console.log(response.data)
       })
       .catch((err) => console.log(err));
   }, [id]);
-  // console.log(clinic)
-  // console.log(cases)
+
   return (
     <>
       <div className="container mt-5">
@@ -74,110 +84,77 @@ function ClinicDetail() {
         <div className="text-center">
           <img src="https://medmaldirect.com/media/1871/meet-our-team-icon.png" />
         </div>
-        <div className="row m-5">
-          <div className="col-4">
-            <div className="card mb-3" style={{ width: "540px" }}>
-              <div className="row g-0">
-                <div className="col-md-4">
-                  <img src="https://media.licdn.com/dms/image/C4D03AQE7YScjLU4qhQ/profile-displayphoto-shrink_800_800/0/1584844567410?e=2147483647&v=beta&t=kfCdZUdTLS654Rtigf8QjpaUXT1DyvbaICarBIonbQg" className="img-fluid rounded-start" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">Tom Hanks</h5>
-                    <p className="card-text">Bachelor of Oral and Dental Medicine, Ain Shams University... Member of the Egyptian Society for Implant Dentistry... Fellowship in Cosmetic Dentistry - University of Genoa - Italy.</p>
-                    <p className="card-text">
-                      <small className="text-body-secondary">Last updated 3 mins ago</small>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-4">
-            <div className="card mb-3" style={{ width: "540px" }}>
-              <div className="row g-0">
-                <div className="col-md-4">
-                  <img src="https://demo.cherrytheme.com/gems/wp-content/uploads/2018/11/our-team-04.jpg" className="img-fluid rounded-start" alt="..." />
+        <Container className="d-flex flex-wrap justify-content-center my-3 gap-2 ">
+          {doctors.map((doctor) => (
+            <Card key={doctor.id} className="col-md-3 col-sm-6 mb-3">
+              {doctor.profile_picture ? (
+                <Card.Img variant="top" src={`http://localhost:8000${doctor.profile_picture}`} alt="" className="profile-picture p-3 " height={"250px"} />
+              ) : (
+                <div className="user-icon d-flex justify-content-center align-items-center p-3 h-100">
+                  <FaUser />
                 </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">Sarah Williams</h5>
-                    <p className="card-text">Bachelor of Oral and Dental Medicine, Ain Shams University... Member of the Egyptian Society for Implant Dentistry... Fellowship in Cosmetic Dentistry - University of Genoa - Italy.</p>
-                    <p className="card-text">
-                      <small className="text-body-secondary">Last updated 3 mins ago</small>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-4">
-            <div className="card mb-3" style={{ width: "540px" }}>
-              <div className="row g-0">
-                <div className="col-md-4">
-                  <img src="https://documentapi-fargate-documentbucket-15qi4tpdvnhlz.s3.amazonaws.com/207/e79aaab0-9a91-11ea-84ae-17eede58e6c3.jpg" className="img-fluid rounded-start" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">John Sam</h5>
-                    <p className="card-text">Bachelor of Oral and Dental Medicine, Ain Shams University... Member of the Egyptian Society for Implant Dentistry... Fellowship in Cosmetic Dentistry - University of Genoa - Italy</p>
-                    <p className="card-text">
-                      <small className="text-body-secondary">Last updated 3 mins ago</small>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              )}
+              <Card.Body>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    navigate(`/profile/${doctor.id}`);
+                    dispatch(setSignal(!signal));
+                  }}
+                  className="w-100"
+                >
+                  Dr. {doctor.first_name}
+                </Button>
+              </Card.Body>
+            </Card>
+          ))}
+        </Container>
       </div>
 
-      <div className="container">
-        <div className="mt-5">
-          <h2 style={{ textAlign: "center" }}>Contact us on</h2>
-        </div>
+      <Container className="mt-5">
+        <h2 className="text-center">Contact us on</h2>
 
-        <div className="mt-5 row text-center">
-          <div className="col-3 mt-4">
-            <a href="">
-              <img style={{ width: "10rem", height: "10rem" }} src="https://www.chsica.org/wp-content/uploads/2020/10/Facebook-Logo-PNG-Transparent-Like-17-300x300.png" />
+        <Row className="mt-5 text-center">
+          <Col md={3} sm={6} xs={12} className="mt-4 animated-col ">
+            <a href="#">
+              <FaFacebook size={100} color="#3b5998" />
             </a>
-          </div>
-          <div className="col-3 mt-4">
-            <a href="">
-              <img style={{ width: "10rem", height: "10rem" }} src="https://img.freepik.com/premium-vector/modern-badge-logo-instagram-icon_578229-124.jpg" />
+          </Col>
+          <Col md={3} sm={6} xs={12} className="mt-4 animated-col ">
+            <a href="#">
+              <FaInstagram size={100} color="#e4405f" />
             </a>
-          </div>
-          <div className="col-3 mt-4">
-            <a href="">
-              <img style={{ width: "10rem", height: "10rem" }} src="https://static-00.iconduck.com/assets.00/linkedin-icon-2048x2048-ya5g47j2.png" />
+          </Col>
+          <Col md={3} sm={6} xs={12} className="mt-4 animated-col ">
+            <a href="#">
+              <FaLinkedin size={100} color="#0077b5" />
             </a>
-          </div>
-          <div className="col-3 mt-4">
-            <a href="">
-              <img style={{ width: "10rem", height: "10rem" }} src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Logo_Twitter.png" />
+          </Col>
+          <Col md={3} sm={6} xs={12} className="mt-4 animated-col ">
+            <a href="#">
+              <FaTwitter size={100} color="#1da1f2" />
             </a>
-          </div>
-        </div>
-        <div className="mt-5 row text-center">
-          <div className="col-6 mt-4">
+          </Col>
+        </Row>
+
+        <Row className="mt-5 text-center">
+          <Col md={6} sm={12} className="mt-4 animated-col ">
             <span>
-              <img style={{ width: "10rem", height: "10rem" }} src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/2044px-WhatsApp.svg.png" />
+              <FaWhatsapp size={100} color="#25D366" />
             </span>
             <span style={{ fontSize: "1.3rem" }}>Our Number : </span>
-            <span>0123456789</span>
-          </div>
-          <div className="col-6 mt-4">
+            <span>{clinic.phone}</span>
+          </Col>
+          <Col md={6} sm={12} className="mt-4 animated-col ">
             <span>
-              <img style={{ width: "10rem", height: "10rem" }} src="https://cdn.icon-icons.com/icons2/2642/PNG/512/google_map_location_logo_icon_159350.png" />
+              <FaMapMarker size={100} color="#4285F4" />
             </span>
             <span style={{ fontSize: "1.3rem" }}>Our Location : </span>
-            <span>6 Ali Mubarak St. Asyut</span>
-          </div>
-        </div>
-      </div>
+            <span>{clinic.address}</span>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 }

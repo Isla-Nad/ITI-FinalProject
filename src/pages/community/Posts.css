@@ -15,8 +15,7 @@
 .post--container {
   width: 90%;
   overflow: auto;
-  margin-top: 2rem;
-  margin: auto;
+  margin: 1rem auto;
 }
 
 .card-footer {

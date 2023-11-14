@@ -35,7 +35,6 @@ const AppointmentPicker = (props) => {
     axios
       .get("http://127.0.0.1:8000/appointments/" + props.doctor)
       .then((response) => {
-        console.log(response.data);
         setDailyTimeRanges(response.data);
       })
       .catch((error) => {
@@ -279,7 +278,8 @@ const AppointmentPicker = (props) => {
       />
 
       <ToastCom
-        position="bottom"
+        position="top-start"
+        className="text-danger"
         delay={3000}
         showToast={showToast}
         onClose={() => {
