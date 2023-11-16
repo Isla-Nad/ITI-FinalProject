@@ -100,6 +100,7 @@ function Nav() {
     navigate("/");
     setAuthTokens(null);
     localStorage.removeItem("authTokens");
+    dispatch(setCurrentUser(null));
     setLoggedInUser(null);
   };
 

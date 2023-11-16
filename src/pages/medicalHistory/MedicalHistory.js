@@ -219,7 +219,7 @@ const MedicalHistory = () => {
         </Pagination.Next>
       </Pagination>
 
-      <Modal show={showForm} onHide={() => onHideForm()} size="xl">
+      <Modal show={showForm} onHide={() => onHideForm()} size="lg">
         <Modal.Header closeButton={!editMode}>
           <Modal.Title>
             {editMode ? (

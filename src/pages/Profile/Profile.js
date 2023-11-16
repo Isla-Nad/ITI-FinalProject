@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen } from "@fortawesome/free-solid-svg-icons";
 import "./Profile.css";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AppointmentPicker from "./AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
 import { Button, Card, Container, Form, Image, ListGroup, ListGroupItem, Modal, NavLink, Offcanvas } from "react-bootstrap";
@@ -61,6 +61,7 @@ function Profile() {
       .get("http://127.0.0.1:8000/accounts/profile/" + id)
       .then((res) => {
         setProfileData(res.data);
+        console.log(res.data);
         setFormData(res.data);
       })
       .catch((err) => console.log(err));
@@ -451,6 +452,14 @@ function Profile() {
                 </div>
                 <hr />
                 <p>{profileData.info}</p>
+                Clinic:{" "}
+                {profileData.clinic_data ? (
+                  <Link className="badge bg-primary text-wrap link-underline " to={`/clinics/clinicDetails/${profileData.clinic}`}>
+                    {profileData.clinic_data.name}
+                  </Link>
+                ) : (
+                  <p>No clinic data available</p>
+                )}
               </div>
               <div id="About" className="mt-5">
                 <h2 className="profile--header">Biography</h2>
@@ -700,65 +709,66 @@ function Profile() {
           </Modal.Footer>
         </Form>
       </Modal>
+      {currentUser && currentUser.id === profileData.id && (
+        <Offcanvas show={showCanvas} onHide={() => setShowCanvas(false)}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Booked Appointments</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            {bookedAppointmentsDoctor.map((appointment, index) => (
+              <Card key={index} className=" m-2 ">
+                <Card.Body>
+                  <Card.Title className="text-center">
+                    Appointment Date: <p>{appointment.appointment_date}</p>
+                  </Card.Title>
+                  <ListGroup>
+                    {appointment.appointments.map((app) => (
+                      <ListGroup.Item action variant="primary" key={app.id}>
+                        <p>Start Time: {app.start_time}</p>
+                        <p>End Time: {app.end_time}</p>
+                        {currentUser && currentUser.id == profileData.id && (
+                          <div className="d-flex justify-content-around">
+                            <button
+                              disabled={app.is_accepted}
+                              className="btn btn-danger"
+                              onClick={() => {
+                                setShowReject(true);
+                                setSelectedAppointment(app);
+                                setSelectedAppointments(appointment);
+                              }}
+                            >
+                              Reject
+                            </button>
+                            <button
+                              disabled={app.is_accepted}
+                              className="btn btn-primary"
+                              onClick={() => {
+                                setShowAccept(true);
+                                setSelectedAppointment(app);
+                                setSelectedAppointments(appointment);
+                              }}
+                            >
+                              Accept
+                            </button>
+                          </div>
+                        )}
 
-      <Offcanvas show={showCanvas} onHide={() => setShowCanvas(false)}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Booked Appointments</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          {bookedAppointmentsDoctor.map((appointment, index) => (
-            <Card key={index} className=" m-2 ">
-              <Card.Body>
-                <Card.Title className="text-center">
-                  Appointment Date: <p>{appointment.appointment_date}</p>
-                </Card.Title>
-                <ListGroup>
-                  {appointment.appointments.map((app) => (
-                    <ListGroup.Item action variant="primary" key={app.id}>
-                      <p>Start Time: {app.start_time}</p>
-                      <p>End Time: {app.end_time}</p>
-                      {currentUser && currentUser.id == profileData.id && (
-                        <div className="d-flex justify-content-around">
-                          <button
-                            disabled={app.is_accepted}
-                            className="btn btn-danger"
-                            onClick={() => {
-                              setShowReject(true);
-                              setSelectedAppointment(app);
-                              setSelectedAppointments(appointment);
-                            }}
-                          >
-                            Reject
-                          </button>
-                          <button
-                            disabled={app.is_accepted}
-                            className="btn btn-primary"
-                            onClick={() => {
-                              setShowAccept(true);
-                              setSelectedAppointment(app);
-                              setSelectedAppointments(appointment);
-                            }}
-                          >
-                            Accept
-                          </button>
-                        </div>
-                      )}
+                        <hr />
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Card.Body>
 
-                      <hr />
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card.Body>
-
-              <Card.Footer>
-                <h4 className="text-center">
-                  Patient: {appointment.patient.first_name} {appointment.patient.last_name}
-                </h4>
-              </Card.Footer>
-            </Card>
-          ))}
-        </Offcanvas.Body>
-      </Offcanvas>
+                <Card.Footer>
+                  <h4 className="text-center">
+                    Patient: {appointment.patient.first_name} {appointment.patient.last_name}
+                  </h4>
+                </Card.Footer>
+              </Card>
+            ))}
+          </Offcanvas.Body>
+        </Offcanvas>
+      )}
 
       <Modal show={showReject} onHide={() => setShowReject(false)}>
         <Modal.Header closeButton>

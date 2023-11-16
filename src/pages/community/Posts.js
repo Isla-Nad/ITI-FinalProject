@@ -232,6 +232,8 @@ const Posts = () => {
         showModal={showModal}
         onHide={() => {
           setShowModal(false);
+          setEditMode(false);
+          setNewPost({ title: "", content: "", image: null });
           setErrorMessage("");
         }}
         ButtonText={editMode ? "Edit" : "post"}
