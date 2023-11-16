@@ -24,6 +24,7 @@ const PostsForm = (props) => {
               <Form.Control type="file" accept=".jpg, .jpeg, .png" onChange={props.handleFileChange} />
             </Form.Group>
           </Form>
+          <p className="text-danger">{props.errorMessage}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={props.handleAddPost}>

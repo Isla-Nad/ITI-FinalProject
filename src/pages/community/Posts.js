@@ -36,19 +36,19 @@ const Posts = () => {
     return posts.slice(startIndex, endIndex);
   };
 
-  const { likedPost, likeID } = posts.reduce(
-    (result, post) => {
-      if (currentUser) {
-        const likedLike = post.likes.find((like) => like.user.id === currentUser.id);
-        if (likedLike) {
-          result.likedPost = post;
-          result.likeID = likedLike.id;
-        }
-      }
-      return result;
-    },
-    { likedPost: null, likeID: null }
-  );
+  // const { likedPost, likeID } = posts.reduce(
+  //   (result, post) => {
+  //     if (currentUser) {
+  //       const likedLike = post.likes.find((like) => like.user.id === currentUser.id);
+  //       if (likedLike) {
+  //         result.likedPost = post;
+  //         result.likeID = likedLike.id;
+  //       }
+  //     }
+  //     return result;
+  //   },
+  //   { likedPost: null, likeID: null }
+  // );
 
   const isPostLiked = (postId) => {
     const post = posts.find((p) => p.id === postId);
@@ -96,7 +96,11 @@ const Posts = () => {
           setEditMode(false);
           setSelectedIndex(null);
         })
-        .catch((error) => console.log(error));
+
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(error.response.data.detail);
+        });
     } else {
       const newPostwithUser = { ...newPost, user: currentUser.id };
       axios
@@ -112,7 +116,10 @@ const Posts = () => {
           setShowModal(false);
           dispatch(setSignal(!signal));
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(error.response.data.detail);
+        });
     }
     setNewPost({ title: "", content: "", image: posts.image });
   };
@@ -142,7 +149,11 @@ const Posts = () => {
         setShowConfirmationModal(false);
         setSelectedIndex(null);
       })
-      .catch((error) => console.log(error));
+
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(error.response.data.detail);
+      });
   };
 
   const handleRemovePost = (index) => {
@@ -158,6 +169,7 @@ const Posts = () => {
   const cancelRemoval = () => {
     setShowConfirmationModal(false);
     setSelectedIndex(null);
+    setErrorMessage("");
   };
 
   const likePost = (postId) => {
@@ -210,49 +222,67 @@ const Posts = () => {
         <CgProfile className="display-3 mx-4" /> What's on your mind?
       </div>
 
-      <PostsForm post={newPost} handleChange={handleChange} handleFileChange={handleFileChange} handleAddPost={handleSubmit} handleSubmit={handleSubmit} buttonText="Add New Post" showModal={showModal} onHide={() => setShowModal(false)} ButtonText={editMode ? "Edit" : "post"} closeButton={!editMode} />
+      <PostsForm
+        post={newPost}
+        handleChange={handleChange}
+        handleFileChange={handleFileChange}
+        handleAddPost={handleSubmit}
+        handleSubmit={handleSubmit}
+        buttonText="Add New Post"
+        showModal={showModal}
+        onHide={() => {
+          setShowModal(false);
+          setErrorMessage("");
+        }}
+        ButtonText={editMode ? "Edit" : "post"}
+        closeButton={!editMode}
+        errorMessage={errorMessage}
+      />
       <Container>
-        {getCurrentPageData().map((post, index) => (
-          <Card key={post.id} className="post--container">
-            <Card.Header>
-              <div className="list-group  ">
-                <div className=" list-group-item w-100 d-flex gap-2 align-items-center ">
-                  <FaUser className="" />
-                  <h4>
-                    {post.user.is_doctor && "Dr."} {post.user.first_name} {post.user.last_name}
-                  </h4>
+        {getCurrentPageData().map((post, index) => {
+          const likedLike = post.likes.find((like) => like.user.id === currentUser?.id);
+          return (
+            <Card key={post.id} className="post--container">
+              <Card.Header>
+                <div className="list-group  ">
+                  <div className=" list-group-item w-100 d-flex gap-2 align-items-center ">
+                    <FaUser className="" />
+                    <h4>
+                      {post.user.is_doctor && "Dr."} {post.user.first_name} {post.user.last_name}
+                    </h4>
+                  </div>
+                  <small>{new Date(post.created_at).toDateString()}</small>
                 </div>
-                <small>{new Date(post.created_at).toDateString()}</small>
-              </div>
-            </Card.Header>
-            <Card.Text className="text-center">{post.title}</Card.Text>
-            <Container>{post.image && <Image src={`http://localhost:8000${post.image}`} alt="" className="file-embed w-100" />}</Container>
-            <Card.Body>
-              <Card.Text>{post.content}</Card.Text>
-            </Card.Body>
-            <Card.Footer className="post--footer">
-              {isPostLiked(post.id) ? (
-                <span className="post--likes" onClick={() => unlikePost(post.id, likeID)}>
-                  Unlike <AiFillLike color="blue" /> {post.likes_count}
+              </Card.Header>
+              <Card.Text className="text-center">{post.title}</Card.Text>
+              <Container>{post.image && <Image src={`http://localhost:8000${post.image}`} alt="" className="file-embed w-100" />}</Container>
+              <Card.Body>
+                <Card.Text>{post.content}</Card.Text>
+              </Card.Body>
+              <Card.Footer className="post--footer">
+                {isPostLiked(post.id) ? (
+                  <span className="post--likes" onClick={() => unlikePost(post.id, likedLike.id)}>
+                    Unlike <AiFillLike color="blue" /> {post.likes_count}
+                  </span>
+                ) : (
+                  <span className="post--likes" onClick={() => likePost(post.id)}>
+                    Like <AiFillLike /> {post.likes_count}
+                  </span>
+                )}
+                <span className="post--comment" onClick={() => setShowComments(!showComments)}>
+                  Comment
                 </span>
-              ) : (
-                <span className="post--likes" onClick={() => likePost(post.id)}>
-                  Like <AiFillLike /> {post.likes_count}
+                <span className="post--edit" onClick={() => editPost(post, post.id)}>
+                  Edit
                 </span>
-              )}
-              <span className="post--comment" onClick={() => setShowComments(!showComments)}>
-                Comment
-              </span>
-              <span className="post--edit" onClick={() => editPost(post, post.id)}>
-                Edit
-              </span>
-              <span className="post--remove" onClick={() => handleRemovePost(post.id)}>
-                Remove
-              </span>
-            </Card.Footer>
-            {showComments && <Comments post={post} />}
-          </Card>
-        ))}
+                <span className="post--remove" onClick={() => handleRemovePost(post.id)}>
+                  Remove
+                </span>
+              </Card.Footer>
+              {showComments && <Comments post={post} />}
+            </Card>
+          );
+        })}
       </Container>
       <Pagination className="justify-content-center my-2 custom-pagination">
         <Pagination.Prev disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
@@ -278,7 +308,7 @@ const Posts = () => {
         position="top-start"
         className="text-danger"
       />
-      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="post" />
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="Are you sure you want to remove this post?" errorMessage={errorMessage} />
     </div>
   );
 };

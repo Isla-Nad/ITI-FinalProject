@@ -20,14 +20,14 @@ function Footer() {
                 </Link>
               </p>
               <p>
-                <Link to="/#about" className="text-decoration-none text-dark ">
-                  About
+                <Link to="/contactus" className="text-decoration-none text-dark ">
+                  contact us
                 </Link>
               </p>
               <p>
-                <a href="/posts" className="text-decoration-none text-dark">
+                <Link to="/posts" className="text-decoration-none text-dark">
                   Community
-                </a>
+                </Link>
               </p>
             </div>
             <hr className="w-100 clearfix d-md-none" />

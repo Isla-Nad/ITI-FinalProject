@@ -2,7 +2,7 @@ import logo from "../icons/logo.png";
 import axios from "axios";
 import Register from "./Register";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Dropdown, FloatingLabel, Form, FormControl, InputGroup, Overlay, Popover } from "react-bootstrap";
+import { Button, Dropdown, FloatingLabel, Form, FormControl, InputGroup, ListGroupItem, Overlay, Popover } from "react-bootstrap";
 import { FaBuilding, FaClipboardList, FaHome, FaRegUserCircle, FaSearch, FaStethoscope, FaUsers } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { setCurrentUser } from "../store/actions/CurrentUser";
@@ -213,9 +213,9 @@ function Nav() {
 
                       <Form.Control type="submit" value="login" className="mt-3 btn btn-outline-success" onClick={(e) => setTarget(e.target)} />
                       <div className="dropdown-divider"></div>
-                      <Button className="dropdown-item" variant="outline-info" onClick={(e) => setShowRegModal(true)}>
+                      <div className="w-100 btn btn-outline-dark adding--button" style={{ cursor: "pointer" }} onClick={(e) => setShowRegModal(true)}>
                         New around here? Sign up
-                      </Button>
+                      </div>
                     </Form>
                   )}
                 </Dropdown>

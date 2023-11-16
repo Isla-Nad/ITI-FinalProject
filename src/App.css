@@ -119,6 +119,11 @@ body:before {
   background-color: rgb(var(--bg-secondary));
   color: rgb(var(--text-secondary));
 }
+.modal-header,
+.modal-footer {
+  background-color: rgb(var(--bg-primary));
+  box-shadow: 0 0 5px;
+}
 .form-control,
 .form-select,
 .react-datepicker__input-container input {
