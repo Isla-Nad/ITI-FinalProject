@@ -37,13 +37,13 @@ function ClinicDetail() {
         <div className="row">
           <div id="carouselExampleCaptions" className="carousel slide">
             <div className="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              {images.map((myimage, index) => (
+                <button key={index} type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to={index} className={index === 0 ? "active" : ""} aria-current={index === 0 ? "true" : undefined} aria-label={`Slide ${index + 1}`}></button>
+              ))}
             </div>
             <div className="carousel-inner">
               {images.map((myimage, index) => (
-                <div key={index} className="carousel-item active">
+                <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
                   <img src={`http://127.0.0.1:8000${myimage.image}`} style={{ height: "50rem", width: "100%" }} className="d-block w-100" alt="..." />
                   <div className="carousel-caption d-none d-md-block">
                     <h5>{myimage.desc}</h5>

@@ -253,6 +253,16 @@ function Profile() {
         setShowModal(false);
       })
       .catch((error) => {
+        setShowToast(true);
+        if (error.response.data.phone) {
+          setErrorMessage("Phone: " + error.response.data.phone);
+        }
+        if (error.response.data.first_name) {
+          setErrorMessage("First Name: " + error.response.data.first_name);
+        }
+        if (error.response.data.last_name) {
+          setErrorMessage("Last Name: " + error.response.data.last_name);
+        }
         console.log(error);
       });
   };
@@ -452,7 +462,8 @@ function Profile() {
                 </div>
                 <hr />
                 <p>{profileData.info}</p>
-                Clinic:{" "}
+                {profileData.is_doctor && <p>Clinic:</p>}
+
                 {profileData.clinic_data ? (
                   <Link className="badge bg-primary text-wrap link-underline " to={`/clinics/clinicDetails/${profileData.clinic}`}>
                     {profileData.clinic_data.name}
@@ -475,6 +486,8 @@ function Profile() {
                   {/* <FontAwesomeIcon icon={faFacebook} size="2xl" /> */}
                   {/* <FontAwesomeIcon icon={faInstagram} size="2xl" /> */}
                 </p>
+                <span className=" text-danger-emphasis ">Phone:</span>
+                <span> {profileData.phone}</span>
               </div>
               {profileData.is_doctor && (
                 <>
@@ -813,13 +826,15 @@ function Profile() {
       </Modal>
 
       <ToastCom
+        position="top-start"
+        className="text-danger"
         delay={3000}
         showToast={showToast}
         onClose={() => {
           setShowToast(false);
           setErrorMessage("");
         }}
-        message={errorMessage}
+        message={<p className="text-danger">{errorMessage}</p>}
       />
 
       <ConfirmationModal show={showConfirmationCase} onHide={() => setShowConfirmationCase(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCase} />

@@ -68,7 +68,8 @@ function Nav() {
       })
       .catch((error) => {
         setShowToast(true);
-        console.error(error);
+        console.error(error.response.data.email);
+        setErrorMessage(error.response.data.email[0]);
       });
   };
 

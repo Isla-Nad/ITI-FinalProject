@@ -92,7 +92,11 @@ function CommentsAndRating(props) {
         console.log(res.data);
         dispatch(setSignal(!signal));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setShowToast(true);
+        setErrorMessage(err.response.data.detail);
+      });
 
     setNewComment({ body: "" });
     setRating(0);
@@ -172,7 +176,10 @@ function CommentsAndRating(props) {
                 <div className="list-group bg-dark-subtle shadow">
                   <div className=" list-group-item w-100 d-flex gap-2 align-items-center ">
                     <FaUser className="" />
-                    <h4>{comment.reviewing_user.first_name}</h4>
+                    {comment.reviewing_user.is_doctor && <h4>Dr.</h4>}
+                    <h4>
+                      {comment.reviewing_user.first_name} {comment.reviewing_user.last_name}
+                    </h4>
                   </div>
                   <small className="text-muted">{new Date(comment.review.created_at).toDateString()}</small>
                 </div>
