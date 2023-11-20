@@ -2,8 +2,9 @@ import logo from "../icons/logo.png";
 import axios from "axios";
 import Register from "./Register";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Dropdown, FloatingLabel, Form, FormControl, InputGroup, ListGroupItem, Overlay, Popover } from "react-bootstrap";
+import { Button, Dropdown, DropdownButton, FloatingLabel, Form, FormControl, InputGroup, Overlay, Popover } from "react-bootstrap";
 import { FaBuilding, FaClipboardList, FaHome, FaRegUserCircle, FaSearch, FaStethoscope, FaUsers } from "react-icons/fa";
+import { TbUserSquare } from "react-icons/tb";
 import { useState, useEffect } from "react";
 import { setCurrentUser } from "../store/actions/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,9 +13,10 @@ import { setSignal } from "../store/actions/Signal";
 import ToastCom from "./ToastCom";
 import { setSearchQuery } from "../store/actions/SearchQuery";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { changeLang } from "../store/actions/ChangeLang";
+import translations from "./translations.json";
 
 function Nav() {
-  const currentUser = useSelector((state) => state.user.user);
   const [authTokens, setAuthTokens] = useState(JSON.parse(localStorage.getItem("authTokens")) || null);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [regFormData, setRegFormData] = useState({ first_name: "", last_name: "", email: "", password: "", confirm_password: "", phone: "", is_doctor: false, clinic: "" });
@@ -23,25 +25,32 @@ function Nav() {
   const [currentPage, setCurrentPage] = useState(1);
   const [errorOverlay, setErrorOverlay] = useState({ show: false, message: "" });
   const [target, setTarget] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const signal = useSelector((state) => state.signal);
-  const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchCategory, setSearchCategory] = useState("clinics");
   const [activeLink, setActiveLink] = useState("/");
+  const lang = useSelector((state) => state.lang);
+  const [language, setLanguage] = useState(localStorage.getItem("LANGUAGE") || "en");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const translate = (key) => {
+    return translations[lang][key];
+  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     dispatch(setSearchQuery(searchValue));
+
     if (searchCategory === "clinics") {
       navigate("/clinics/search");
     } else {
       navigate("/doctor/search");
     }
   };
+
   const handlePageChange = (page, type) => {
     setCurrentPage(page);
     setRegFormData({
@@ -124,33 +133,6 @@ function Nav() {
     }
   }, [authTokens]);
 
-  // const updateToken = () => {
-  //   axios
-  //     .post("http://127.0.0.1:8000/api/token/refresh/", { refresh: authTokens.refresh })
-  //     .then((response) => {
-  //       setAuthTokens(response.data);
-  //       localStorage.setItem("authTokens", JSON.stringify(response.data));
-  //       setLoggedInUser(jwtDecode(response.data.access));
-  //     })
-  //     .catch((error) => {
-  //       handleLogout();
-  //       setLoading(false);
-  //       console.log(error);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   if (loading) {
-  //     updateToken();
-  //   }
-  //   const interval = setInterval(() => {
-  //     if (authTokens) {
-  //       updateToken();
-  //     }
-  //   }, 1000 * 60 * 4);
-  //   return () => clearInterval(interval);
-  // }, [authTokens, loading]);
-
   return (
     <>
       <nav className="navbar navbar-expand-lg ">
@@ -166,16 +148,16 @@ function Nav() {
               <InputGroup>
                 <Dropdown>
                   <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" className="category-toggle">
-                    {searchCategory === "clinics" ? "Clinics" : "Doctors"}
+                    {searchCategory === "clinics" ? translate("clinics") : translate("doctors")}
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setSearchCategory("clinics")}>Clinics</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSearchCategory("doctors")}>Doctors</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSearchCategory("clinics")}>{translate("clinics")}</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSearchCategory("doctors")}>{translate("doctors")}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
 
-                <FormControl required placeholder="Search for Clinics or Doctors..." value={searchValue} onChange={(e) => setSearchValue(e.target.value)} className="search-input" />
+                <FormControl required placeholder={translate("searchPlaceholder")} value={searchValue} onChange={(e) => setSearchValue(e.target.value)} className="search-input" />
                 <Button type="submit" variant="outline-secondary" className="search-button">
                   <FaSearch />
                 </Button>
@@ -184,7 +166,8 @@ function Nav() {
             <span className="btn-group fs-2 gap-1 mx-2  ">
               <ToggleTheme />
               <div className="btn-group">
-                <FaRegUserCircle className="dropdown-toggle nav-link" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
+                <TbUserSquare className="dropdown-toggle nav-link border-0" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
+
                 <Dropdown className={`dropdown-menu p-4 `} id="user-dropdown">
                   {loggedInUser ? (
                     <>
@@ -194,29 +177,29 @@ function Nav() {
                       </h3>
                       <Form.Control
                         type="button"
-                        value="Your profile"
+                        value={translate("profile")}
                         className="mt-3 btn btn-outline-info"
                         onClick={() => {
                           navigate(`/profile/${loggedInUser.id}`);
                           dispatch(setSignal(!signal));
                         }}
                       />
-                      <Form.Control type="button" value="logout" className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
+                      <Form.Control type="button" value={translate("logout")} className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
                     </>
                   ) : (
                     <Form onSubmit={handleLogSubmit} style={{ width: "18rem" }}>
-                      <FloatingLabel label="Email address" className="mb-3">
-                        <Form.Control type="email" name="email" value={logFormData.email} onChange={handleLogChange} placeholder="..." />
+                      <FloatingLabel label={translate("emailLabel")}>
+                        <Form.Control className="mb-2" type="email" name="email" value={logFormData.email} onChange={handleLogChange} placeholder="..." />
                       </FloatingLabel>
 
-                      <FloatingLabel label="Password">
+                      <FloatingLabel label={translate("passwordLabel")}>
                         <Form.Control type="password" name="password" value={logFormData.password} onChange={handleLogChange} placeholder="..." />
                       </FloatingLabel>
 
-                      <Form.Control type="submit" value="login" className="mt-3 btn btn-outline-success" onClick={(e) => setTarget(e.target)} />
+                      <Form.Control type="submit" value={translate("login")} className="mt-3 btn btn-outline-success" onClick={(e) => setTarget(e.target)} />
                       <div className="dropdown-divider"></div>
                       <div className="w-100 btn btn-outline-dark adding--button" style={{ cursor: "pointer" }} onClick={(e) => setShowRegModal(true)}>
-                        New around here? Sign up
+                        {translate("newHere")} {translate("signUp")}
                       </div>
                     </Form>
                   )}
@@ -224,36 +207,64 @@ function Nav() {
               </div>
             </span>
 
+            <DropdownButton title={language.toUpperCase()} size="sm" variant="info">
+              <Dropdown.Item
+                onClick={() => {
+                  setLanguage("EN");
+                  dispatch(changeLang("en"));
+                  localStorage.setItem("LANGUAGE", "en");
+                }}
+              >
+                EN
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  setLanguage("AR");
+                  dispatch(changeLang("ar"));
+                  localStorage.setItem("LANGUAGE", "ar");
+                }}
+              >
+                AR
+              </Dropdown.Item>
+            </DropdownButton>
+
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link to="/" className={`nav-link text-center ${activeLink === "/" ? "active" : ""}`} onClick={() => setActiveLink("/")}>
-                  <FaHome className="me-2" /> <small>Home</small>
+                  <FaHome className="me-2" /> <small>{translate("home")}</small>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="/contactus" className={`nav-link text-center ${activeLink === "/contactus" ? "active" : ""}`} onClick={() => setActiveLink("/contactus")}>
-                  <IoChatboxEllipsesOutline className="me-2" /> <small>Contact Us</small>
+                  <IoChatboxEllipsesOutline className="me-2" /> <small>{translate("contactUs")}</small>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/doctor/search" className={`nav-link text-center ${activeLink === "/doctor/search" ? "active" : ""}`} onClick={() => setActiveLink("/doctor/search")}>
-                  <FaStethoscope className="me-2" /> <small>Doctors</small>
+                <Link
+                  to="/doctor/search"
+                  className={`nav-link text-center ${activeLink === "/doctor/search" ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveLink("/doctor/search");
+                    dispatch(setSearchQuery(""));
+                  }}
+                >
+                  <FaStethoscope className="me-2" /> <small>{translate("doctors")}</small>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="/clinics" className={`nav-link text-center ${activeLink === "/clinics" ? "active" : ""}`} onClick={() => setActiveLink("/clinics")}>
-                  <FaBuilding className="me-2" /> <small>Clinics</small>
+                  <FaBuilding className="me-2" /> <small>{translate("clinics")}</small>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="/posts" className={`nav-link text-center ${activeLink === "/posts" ? "active" : ""}`} onClick={() => setActiveLink("/posts")}>
-                  <FaClipboardList className="me-2" /> <small>Community</small>
+                  <FaClipboardList className="me-2" /> <small>{translate("community")}</small>
                 </Link>
               </li>
               {loggedInUser && loggedInUser.is_doctor && (
                 <li className="nav-item">
                   <Link to="/medicalHistory" className={`nav-link text-center  ${activeLink === "/medicalHistory" ? "active" : ""}`} onClick={() => setActiveLink("/medicalHistory")}>
-                    <FaUsers className="me-2" /> <small>Medical History</small>
+                    <FaUsers className="me-2" /> <small>{translate("medicalHistory")}</small>
                   </Link>
                 </li>
               )}

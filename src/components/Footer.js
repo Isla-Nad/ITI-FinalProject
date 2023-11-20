@@ -1,40 +1,49 @@
 import { FaPhoneAlt, FaFacebookF, FaInstagram, FaTwitter, FaEnvelope, FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import translations from "./translations.json";
+import { useSelector } from "react-redux";
 
 function Footer() {
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
+
   return (
     <footer className="text-center text-lg-start mt-5 " style={{ flexShrink: 0 }}>
       <div className="container p-4 pb-0">
         <section>
           <div className="row">
             <div className="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-              <h6 className="text-uppercase mb-4 font-weight-bold">Information Technology Institute</h6>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem , consectetur adipisicing elit.</p>
+              <h6 className="text-uppercase mb-4 font-weight-bold">{translate("itiInfo")}</h6>
+              <p>{translate("itiDescription")}</p>
             </div>
             <hr className="w-100 clearfix d-md-none" />
             <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-              <h6 className="text-uppercase mb-4 font-weight-bold">Useful links</h6>
+              <h6 className="text-uppercase mb-4 font-weight-bold">{translate("usefulLinks")}</h6>
               <p>
                 <Link to="/" className="text-decoration-none  text-dark">
-                  Home
+                  {translate("home")}
                 </Link>
               </p>
               <p>
                 <Link to="/contactus" className="text-decoration-none text-dark ">
-                  contact us
+                  {translate("contactUs")}
                 </Link>
               </p>
               <p>
                 <Link to="/posts" className="text-decoration-none text-dark">
-                  Community
+                  {translate("community")}
                 </Link>
               </p>
             </div>
             <hr className="w-100 clearfix d-md-none" />
             <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-              <h6 className="text-uppercase mb-4 font-weight-bold">Contact</h6>
+              <h6 className="text-uppercase mb-4 font-weight-bold">{translate("contact")}</h6>
               <p>
-                <i className="fas fa-home mr-3"></i> Teraat El Daswt Street, El Menia
+                <i className="fas fa-home mr-3"></i>
+                {translate("address")}
               </p>
               <p>
                 <a href="mailto:islamnady95@gmail.com" className="text-decoration-none text-info-emphasis" target="_blank">
@@ -56,7 +65,7 @@ function Footer() {
           <div className="row d-flex align-items-center">
             <div className="col-md-7 col-lg-8 text-center text-md-start">
               <div className="p-3 ">
-                © 2023 Copyright:
+                {translate("copyright")}
                 <a href="https://iti.gov.eg/iti/home" className="text-decoration-none text-info-emphasis" target="_blank">
                   iti.gov.eg
                 </a>

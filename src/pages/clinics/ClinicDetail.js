@@ -35,6 +35,7 @@ function ClinicDetail() {
     <>
       <div className="container mt-5">
         <div className="row">
+          <h1 className=" text-center ">{clinic.name}</h1>
           <div id="carouselExampleCaptions" className="carousel slide">
             <div className="carousel-indicators">
               {images.map((myimage, index) => (
