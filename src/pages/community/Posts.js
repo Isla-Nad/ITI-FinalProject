@@ -80,18 +80,22 @@ const Posts = () => {
             "content-type": "multipart/form-data",
           },
         })
-
         .then((response) => {
           console.log(response.data);
           dispatch(setSignal(!signal));
           setShowModal(false);
           setEditMode(false);
+          setNewPost({ title: "", content: "", image: posts.image });
           setSelectedIndex(null);
         })
 
         .catch((error) => {
-          console.log(error);
-          setErrorMessage(error.response.data.detail);
+          if (error.response.data.content) {
+            setErrorMessage("content: " + error.response.data.content);
+          }
+          if (error.response.data.title) {
+            setErrorMessage("title: " + error.response.data.title);
+          }
         });
     } else {
       const newPostwithUser = { ...newPost, user: currentUser.id };
@@ -106,14 +110,19 @@ const Posts = () => {
         .then((response) => {
           console.log(response.data);
           setShowModal(false);
+          setNewPost({ title: "", content: "", image: posts.image });
           dispatch(setSignal(!signal));
         })
         .catch((error) => {
           console.log(error);
-          setErrorMessage(error.response.data.detail);
+          if (error.response.data.content) {
+            setErrorMessage("content: " + error.response.data.content);
+          }
+          if (error.response.data.title) {
+            setErrorMessage("title: " + error.response.data.title);
+          }
         });
     }
-    setNewPost({ title: "", content: "", image: posts.image });
   };
 
   const editPost = (post, index) => {

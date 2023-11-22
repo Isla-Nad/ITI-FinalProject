@@ -163,9 +163,9 @@ function Nav() {
                 </Button>
               </InputGroup>
             </form>
-            <span className="btn-group fs-2 gap-1 mx-2  ">
+            <span className="btn-group fs-2 gap-1 mx-2 align-items-center utiltiy--group">
               <ToggleTheme />
-              <div className="btn-group">
+              <div className="btn-group ">
                 <TbUserSquare className="dropdown-toggle nav-link border-0" data-bs-toggle="dropdown" data-bs-auto-close="outside" />
 
                 <Dropdown className={`dropdown-menu p-4 `} id="user-dropdown">
@@ -205,28 +205,27 @@ function Nav() {
                   )}
                 </Dropdown>
               </div>
+              <DropdownButton title={language.toUpperCase()} size="sm" variant="info">
+                <Dropdown.Item
+                  onClick={() => {
+                    setLanguage("EN");
+                    dispatch(changeLang("en"));
+                    localStorage.setItem("LANGUAGE", "en");
+                  }}
+                >
+                  EN
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setLanguage("AR");
+                    dispatch(changeLang("ar"));
+                    localStorage.setItem("LANGUAGE", "ar");
+                  }}
+                >
+                  AR
+                </Dropdown.Item>
+              </DropdownButton>
             </span>
-
-            <DropdownButton title={language.toUpperCase()} size="sm" variant="info">
-              <Dropdown.Item
-                onClick={() => {
-                  setLanguage("EN");
-                  dispatch(changeLang("en"));
-                  localStorage.setItem("LANGUAGE", "en");
-                }}
-              >
-                EN
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => {
-                  setLanguage("AR");
-                  dispatch(changeLang("ar"));
-                  localStorage.setItem("LANGUAGE", "ar");
-                }}
-              >
-                AR
-              </Dropdown.Item>
-            </DropdownButton>
 
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">

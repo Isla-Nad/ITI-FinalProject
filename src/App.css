@@ -109,8 +109,7 @@ body:before {
   background-color: rgba(var(--bg-primary), 0.7);
   color: rgb(var(--text-primary));
 }
-.modal-content,
-.dropdown {
+.modal-content {
   background-color: rgb(var(--bg-primary));
   color: rgb(var(--text-primary));
 }
@@ -157,4 +156,11 @@ footer {
   background-color: rgba(var(--bg-secondary), 0.7);
   box-shadow: 0 -1px 7px;
   position: relative;
+}
+@media only screen and (max-width: 990px) {
+  .utiltiy--group {
+    justify-content: center;
+    gap: 5rem;
+    width: 100%;
+  }
 }

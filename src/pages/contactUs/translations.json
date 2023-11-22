@@ -8,7 +8,7 @@
     "emailPlaceholder": "Your Email",
     "messagePlaceholder": "Your Message",
     "buttonText": "Send Message",
-    "successMessage": "Email sent successfully"
+    "successMessage": "Your message has been sent successfully. Thank you!"
   },
   "ar": {
     "title": "اتصل بنا",
@@ -19,6 +19,6 @@
     "emailPlaceholder": "بريدك الإلكتروني",
     "messagePlaceholder": "رسالتك",
     "buttonText": "إرسال الرسالة",
-    "successMessage": "تم إرسال البريد الإلكتروني بنجاح"
+    "successMessage": "تم إرسال رسالتك بنجاح. شكراً لك!"
   }
 }

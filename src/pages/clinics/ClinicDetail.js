@@ -41,7 +41,7 @@ function ClinicDetail() {
     <>
       <div className="container mt-5">
         <div className="row">
-          <h1 className=" text-center ">{clinic.name}</h1>
+          <h1 className=" text-center Icon2-head w-50 m-auto my-2">{clinic.name}</h1>
           <div id="carouselExampleCaptions" className="carousel slide">
             <div className="carousel-indicators">
               {images.map((myimage, index) => (
@@ -53,7 +53,7 @@ function ClinicDetail() {
                 <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
                   <img src={`http://127.0.0.1:8000${myimage.image}`} style={{ height: "50rem", width: "100%" }} className="d-block w-100" alt="..." />
                   <div className="carousel-caption d-none d-md-block">
-                    <h5>{myimage.desc}</h5>
+                    <h5 className=" text-dark-emphasis ">{myimage.desc}</h5>
                   </div>
                 </div>
               ))}

@@ -94,6 +94,7 @@ const MedicalHistory = () => {
           setEditMode(false);
         })
         .catch((error) => {
+          setErrorMessage(error.response.data.detail);
           console.error(error);
         });
     } else {

@@ -95,7 +95,8 @@
     "selectEndTime": "Select End Time",
     "previous": "Previous",
     "next": "Next",
-    "book": "Book"
+    "book": "Book",
+    "schedule": "Schedule your appointment online and make the payment at the clinic."
   },
   "ar": {
     "addPicture": "إضافة صورة",
@@ -191,6 +192,7 @@
     "selectEndTime": "اختر وقت الانتهاء",
     "previous": "السابق",
     "next": "التالي",
-    "book": "حجز"
+    "book": "حجز",
+    "schedule": "حدد موعدك عبر الإنترنت وقم بالدفع في العيادة."
   }
 }

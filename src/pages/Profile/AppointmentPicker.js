@@ -257,9 +257,12 @@ const AppointmentPicker = (props) => {
         </Modal.Header>
         <Modal.Body>
           {selectedAppointmentToBook && (
-            <p>
-              {translate("bookingTimeSlot")} {translate("from")} <span className="text-warning">{selectedAppointmentToBook.start_time}</span> {translate("to")} <span className="text-warning">{selectedAppointmentToBook.end_time}</span> {translate("on")} <span className="text-info">{selectedAppointmentToBook.appointment_date}</span>.
-            </p>
+            <>
+              <p>
+                {translate("bookingTimeSlot")} {translate("from")} <span className="text-warning">{selectedAppointmentToBook.start_time}</span> {translate("to")} <span className="text-warning">{selectedAppointmentToBook.end_time}</span> {translate("on")} <span className="text-info">{selectedAppointmentToBook.appointment_date}</span>.
+              </p>
+              <p className="text-center text-warning  fst-italic ">{translate("schedule")}</p>
+            </>
           )}
         </Modal.Body>
         <Modal.Footer>
