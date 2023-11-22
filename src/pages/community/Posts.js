@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
 import { FaUser } from "react-icons/fa";
 import ToastCom from "../../components/ToastCom";
+import translations from "./translations.json";
 
 const Posts = () => {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -29,26 +30,17 @@ const Posts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 1;
   const totalPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     return posts.slice(startIndex, endIndex);
   };
-
-  // const { likedPost, likeID } = posts.reduce(
-  //   (result, post) => {
-  //     if (currentUser) {
-  //       const likedLike = post.likes.find((like) => like.user.id === currentUser.id);
-  //       if (likedLike) {
-  //         result.likedPost = post;
-  //         result.likeID = likedLike.id;
-  //       }
-  //     }
-  //     return result;
-  //   },
-  //   { likedPost: null, likeID: null }
-  // );
 
   const isPostLiked = (postId) => {
     const post = posts.find((p) => p.id === postId);
@@ -207,19 +199,19 @@ const Posts = () => {
   };
 
   return (
-    <div style={{ flex: "1 0 auto" }}>
+    <div style={{ flex: "1 0 auto" }} dir={language === "ar" ? "rtl" : ""}>
       <div
         onClick={() => {
           if (!currentUser) {
             setShowToast(true);
-            setErrorMessage("Must be logged");
+            setErrorMessage(translate("whatsOnYourMind"));
             return;
           }
           setShowModal(true);
         }}
         className="post--button"
       >
-        <CgProfile className="display-3 mx-4" /> What's on your mind?
+        <CgProfile className="display-3 mx-4" /> {translate("whatsOnYourMind")}
       </div>
 
       <PostsForm
@@ -228,7 +220,6 @@ const Posts = () => {
         handleFileChange={handleFileChange}
         handleAddPost={handleSubmit}
         handleSubmit={handleSubmit}
-        buttonText="Add New Post"
         showModal={showModal}
         onHide={() => {
           setShowModal(false);
@@ -236,7 +227,7 @@ const Posts = () => {
           setNewPost({ title: "", content: "", image: null });
           setErrorMessage("");
         }}
-        ButtonText={editMode ? "Edit" : "post"}
+        ButtonText={editMode ? translate("edit") : translate("post")}
         closeButton={!editMode}
         errorMessage={errorMessage}
       />
@@ -264,21 +255,21 @@ const Posts = () => {
               <Card.Footer className="post--footer">
                 {isPostLiked(post.id) ? (
                   <span className="post--likes" onClick={() => unlikePost(post.id, likedLike.id)}>
-                    Unlike <AiFillLike color="blue" /> {post.likes_count}
+                    {translate("unlike")} <AiFillLike color="blue" /> {post.likes_count}
                   </span>
                 ) : (
                   <span className="post--likes" onClick={() => likePost(post.id)}>
-                    Like <AiFillLike /> {post.likes_count}
+                    {translate("like")} <AiFillLike /> {post.likes_count}
                   </span>
                 )}
                 <span className="post--comment" onClick={() => setShowComments(!showComments)}>
-                  Comment
+                  {translate("comment")}
                 </span>
                 <span className="post--edit" onClick={() => editPost(post, post.id)}>
-                  Edit
+                  {translate("edit")}
                 </span>
                 <span className="post--remove" onClick={() => handleRemovePost(post.id)}>
-                  Remove
+                  {translate("remove")}
                 </span>
               </Card.Footer>
               {showComments && <Comments post={post} />}
@@ -288,7 +279,7 @@ const Posts = () => {
       </Container>
       <Pagination className="justify-content-center my-2 custom-pagination">
         <Pagination.Prev disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-          Previous
+          {translate("previous")}
         </Pagination.Prev>
         {[...Array(totalPages)].map((_, page) => (
           <Pagination.Item key={page + 1} active={currentPage === page + 1} onClick={() => setCurrentPage(page + 1)}>
@@ -296,7 +287,7 @@ const Posts = () => {
           </Pagination.Item>
         ))}
         <Pagination.Next disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
-          Next
+          {translate("next")}
         </Pagination.Next>
       </Pagination>
       <ToastCom
@@ -310,7 +301,7 @@ const Posts = () => {
         position="top-start"
         className="text-danger"
       />
-      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="Are you sure you want to remove this post?" errorMessage={errorMessage} />
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text={translate("confirmRemovePost")} errorMessage={errorMessage} />
     </div>
   );
 };

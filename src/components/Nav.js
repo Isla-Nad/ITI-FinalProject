@@ -269,7 +269,22 @@ function Nav() {
                 </li>
               )}
             </ul>
-            <Register show={showRegModal} onHide={() => setShowRegModal(false)} handleSubmit={handleSubmit} handleChange={handleChange} formData={regFormData} currentPage={currentPage === 1} handlePageChange={() => handlePageChange(1, false)} currentPage2={currentPage === 2} handlePageChange2={() => handlePageChange(2, true)} onClick={(e) => setTarget(e.target)} />
+            <Register
+              show={showRegModal}
+              onHide={() => {
+                setShowRegModal(false);
+                setErrorMessage("");
+              }}
+              errorMessage={<p className=" text-danger ">{errorMessage}</p>}
+              handleSubmit={handleSubmit}
+              handleChange={handleChange}
+              formData={regFormData}
+              currentPage={currentPage === 1}
+              handlePageChange={() => handlePageChange(1, false)}
+              currentPage2={currentPage === 2}
+              handlePageChange2={() => handlePageChange(2, true)}
+              onClick={(e) => setTarget(e.target)}
+            />
 
             {errorOverlay.show && (
               <Overlay show={errorOverlay.show} target={target} placement="bottom" rootClose={true} onHide={() => setErrorOverlay({ show: false, message: "" })}>

@@ -46,6 +46,10 @@
   margin-left: 30%;
   width: 70%;
 }
+#profile--container--ar {
+  margin-right: 30%;
+  width: 70%;
+}
 @media only screen and (min-width: 990px) and (max-width: 1400px) {
   #sidebar--container {
     width: 25%;
@@ -63,6 +67,10 @@
   }
   #profile--container {
     margin-left: 0;
+    width: 100%;
+  }
+  #profile--container--ar {
+    margin-right: 0;
     width: 100%;
   }
   #sidebar-nav-1 {

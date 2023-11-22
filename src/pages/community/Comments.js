@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setSignal } from "../../store/actions/Signal";
 import ToastCom from "../../components/ToastCom";
+import translations from "./translations.json";
 
 const Comments = (props) => {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -20,12 +21,17 @@ const Comments = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const dispatch = useDispatch();
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (!currentUser) {
       setShowToast(true);
-      setErrorMessage("Must be logged");
+      setErrorMessage(translate("mustBeLogged"));
       return;
     }
     if (selectedCommentToEdit === null) {
@@ -127,11 +133,11 @@ const Comments = (props) => {
 
       <Form onSubmit={onSubmit}>
         <InputGroup className="mt-3">
-          <FloatingLabel controlId="floatingTextarea2" label="Leave a comment here">
+          <FloatingLabel controlId="floatingTextarea2" label={translate("leaveCommentLabel")}>
             <Form.Control as="textarea" style={{ height: "100px" }} name="text" value={formData.text} onChange={(e) => setFormData({ ...formData, text: e.target.value })} />
           </FloatingLabel>
           <Button type="submit" variant="outline-secondary" style={{ border: "none" }}>
-            {selectedCommentToEdit === null ? <FontAwesomeIcon icon={faArrowRight} /> : <span>Save Changes</span>}
+            {selectedCommentToEdit === null ? <FontAwesomeIcon icon={faArrowRight} /> : <span>{translate("saveChanges")}</span>}
           </Button>
         </InputGroup>
       </Form>
@@ -146,7 +152,7 @@ const Comments = (props) => {
         position="top-start"
         className="text-danger"
       />
-      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text="Are you sure you want to remove this comment?" />
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text={translate("confirmRemoveComment")} />
     </>
   );
 };

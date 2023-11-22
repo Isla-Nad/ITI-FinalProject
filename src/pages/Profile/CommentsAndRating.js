@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
 import ToastCom from "../../components/ToastCom";
+import translations from "./translations.json";
 
 const colors = {
   orange: "#FFBA5A",
@@ -28,6 +29,11 @@ function CommentsAndRating(props) {
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   useEffect(() => {
     axios
@@ -68,11 +74,11 @@ function CommentsAndRating(props) {
   const handleAddComment = () => {
     if (!currentUser) {
       setShowToast(true);
-      setErrorMessage("Must be logged");
+      setErrorMessage(translate("mustBeLogged"));
       return;
     }
     if (rating === 0 || newComment.body.trim() === "") {
-      setError("Please provide a rating and a comment before submitting.");
+      setError(translate("reviewsError"));
       return;
     }
 
@@ -124,7 +130,7 @@ function CommentsAndRating(props) {
 
   const handleAddUpdate = () => {
     if (rating === 0 || updateComment.comment.trim() === "") {
-      setUpdateError("Please provide a rating and a comment before submitting.");
+      setUpdateError(translate("reviewsError"));
       return;
     }
     const newCommentWithDate = {
@@ -155,7 +161,7 @@ function CommentsAndRating(props) {
     <>
       <Container>
         <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
-          <Form.Control as="textarea" placeholder="What is Your Comment" name="Textcomment" value={newComment.body} onChange={(e) => setNewComment({ ...newComment, body: e.target.value })} />
+          <Form.Control as="textarea" placeholder={translate("reviewsPlaceHolder")} name="Textcomment" value={newComment.body} onChange={(e) => setNewComment({ ...newComment, body: e.target.value })} />
           <div className="text-center">
             {Array(5)
               .fill()
@@ -164,11 +170,13 @@ function CommentsAndRating(props) {
               ))}
           </div>
           <Button onClick={handleAddComment} className="w-100 mt-2 adding--button">
-            Add Comment
+            {translate("reviewsButton")}
           </Button>
         </div>
         <h5 className="text-danger">{error}</h5>
-        <small>Overall rating: {comments[0]?.overall_rating}</small>
+        <small>
+          {translate("overallRating")}: {comments[0]?.overall_rating}
+        </small>
         <Col>
           <ListGroup style={{ marginTop: "20px" }}>
             {comments.map((comment, index) => (
@@ -176,7 +184,7 @@ function CommentsAndRating(props) {
                 <div className="list-group bg-dark-subtle shadow">
                   <div className=" list-group-item w-100 d-flex gap-2 align-items-center ">
                     <FaUser className="" />
-                    {comment.reviewing_user.is_doctor && <h4>Dr.</h4>}
+                    {comment.reviewing_user.is_doctor && <h4>{translate("dr")}.</h4>}
                     <h4>
                       {comment.reviewing_user.first_name} {comment.reviewing_user.last_name}
                     </h4>
@@ -211,26 +219,26 @@ function CommentsAndRating(props) {
 
         <Modal show={showRemove} onHide={handleCloseRemove}>
           <Modal.Header closeButton>
-            <Modal.Title>Remove</Modal.Title>
+            <Modal.Title>{translate("remove")}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Are you sure you want to remove the comment?</Modal.Body>
+          <Modal.Body>{translate("removeConfirmationComments")}</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseRemove}>
-              Close
+              {translate("close")}
             </Button>
             <Button variant="primary" onClick={() => handleRemoveComment()}>
-              Confirm
+              {translate("confirm")}
             </Button>
           </Modal.Footer>
         </Modal>
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Update your rating and comment</Modal.Title>
+            <Modal.Title>{translate("updateReview")}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
-              <Form.Control as="textarea" placeholder="What is Your new Comment" name="Textcomment" onChange={(e) => setUpdateComment({ ...updateComment, comment: e.target.value })} value={updateComment.comment} />
+              <Form.Control as="textarea" placeholder={translate("reviewsPlaceHolder")} name="Textcomment" onChange={(e) => setUpdateComment({ ...updateComment, comment: e.target.value })} value={updateComment.comment} />
               <div className="text-center">
                 {Array(5)
                   .fill()
@@ -239,14 +247,14 @@ function CommentsAndRating(props) {
                   ))}
               </div>
               <div onClick={handleAddUpdate} className="text-center mt-2" style={{ border: "1px solid gray", padding: "10px 20px", cursor: "pointer", borderRadius: "5px" }}>
-                Update
+                {translate("edit")}
               </div>
               <h4 className="text-danger">{updateError}</h4>
             </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="danger" onClick={handleClose}>
-              Close
+              {translate("close")}
             </Button>
           </Modal.Footer>
         </Modal>

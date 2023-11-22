@@ -8,6 +8,7 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
 import { BiEdit, BiShow, BiTrash } from "react-icons/bi";
+import translations from "./translations.json";
 
 const MedicalHistory = () => {
   const signal = useSelector((state) => state.signal);
@@ -36,6 +37,11 @@ const MedicalHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 7;
   const totalPages = Math.ceil(historyData.length / ITEMS_PER_PAGE);
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -180,23 +186,23 @@ const MedicalHistory = () => {
   };
 
   return (
-    <div className="medical-history-container" style={{ flex: "1 0 auto" }}>
+    <div className="medical-history-container" style={{ flex: "1 0 auto" }} dir={language === "ar" ? "rtl" : ""}>
       <Container>
         <Button onClick={() => setShowForm(true)} className="add-button my-3">
-          Add New Dental History +
+          {translate("addNewDentalHistory")} +
         </Button>
         <Row className="grid-header">
           <Col className="grid-col col-1">#</Col>
-          <Col className="grid-col">Patient Name</Col>
-          <Col className="grid-col">Date of Visit</Col>
-          <Col className="grid-col">Actions</Col>
+          <Col className="grid-col">{translate("patientName")}</Col>
+          <Col className="grid-col">{translate("dateOfVisit")}</Col>
+          <Col className="grid-col">{translate("actions")}</Col>
         </Row>
         {getCurrentPageData().map((history, index) => (
           <Row key={index} className="grid-row ">
             <Col className="grid-col col-1 border-end border-secondary ">{index + 1}</Col>
             <Col className="grid-col border-end border-secondary ">{history.patient_name}</Col>
             <Col className="grid-col border-end border-secondary ">{history.date_of_visit}</Col>
-            <Col className="grid-col gap-2 d-flex ">
+            <Col className={`grid-col gap-2 d-flex  ${language === "ar" ? "border-end border-secondary" : ""}`}>
               <BiShow onClick={() => showPatientData(history)} className="icon--actions text-info" />
               <BiEdit onClick={() => editPatientData(history, history.id)} className="icon--actions text-warning" />
               <BiTrash onClick={() => removePatientData(history.id)} className="icon--actions text-danger" />
@@ -207,7 +213,7 @@ const MedicalHistory = () => {
       </Container>
       <Pagination className="justify-content-center my-2 custom-pagination">
         <Pagination.Prev disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-          Previous
+          {translate("previous")}
         </Pagination.Prev>
         {[...Array(totalPages)].map((_, page) => (
           <Pagination.Item key={page + 1} active={currentPage === page + 1} onClick={() => setCurrentPage(page + 1)}>
@@ -215,7 +221,7 @@ const MedicalHistory = () => {
           </Pagination.Item>
         ))}
         <Pagination.Next disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
-          Next
+          {translate("next")}
         </Pagination.Next>
       </Pagination>
 
@@ -223,20 +229,21 @@ const MedicalHistory = () => {
         <Modal.Header closeButton={!editMode}>
           <Modal.Title>
             {editMode ? (
-              <h3>
-                Edit <span className="text-warning">{formData.patient_name}</span>'s History
+              <h3 dir={language === "ar" ? "rtl" : ""}>
+                {translate("edit")}
+                <span className="text-warning">{formData.patient_name}</span>'s History
               </h3>
             ) : (
-              <h3>Add New Dental History</h3>
+              <h3>{translate("addNewDentalHistory")}</h3>
             )}
           </Modal.Title>
         </Modal.Header>
-        <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? "Finish Editing" : "Add New Dental History"} />
+        <MedicalHistoryForm handleChange={handleChange} handleFileChange={handleFileChange} handleSubmit={handleSubmit} patientData={formData} buttonText={editMode ? translate("edit") : translate("addNewDentalHistory")} />
         <p className="text-danger">{errorMessage}</p>
       </Modal>
 
       {selectedPatientData && <PatientDataPopup patientData={selectedPatientData} show={selectedPatientData !== null} onHide={closePatientDataPopup} />}
-      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text={"Are you sure you want to delete this history?"} />
+      <ConfirmationModal show={showConfirmationModal} onHide={cancelRemoval} onConfirm={confirmRemoval} text={translate("confirmRemoveHistory")} />
     </div>
   );
 };

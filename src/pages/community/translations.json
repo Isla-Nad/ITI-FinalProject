@@ -1,0 +1,42 @@
+{
+  "en": {
+    "whatsOnYourMind": "What's on your mind?",
+    "edit": "Edit",
+    "post": "Post",
+    "remove": "Remove",
+    "like": "Like",
+    "unlike": "Unlike",
+    "comment": "Comment",
+    "confirmRemovePost": "Are you sure you want to remove this post?",
+    "mustBeLogged": "Must be logged",
+    "previous": "Previous",
+    "next": "Next",
+    "addPostTitle": "Add a Post",
+    "titleLabel": "Title",
+    "contentLabel": "Content",
+    "addMediaLabel": "Add Media",
+    "leaveCommentLabel": "Leave a comment here",
+    "saveChanges": "Save Changes",
+    "confirmRemoveComment": "Are you sure you want to remove this comment?"
+  },
+  "ar": {
+    "whatsOnYourMind": "ماذا يخطر ببالك؟",
+    "edit": "تحرير",
+    "post": "نشر",
+    "remove": "حذف",
+    "like": "إعجاب",
+    "unlike": "عدم الإعجاب",
+    "comment": "تعليق",
+    "confirmRemovePost": "هل أنت متأكد أنك تريد حذف هذا المنشور؟",
+    "mustBeLogged": "يجب تسجيل الدخول",
+    "previous": "السابق",
+    "next": "التالي",
+    "addPostTitle": "أضف منشور",
+    "titleLabel": "العنوان",
+    "contentLabel": "المحتوى",
+    "addMediaLabel": "إضافة وسائط",
+    "leaveCommentLabel": "اترك تعليقًا هنا",
+    "saveChanges": "حفظ التغييرات",
+    "confirmRemoveComment": "هل أنت متأكد أنك تريد إزالة هذا التعليق؟"
+  }
+}

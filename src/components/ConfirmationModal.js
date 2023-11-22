@@ -14,7 +14,7 @@ function ConfirmationModal(props) {
       <Modal.Header closeButton>
         <Modal.Title>{translate("title")}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body dir={language === "ar" ? "rtl" : ""}>
         {props.text}
         <p className="text-danger">{props.errorMessage}</p>
       </Modal.Body>

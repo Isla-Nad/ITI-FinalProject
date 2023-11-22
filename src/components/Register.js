@@ -189,6 +189,7 @@ const Register = (props) => {
               </FloatingLabel>
             )}
             <Form.Control type="submit" value={translate("signup")} className="mt-3 btn btn-outline-success" onClick={props.onClick} />
+            {props.errorMessage}
           </Form>
         </Modal.Body>
         <Modal.Footer>

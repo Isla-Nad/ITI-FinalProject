@@ -9,10 +9,17 @@ import axios from "axios";
 import { Button, Card, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
+import translations from "./translations.json";
+import { useSelector } from "react-redux";
 
 function Home() {
   const [topRatedDoctors, setTopRatedDoctors] = useState([]);
   const navigate = useNavigate();
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   useEffect(() => {
     axios
@@ -26,16 +33,16 @@ function Home() {
       <div className="container-image">
         <img src={image} alt="" />
         <div className="banner-text">
-          <h1 className="ba-text">Welcome To Dentos</h1>
-          <h3 className="ba-text">Every Smiles Everday</h3>
-          <p className="ba-text">--because your smile is our passion</p>
+          <h1 className="ba-text">{translate("welcomeToDentos")}</h1>
+          <h3 className="ba-text">{translate("everySmileEveryday")}</h3>
+          <p className="ba-text">{translate("yourSmileIsOurPassion")}</p>
         </div>
       </div>
       <Aboutus />
       <Cometics />
       <Services />
       <h2 className="text-center Icon2-head" style={{ padding: "30px 0px" }}>
-        Our Top Five Rated Doctors
+        {translate("topFiveRatedDoctors")}
       </h2>
       <Container className="d-flex flex-wrap justify-content-center my-3 gap-2 ">
         {topRatedDoctors.map((doctor) => (
@@ -65,4 +72,5 @@ function Home() {
     </>
   );
 }
+
 export default Home;

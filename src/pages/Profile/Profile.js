@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
 import ToastCom from "../../components/ToastCom";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import translations from "./translations.json";
 
 function Profile() {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -46,6 +47,11 @@ function Profile() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState(null);
   const [clinics, setClinics] = useState([]);
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   useEffect(() => {
     axios
@@ -333,7 +339,7 @@ function Profile() {
   };
 
   return (
-    <div style={{ flex: "1 0 auto" }}>
+    <div style={{ flex: "1 0 auto" }} dir={language === "ar" ? "rtl" : ""}>
       <div className="container">
         <div className="row">
           <div id="sidebar--container">
@@ -346,7 +352,7 @@ function Profile() {
               }}
             >
               <Modal.Header closeButton>
-                <Modal.Title>Add a picture</Modal.Title>
+                <Modal.Title>{translate("addPicture")}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Control type="file" name="profile_picture" onChange={handlePicChange} />
@@ -360,10 +366,10 @@ function Profile() {
                     setErrorMessage("");
                   }}
                 >
-                  Close
+                  {translate("close")}
                 </Button>
                 <Button type="submit" variant="primary" onClick={editPic}>
-                  Save Changes
+                  {translate("saveChanges")}
                 </Button>
               </Modal.Footer>
             </Modal>
@@ -387,23 +393,23 @@ function Profile() {
                 </div>
               )}
             </Container>
-            <ul className="list-group mb-4" id="sidebar-nav-1">
+            <ul className="list-group mb-4 p-0" id="sidebar-nav-1">
               <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 " href="#profile">
                   <FontAwesomeIcon icon={faUserNurse} size="2xl" />
-                  <span className="ms-4 sidebar--text">Profile</span>
+                  <span className="ms-4 sidebar--text">{translate("profile")}</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 " href="#About">
                   <FontAwesomeIcon icon={faAddressCard} size="2xl" />
-                  <span className="ms-4 sidebar--text">Biography</span>
+                  <span className="ms-4 sidebar--text">{translate("biography")}</span>
                 </a>
               </li>
               <li className="list-group-item list-group-item-primary sidebar--list">
                 <a className="nav-link ms-3 my-1 " href="#Contacts">
                   <FontAwesomeIcon icon={faPhone} size="2xl" />
-                  <span className="ms-4 sidebar--text">Contacts</span>
+                  <span className="ms-4 sidebar--text">{translate("contacts")}</span>
                 </a>
               </li>
               {profileData.is_doctor && (
@@ -411,26 +417,26 @@ function Profile() {
                   <li className="list-group-item list-group-item-primary sidebar--list">
                     <a className="nav-link ms-3 my-1 " href="#Certificates">
                       <FontAwesomeIcon icon={faCertificate} size="2xl" />
-                      <span className="ms-4 sidebar--text">Certificates</span>
+                      <span className="ms-4 sidebar--text">{translate("certificates")}</span>
                     </a>
                   </li>
                   <li className="list-group-item list-group-item-primary sidebar--list">
                     <a className="nav-link ms-3 my-1 " href="#Cases">
                       <FontAwesomeIcon icon={faBriefcaseMedical} size="2xl" />
-                      <span className="ms-4 sidebar--text">Cases</span>
+                      <span className="ms-4 sidebar--text">{translate("cases")}</span>
                     </a>
                   </li>
 
                   <li className="list-group-item list-group-item-primary sidebar--list">
                     <a className="nav-link ms-3 my-1 " href="#Appointments">
                       <FontAwesomeIcon icon={faBookMedical} size="2xl" />
-                      <span className="ms-4 sidebar--text">Appointments</span>
+                      <span className="ms-4 sidebar--text">{translate("appointments")}</span>
                     </a>
                   </li>
                   <li className="list-group-item list-group-item-primary sidebar--list">
                     <a className="nav-link ms-3 my-1 " href="#Rate">
                       <FontAwesomeIcon icon={faStar} size="2xl" />
-                      <span className="ms-4 sidebar--text">Reviews</span>
+                      <span className="ms-4 sidebar--text">{translate("reviews")}</span>
                     </a>
                   </li>
                 </>
@@ -440,14 +446,14 @@ function Profile() {
                   <li className="list-group-item list-group-item-primary sidebar--list">
                     <a className="nav-link ms-3 my-1 " href="#Rate">
                       <FontAwesomeIcon icon={faBookMedical} size="2xl" />
-                      <span className="ms-4 sidebar--text">Booked Appointments</span>
+                      <span className="ms-4 sidebar--text">{translate("bookedAppointments")}</span>
                     </a>
                   </li>
                 </>
               )}
             </ul>
           </div>
-          <div id="profile--container">
+          <div id={`${language === "ar" ? "profile--container--ar" : "profile--container"}`}>
             <div data-bs-spy="scroll" data-bs-target="#sidebar-nav-1" data-bs-smooth-scroll="true" className="scrollspy-example" tabIndex="0">
               <div id="profile">
                 <div className=" d-flex justify-content-between align-items-center ">
@@ -462,23 +468,23 @@ function Profile() {
                 </div>
                 <hr />
                 <p>{profileData.info}</p>
-                {profileData.is_doctor && <p>Clinic:</p>}
+                {profileData.is_doctor && <p>{translate("clinic")}:</p>}
 
                 {profileData.clinic_data ? (
                   <Link className="badge bg-primary text-wrap link-underline " to={`/clinics/clinicDetails/${profileData.clinic}`}>
                     {profileData.clinic_data.name}
                   </Link>
                 ) : (
-                  <p>No clinic data available</p>
+                  <p>{translate("noClinicData")}</p>
                 )}
               </div>
               <div id="About" className="mt-5">
-                <h2 className="profile--header">Biography</h2>
+                <h2 className="profile--header">{translate("biography")}</h2>
                 <hr />
                 <p>{profileData.bio}</p>
               </div>
               <div id="Contacts" className="mt-5">
-                <h2 className="profile--header">Contacts</h2>
+                <h2 className="profile--header">{translate("contacts")}</h2>
                 <hr />
                 <p>
                   {profileData.contact}
@@ -486,14 +492,14 @@ function Profile() {
                   {/* <FontAwesomeIcon icon={faFacebook} size="2xl" /> */}
                   {/* <FontAwesomeIcon icon={faInstagram} size="2xl" /> */}
                 </p>
-                <span className=" text-danger-emphasis ">Phone:</span>
+                <span className=" text-danger-emphasis ">{translate("phone")}:</span>
                 <span> {profileData.phone}</span>
               </div>
               {profileData.is_doctor && (
                 <>
                   <div id="Certificates" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
-                      <h2 className="profile--header">Certificates</h2>
+                      <h2 className="profile--header">{translate("certificates")}</h2>
                       {currentUser && profileData.id === currentUser.id && (
                         <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCertificate(true)}>
                           <BiMessageSquareAdd />
@@ -531,7 +537,7 @@ function Profile() {
                           }}
                         >
                           <Modal.Header closeButton>
-                            <Modal.Title>Add a Certificate</Modal.Title>
+                            <Modal.Title>{translate("addCertificate")}</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <Form.Control type="file" name="certificate" onChange={handleCertificateChange} />
@@ -545,10 +551,10 @@ function Profile() {
                                 setErrorMessage("");
                               }}
                             >
-                              Close
+                              {translate("close")}
                             </Button>
                             <Button type="submit" variant="primary" onClick={addCertificate}>
-                              Save Changes
+                              {translate("saveChanges")}
                             </Button>
                           </Modal.Footer>
                         </Modal>
@@ -557,7 +563,7 @@ function Profile() {
                   </div>
                   <div id="Cases" className="mt-5">
                     <div className=" d-flex justify-content-between align-items-center ">
-                      <h2 className="profile--header">Cases</h2>
+                      <h2 className="profile--header">{translate("cases")}</h2>
                       {currentUser && profileData.id === currentUser.id && (
                         <Button className=" border-0 " variant="outline-primary" onClick={() => setShowCase(true)}>
                           <BiMessageSquareAdd />
@@ -594,7 +600,7 @@ function Profile() {
                           }}
                         >
                           <Modal.Header closeButton>
-                            <Modal.Title>Add a Case</Modal.Title>
+                            <Modal.Title>{translate("addCase")}</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <Form.Control type="file" name="case" onChange={handleCaseChange} />
@@ -608,10 +614,10 @@ function Profile() {
                                 setErrorMessage("");
                               }}
                             >
-                              Close
+                              {translate("close")}
                             </Button>
                             <Button type="submit" variant="primary" onClick={addCase}>
-                              Save Changes
+                              {translate("saveChanges")}
                             </Button>
                           </Modal.Footer>
                         </Modal>
@@ -621,13 +627,13 @@ function Profile() {
 
                   <div id="Appointments" className="mt-5">
                     <h2 className="profile--header" onClick={() => setShowCanvas(true)}>
-                      Appointments
+                      {translate("appointments")}
                     </h2>
                     <hr />
                     <AppointmentPicker profileData={profileData} id={id} doctor={id} />
                   </div>
                   <div id="Rate" className="mt-5">
-                    <h2 className="profile--header">Ratings & Reviews</h2>
+                    <h2 className="profile--header">{translate("reviews")}</h2>
                     <hr />
                     <CommentsAndRating reviewed_user={id} />
                   </div>
@@ -635,20 +641,24 @@ function Profile() {
               )}
               {profileData.is_doctor === false && (
                 <div id="booked-appointments" className="mt-5">
-                  <h2 className="profile--header">Booked Appointments</h2>
+                  <h2 className="profile--header">{translate("bookedAppointments")}</h2>
                   <hr />
                   <div className="d-flex gap-2 flex-wrap flex-lg-nowrap">
                     {bookedAppointments.map((appointment, index) => (
                       <Card key={index}>
                         <Card.Body>
                           <Card.Title className="text-center">
-                            Appointment Date: <p>{appointment.appointment_date}</p>
+                            {translate("appointmentDate")}: <p>{appointment.appointment_date}</p>
                           </Card.Title>
                           <ListGroup>
                             {appointment.appointments.map((app) => (
                               <ListGroup.Item action variant="primary" key={app.id}>
-                                <p>Start Time: {app.start_time}</p>
-                                <p>End Time: {app.end_time}</p>
+                                <p>
+                                  {translate("startTime")}: {app.start_time}
+                                </p>
+                                <p>
+                                  {translate("endTime")}: {app.end_time}
+                                </p>
                                 <hr />
                               </ListGroup.Item>
                             ))}
@@ -657,7 +667,7 @@ function Profile() {
 
                         <Card.Footer>
                           <h4 className="text-center">
-                            Doctor: {appointment.doctor.first_name} {appointment.doctor.last_name}
+                            {translate("doctor")}: {appointment.doctor.first_name} {appointment.doctor.last_name}
                           </h4>
                         </Card.Footer>
                       </Card>
@@ -673,40 +683,40 @@ function Profile() {
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Profile</Modal.Title>
+          <Modal.Title>{translate("editProfile")}</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleEditSubmit}>
+        <Form onSubmit={handleEditSubmit} dir={language === "ar" ? "rtl" : ""}>
           <Modal.Body>
             <Form.Group>
-              <Form.Label>Info</Form.Label>
+              <Form.Label>{translate("info")}</Form.Label>
               <Form.Control type="text" name="info" value={formData.info} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Bio</Form.Label>
+              <Form.Label>{translate("bio")}</Form.Label>
               <Form.Control as="textarea" name="bio" value={formData.bio} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Contact</Form.Label>
+              <Form.Label>{translate("contacts")}</Form.Label>
               <Form.Control type="text" name="contact" value={formData.contact} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>{translate("firstName")}</Form.Label>
               <Form.Control type="text" name="first_name" value={formData.first_name} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Last Name</Form.Label>
+              <Form.Label>{translate("lastName")}</Form.Label>
               <Form.Control type="text" name="last_name" value={formData.last_name} onChange={handleEditChange} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Phone</Form.Label>
+              <Form.Label>{translate("phone")}</Form.Label>
               <Form.Control type="text" name="phone" value={formData.phone} onChange={handleEditChange} />
             </Form.Group>
             {profileData.is_doctor && (
               <Form.Group>
-                <Form.Label>Clinic</Form.Label>
+                <Form.Label>{translate("clinic")}</Form.Label>
                 <Form.Select name="clinic" value={formData.clinic} onChange={handleEditChange}>
                   <option value="" disabled>
-                    Select Clinic
+                    {translate("selectClinic")}
                   </option>
                   {clinics.map((clinic) => (
                     <option key={clinic.id} value={clinic.id}>
@@ -716,6 +726,7 @@ function Profile() {
                 </Form.Select>
               </Form.Group>
             )}
+            <p className="text-danger text-center ">{errorMessage}</p>
           </Modal.Body>
           <Modal.Footer>
             <Form.Control value="Save Changes" type="submit" className="btn btn-outline-dark " />
@@ -725,20 +736,24 @@ function Profile() {
       {currentUser && currentUser.id === profileData.id && (
         <Offcanvas show={showCanvas} onHide={() => setShowCanvas(false)}>
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Booked Appointments</Offcanvas.Title>
+            <Offcanvas.Title>{translate("bookedAppointments")}</Offcanvas.Title>
           </Offcanvas.Header>
-          <Offcanvas.Body>
+          <Offcanvas.Body dir={language === "ar" ? "rtl" : ""}>
             {bookedAppointmentsDoctor.map((appointment, index) => (
               <Card key={index} className=" m-2 ">
                 <Card.Body>
                   <Card.Title className="text-center">
-                    Appointment Date: <p>{appointment.appointment_date}</p>
+                    {translate("appointmentDate")}: <p>{appointment.appointment_date}</p>
                   </Card.Title>
                   <ListGroup>
                     {appointment.appointments.map((app) => (
                       <ListGroup.Item action variant="primary" key={app.id}>
-                        <p>Start Time: {app.start_time}</p>
-                        <p>End Time: {app.end_time}</p>
+                        <p>
+                          {translate("startTime")}: {app.start_time}
+                        </p>
+                        <p>
+                          {translate("endTime")}: {app.end_time}
+                        </p>
                         {currentUser && currentUser.id == profileData.id && (
                           <div className="d-flex justify-content-around">
                             <button
@@ -750,7 +765,7 @@ function Profile() {
                                 setSelectedAppointments(appointment);
                               }}
                             >
-                              Reject
+                              {translate("reject")}
                             </button>
                             <button
                               disabled={app.is_accepted}
@@ -761,7 +776,7 @@ function Profile() {
                                 setSelectedAppointments(appointment);
                               }}
                             >
-                              Accept
+                              {translate("accept")}
                             </button>
                           </div>
                         )}
@@ -774,7 +789,7 @@ function Profile() {
 
                 <Card.Footer>
                   <h4 className="text-center">
-                    Patient: {appointment.patient.first_name} {appointment.patient.last_name}
+                    {translate("patient")}: {appointment.patient.first_name} {appointment.patient.last_name}
                   </h4>
                 </Card.Footer>
               </Card>
@@ -785,42 +800,46 @@ function Profile() {
 
       <Modal show={showReject} onHide={() => setShowReject(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Reject Time Slot</Modal.Title>
+          <Modal.Title>
+            {translate("reject")} {translate("TimeSlot")}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedAppointment && (
             <p>
-              You are booking from <span className="text-warning">{selectedAppointment.start_time}</span> to <span className="text-warning">{selectedAppointment.end_time}</span> on <span className="text-info">{selectedAppointment.appointment_date}</span>.
+              {translate("from")} <span className="text-warning">{selectedAppointment.start_time}</span> {translate("to")} <span className="text-warning">{selectedAppointment.end_time}</span> {translate("on")} <span className="text-info">{selectedAppointment.appointment_date}</span>.
             </p>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowReject(false)}>
-            Close
+            {translate("close")}
           </Button>
           <Button variant="danger" onClick={rejectAppointment}>
-            Reject
+            {translate("reject")}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showAccept} onHide={() => setShowAccept(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Accept Time Slot</Modal.Title>
+          <Modal.Title>
+            {translate("accept")} {translate("TimeSlot")}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedAppointment && (
             <p>
-              You are booking from <span className="text-warning">{selectedAppointment.start_time}</span> to <span className="text-warning">{selectedAppointment.end_time}</span> on <span className="text-info">{selectedAppointment.appointment_date}</span>.
+              {translate("from")} <span className="text-warning">{selectedAppointment.start_time}</span> {translate("to")} <span className="text-warning">{selectedAppointment.end_time}</span> {translate("on")} <span className="text-info">{selectedAppointment.appointment_date}</span>.
             </p>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowAccept(false)}>
-            Close
+            {translate("close")}
           </Button>
           <Button variant="primary" onClick={acceptAppointment}>
-            Accept
+            {translate("accept")}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -837,9 +856,9 @@ function Profile() {
         message={<p className="text-danger">{errorMessage}</p>}
       />
 
-      <ConfirmationModal show={showConfirmationCase} onHide={() => setShowConfirmationCase(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCase} />
-      <ConfirmationModal show={showConfirmationCertificate} onHide={() => setShowConfirmationCertificate(false)} text="Are you sure you want to remove this Case?" onConfirm={removeCertificate} />
-      <ConfirmationModal show={showConfirmationPic} onHide={() => setShowConfirmationPic(false)} text="Are you sure you want to remove your profile picture?" onConfirm={deletePic} />
+      <ConfirmationModal show={showConfirmationCase} onHide={() => setShowConfirmationCase(false)} text={translate("removeConfirmationCase")} onConfirm={removeCase} />
+      <ConfirmationModal show={showConfirmationCertificate} onHide={() => setShowConfirmationCertificate(false)} text={translate("removeConfirmationCertificate")} onConfirm={removeCertificate} />
+      <ConfirmationModal show={showConfirmationPic} onHide={() => setShowConfirmationPic(false)} text={translate("removeConfirmationPicture")} onConfirm={deletePic} />
     </div>
   );
 }
