@@ -148,6 +148,11 @@ body:before {
 .toast-container {
   position: fixed;
 }
+.dropdown-toggle {
+  background-color: rgba(var(--bg-primary), 0.8);
+  color: rgb(var(--text-primary));
+  border: 1px solid rgb(var(--text-primary));
+}
 footer {
   background-color: rgba(var(--bg-secondary), 0.7);
   box-shadow: 0 -1px 7px;

@@ -1,11 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Form, Modal, Pagination, FloatingLabel, Popover, Overlay } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import translations from "./translations.json";
 
 const Register = (props) => {
   const [errors, setErrors] = useState({});
   const [clinics, setClinics] = useState([]);
   const [targets, setTargets] = useState({});
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language]["register"][key];
+  };
 
   useEffect(() => {
     axios
@@ -20,59 +27,59 @@ const Register = (props) => {
     switch (fieldName) {
       case "first_name":
         if (!value.trim()) {
-          newErrors.first_name = "First Name is required";
+          newErrors.first_name = translate("firstNameRequired");
         } else if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(value)) {
-          newErrors.first_name = "Please use only alphanumeric characters, starting with a letter or underscore.";
+          newErrors.first_name = translate("alphanumeric");
         } else {
           delete newErrors.first_name;
         }
         break;
       case "last_name":
         if (!value.trim()) {
-          newErrors.last_name = "Last Name is required";
+          newErrors.last_name = translate("lastNameRequired");
         } else if (!/^[a-zA-Z_][a-zA-Z0-9_]*/.test(value)) {
-          newErrors.last_name = "Please use only alphanumeric characters, starting with a letter or underscore.";
+          newErrors.last_name = translate("alphanumeric");
         } else {
           delete newErrors.last_name;
         }
         break;
       case "email":
         if (!value.trim()) {
-          newErrors.email = "Email Address is required";
+          newErrors.email = translate("emailRequired");
         } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
-          newErrors.email = "Please enter a valid email address, like example@example.com.";
+          newErrors.email = translate("emailErrors");
         } else {
           delete newErrors.email;
         }
         break;
       case "phone":
         if (!value.trim()) {
-          newErrors.phone = "Phone Number is required";
+          newErrors.phone = translate("phoneRequired");
         } else if (!/^01[0-9]{9}$/.test(value)) {
-          newErrors.phone = "Phone Number must be a valid Egyptian mobile number";
+          newErrors.phone = translate("phoneErrors");
         } else {
           delete newErrors.phone;
         }
         break;
       case "password":
         if (!value.trim()) {
-          newErrors.password = "password required";
+          newErrors.password = translate("passwordRequired");
         } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value)) {
-          newErrors.password = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.";
+          newErrors.password = translate("passwordCriteria");
         } else {
           delete newErrors.password;
         }
         break;
       case "confirm_password":
         if (value !== props.formData.password) {
-          newErrors.confirm_password = "Passwords do not match";
+          newErrors.confirm_password = translate("passwordMismatch");
         } else {
           delete newErrors.confirm_password;
         }
         break;
       case "clinic":
         if (!value.trim()) {
-          newErrors.clinic = "Clinic is required";
+          newErrors.clinic = translate("clinicRequired");
         } else {
           delete newErrors.clinic;
         }
@@ -132,45 +139,45 @@ const Register = (props) => {
     <div>
       <Modal show={props.show} onHide={props.onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Register</Modal.Title>
+          <Modal.Title>{translate("title")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <FloatingLabel controlId="first_name" label="First Name" className="mb-3">
+            <FloatingLabel controlId="first_name" label={translate("firstName")} className="mb-3">
               <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, first_name: null }))} className={errors.first_name || !props.formData.first_name ? "is-invalid" : "is-valid"} type="text" name="first_name" value={props.formData.first_name} onChange={handleChange} placeholder="..." required />
               {renderFeedback("first_name")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="last_name" label="Last Name" className="mb-3">
+            <FloatingLabel controlId="last_name" label={translate("lastName")} className="mb-3">
               <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, last_name: null }))} className={errors.last_name || !props.formData.last_name ? "is-invalid" : "is-valid"} type="text" name="last_name" value={props.formData.last_name} onChange={handleChange} placeholder="..." required />
               {renderFeedback("last_name")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="email" label="Email Address" className="mb-3">
+            <FloatingLabel controlId="email" label={translate("email")} className="mb-3">
               <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, email: null }))} className={errors.email || !props.formData.email ? "is-invalid" : "is-valid"} type="email" name="email" value={props.formData.email} onChange={handleChange} placeholder="..." required />
               {renderFeedback("email")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="phone" label="Phone Number" className="mb-3">
+            <FloatingLabel controlId="phone" label={translate("phone")} className="mb-3">
               <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, phone: null }))} className={errors.phone || !props.formData.phone ? "is-invalid" : "is-valid"} type="text" name="phone" value={props.formData.phone} onChange={handleChange} placeholder="..." required />
               {renderFeedback("phone")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="password" label="Password" className="mb-3">
+            <FloatingLabel controlId="password" label={translate("password")} className="mb-3">
               <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, password: null }))} className={errors.password || !props.formData.password ? "is-invalid" : "is-valid"} type="password" name="password" value={props.formData.password} onChange={handleChange} placeholder="..." required />
               {renderFeedback("password")}
             </FloatingLabel>
 
-            <FloatingLabel controlId="confirm_password" label="Confirm Password" className="mb-3">
+            <FloatingLabel controlId="confirm_password" label={translate("confirmPassword")} className="mb-3">
               <Form.Control onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, confirm_password: null }))} className={errors.confirm_password || !props.formData.confirm_password ? "is-invalid" : "is-valid"} type="Password" name="confirm_password" value={props.formData.confirm_password} onChange={handleChange} placeholder="..." required />
               {renderFeedback("confirm_password")}
             </FloatingLabel>
 
             {props.formData.is_doctor && (
-              <FloatingLabel controlId="clinic" label="Clinic" className="mb-3">
+              <FloatingLabel controlId="clinic" label={translate("clinic")} className="mb-3">
                 <Form.Select onBlur={() => setTargets((prevTargets) => ({ ...prevTargets, clinic: null }))} name="clinic" value={props.formData.clinic} onChange={handleChange} required>
                   <option value="" disabled>
-                    Select Clinic
+                    {translate("selectClinic")}
                   </option>
                   {clinics.map((clinic) => (
                     <option key={clinic.id} value={clinic.id}>
@@ -181,16 +188,17 @@ const Register = (props) => {
                 {renderFeedback("clinic")}
               </FloatingLabel>
             )}
-            <Form.Control type="submit" value="Signup" className="mt-3 btn btn-outline-success" onClick={props.onClick} />
+            <Form.Control type="submit" value={translate("signup")} className="mt-3 btn btn-outline-success" onClick={props.onClick} />
+            {props.errorMessage}
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Pagination>
             <Pagination.Item active={props.currentPage} onClick={props.handlePageChange}>
-              Patient
+              {translate("patient")}
             </Pagination.Item>
             <Pagination.Item active={props.currentPage2} onClick={props.handlePageChange2}>
-              Doctor
+              {translate("doctor")}
             </Pagination.Item>
           </Pagination>
         </Modal.Footer>

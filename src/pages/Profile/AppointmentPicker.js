@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSignal } from "../../store/actions/Signal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import ToastCom from "../../components/ToastCom";
+import translations from "./translations.json";
 
 const AppointmentPicker = (props) => {
   const authTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
@@ -30,6 +31,11 @@ const AppointmentPicker = (props) => {
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   useEffect(() => {
     axios
@@ -177,20 +183,20 @@ const AppointmentPicker = (props) => {
         <div style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", padding: "20px", borderRadius: "5px" }}>
           <div className="d-flex justify-content-between flex-wrap">
             <div>
-              <p>Select Date:</p>
+              <p>{translate("selectDate")}:</p>
               <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} dateFormat="MM/dd/yyyy" />
             </div>
             <div>
-              <p>Select Start Time:</p>
+              <p>{translate("selectStartTime")}:</p>
               <DatePicker selected={startTime} onChange={(time) => setStartTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
             </div>
             <div>
-              <p>Select End Time:</p>
+              <p>{translate("selectEndTime")}:</p>
               <DatePicker selected={endTime} onChange={(time) => setEndTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={15} dateFormat="h:mm aa" />
             </div>
           </div>
           <Button onClick={addAppointment} className=" w-100  mt-2 adding--button">
-            Add Appointment
+            {translate("addAppointment")}
           </Button>
           <div className="text-danger text-center ">{errorMessage}</div>
         </div>
@@ -204,7 +210,7 @@ const AppointmentPicker = (props) => {
             <Card key={index} className="mb-3">
               <Card.Body>
                 <Card.Title className="text-center">
-                  Appointment Date: <p>{card.appointment_date}</p>
+                  {translate("appointmentDate")}: <p>{card.appointment_date}</p>
                 </Card.Title>
                 <ListGroup className="opacity-75">
                   {card.appointments.map((range, i) => (
@@ -215,7 +221,7 @@ const AppointmentPicker = (props) => {
                         onClick={() => {
                           if (!currentUser) {
                             setShowToast(true);
-                            setErrorMessage("Must be logged");
+                            setErrorMessage(translate("mustBeLogged"));
                             return;
                           }
                           setSelectedAppointmentToBook(range);
@@ -224,7 +230,7 @@ const AppointmentPicker = (props) => {
                         disabled={range.is_booked || (currentUser && currentUser.is_doctor)}
                         className={`text-truncate ${range.is_booked && "text-decoration-line-through"}`}
                       >
-                        <strong>From:</strong> {range.start_time} <br /> <strong>To:</strong> {range.end_time}
+                        <strong>{translate("from")}:</strong> {range.start_time} <br /> <strong>{translate("to")}:</strong> {range.end_time}
                       </ListGroup.Item>
                       <hr />
                       {currentUser && props.doctor == currentUser.id && <Button className="btn-close position-absolute end-0 top-0 " onClick={() => openConfirmationModal(range)} variant="danger"></Button>}
@@ -237,31 +243,31 @@ const AppointmentPicker = (props) => {
         </Container>
         <div className="d-flex justify-content-between mt-3">
           <Button variant="secondary" onClick={() => setCurrentPage(currentPage - 1)} disabled={!canGoPrev}>
-            Previous
+            {translate("previous")}
           </Button>
           <Button variant="secondary" onClick={() => setCurrentPage(currentPage + 1)} disabled={!canGoNext}>
-            Next
+            {translate("next")}
           </Button>
         </div>
       </div>
 
       <Modal show={showBookingModal} onHide={() => setShowBookingModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Book Time Slot</Modal.Title>
+          <Modal.Title>{translate("TimeSlot")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedAppointmentToBook && (
             <p>
-              You are booking from <span className="text-warning">{selectedAppointmentToBook.start_time}</span> to <span className="text-warning">{selectedAppointmentToBook.end_time}</span> on <span className="text-info">{selectedAppointmentToBook.appointment_date}</span>.
+              {translate("bookingTimeSlot")} {translate("from")} <span className="text-warning">{selectedAppointmentToBook.start_time}</span> {translate("to")} <span className="text-warning">{selectedAppointmentToBook.end_time}</span> {translate("on")} <span className="text-info">{selectedAppointmentToBook.appointment_date}</span>.
             </p>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowBookingModal(false)}>
-            Close
+            {translate("close")}
           </Button>
           <Button variant="primary" onClick={bookTimeSlot}>
-            Book
+            {translate("book")}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -272,7 +278,7 @@ const AppointmentPicker = (props) => {
         onConfirm={() => removeAppointment()}
         text={
           <>
-            Are you sure you want to remove the appointment on <span className="text-info"> {selectedAppointmentToRemove?.appointment_date}</span> from <span className="text-warning">{selectedAppointmentToRemove?.start_time}</span> to <span className="text-warning">{selectedAppointmentToRemove?.end_time}</span>?
+            {translate("confirmRemoveAppointment")} {translate("on")} <span className="text-info"> {selectedAppointmentToRemove?.appointment_date}</span> {translate("from")} <span className="text-warning">{selectedAppointmentToRemove?.start_time}</span> {translate("to")} <span className="text-warning">{selectedAppointmentToRemove?.end_time}</span>?
           </>
         }
       />

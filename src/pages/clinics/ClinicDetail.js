@@ -7,6 +7,7 @@ import { setSignal } from "../../store/actions/Signal";
 import { useDispatch, useSelector } from "react-redux";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaWhatsapp, FaMapMarker } from "react-icons/fa";
 import "./Clinics.css";
+import translations from "./translations.json";
 
 function ClinicDetail() {
   const [doctors, setDoctors] = useState([]);
@@ -17,6 +18,11 @@ function ClinicDetail() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const language = useSelector((state) => state.lang);
+
+  const translate = (key) => {
+    return translations[language][key];
+  };
 
   useEffect(() => {
     axios
@@ -35,15 +41,16 @@ function ClinicDetail() {
     <>
       <div className="container mt-5">
         <div className="row">
+          <h1 className=" text-center ">{clinic.name}</h1>
           <div id="carouselExampleCaptions" className="carousel slide">
             <div className="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              {images.map((myimage, index) => (
+                <button key={index} type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to={index} className={index === 0 ? "active" : ""} aria-current={index === 0 ? "true" : undefined} aria-label={`Slide ${index + 1}`}></button>
+              ))}
             </div>
             <div className="carousel-inner">
               {images.map((myimage, index) => (
-                <div key={index} className="carousel-item active">
+                <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
                   <img src={`http://127.0.0.1:8000${myimage.image}`} style={{ height: "50rem", width: "100%" }} className="d-block w-100" alt="..." />
                   <div className="carousel-caption d-none d-md-block">
                     <h5>{myimage.desc}</h5>
@@ -64,7 +71,7 @@ function ClinicDetail() {
       </div>
       <div className=" mt-5">
         <div>
-          <h2 style={{ textAlign: "center" }}>Some of our Cases</h2>
+          <h2 className="text-center Icon2-head">{translate("casesHeading")}</h2>
         </div>
         <div className="container">
           <div className="row mt-5">
@@ -81,9 +88,7 @@ function ClinicDetail() {
         </div>
       </div>
       <div className="mt-5">
-        <div className="text-center">
-          <img src="https://medmaldirect.com/media/1871/meet-our-team-icon.png" />
-        </div>
+        <h2 className="text-center Icon2-head">{translate("doctorsSectionHeading")}</h2>
 
         <Container className="d-flex flex-wrap justify-content-center my-3 gap-2 ">
           {doctors.map((doctor) => (
@@ -113,7 +118,7 @@ function ClinicDetail() {
       </div>
 
       <Container className="mt-5">
-        <h2 className="text-center">Contact us on</h2>
+        <h2 className="text-center Icon2-head">{translate("contactUsHeading")}</h2>
 
         <Row className="mt-5 text-center">
           <Col md={3} sm={6} xs={12} className="mt-4 animated-col ">
@@ -138,19 +143,19 @@ function ClinicDetail() {
           </Col>
         </Row>
 
-        <Row className="mt-5 text-center">
+        <Row className="mt-5 text-center" dir={language === "ar" ? "rtl" : ""}>
           <Col md={6} sm={12} className="mt-4 animated-col ">
             <span>
               <FaWhatsapp size={100} color="#25D366" />
             </span>
-            <span style={{ fontSize: "1.3rem" }}>Our Number : </span>
+            <span style={{ fontSize: "1.3rem" }}>{translate("ourNumber")} : </span>
             <span>{clinic.phone}</span>
           </Col>
           <Col md={6} sm={12} className="mt-4 animated-col ">
             <span>
               <FaMapMarker size={100} color="#4285F4" />
             </span>
-            <span style={{ fontSize: "1.3rem" }}>Our Location : </span>
+            <span style={{ fontSize: "1.3rem" }}>{translate("ourLocation")} : </span>
             <span>{clinic.address}</span>
           </Col>
         </Row>

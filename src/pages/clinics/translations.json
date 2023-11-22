@@ -1,0 +1,18 @@
+{
+  "en": {
+    "casesHeading": "Some of our Cases",
+    "contactUsHeading": "Contact us on",
+    "doctorsSectionHeading": "Meet Our Doctors",
+    "contactOn": "Contact us on",
+    "ourNumber": "Our Number",
+    "ourLocation": "Our Location"
+  },
+  "ar": {
+    "casesHeading": "بعض حالاتنا",
+    "contactUsHeading": "تواصل معنا",
+    "doctorsSectionHeading": "تعرف على أطبائنا",
+    "contactOn": "تواصل معنا على",
+    "ourNumber": "رقمنا",
+    "ourLocation": "موقعنا"
+  }
+}

@@ -12,6 +12,7 @@ const Clinics = () => {
   const signal = useSelector((state) => state.signal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const language = useSelector((state) => state.lang);
 
   useEffect(() => {
     axios
@@ -23,7 +24,7 @@ const Clinics = () => {
   }, []);
 
   return (
-    <div style={{ flex: "1 0 auto" }}>
+    <div style={{ flex: "1 0 auto" }} dir={language === "ar" ? "rtl" : ""}>
       <Container className="d-flex flex-wrap justify-content-center my-3 gap-2 ">
         {clinics.map((clinic) => (
           <Card key={clinic.id} className="col-md-3 col-sm-6 mb-3">
