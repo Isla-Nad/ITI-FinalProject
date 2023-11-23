@@ -92,9 +92,10 @@ const Posts = () => {
         .catch((error) => {
           if (error.response.data.content) {
             setErrorMessage("content: " + error.response.data.content);
-          }
-          if (error.response.data.title) {
+          } else if (error.response.data.title) {
             setErrorMessage("title: " + error.response.data.title);
+          } else {
+            setErrorMessage(error.response.data.detail);
           }
         });
     } else {
@@ -128,7 +129,7 @@ const Posts = () => {
   const editPost = (post, index) => {
     if (!currentUser) {
       setShowToast(true);
-      setErrorMessage("Must be logged");
+      setErrorMessage(translate("mustBeLogged"));
       return;
     }
     setEditMode(true);
@@ -160,7 +161,7 @@ const Posts = () => {
   const handleRemovePost = (index) => {
     if (!currentUser) {
       setShowToast(true);
-      setErrorMessage("Must be logged");
+      setErrorMessage(translate("mustBeLogged"));
       return;
     }
     setShowConfirmationModal(true);
@@ -176,7 +177,7 @@ const Posts = () => {
   const likePost = (postId) => {
     if (!currentUser) {
       setShowToast(true);
-      setErrorMessage("Must be logged");
+      setErrorMessage(translate("mustBeLogged"));
       return;
     }
     const likePostWithUser = { is_liked: true, user: currentUser.id, post: postId };
@@ -213,7 +214,7 @@ const Posts = () => {
         onClick={() => {
           if (!currentUser) {
             setShowToast(true);
-            setErrorMessage(translate("whatsOnYourMind"));
+            setErrorMessage(translate("mustBeLogged"));
             return;
           }
           setShowModal(true);

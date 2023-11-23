@@ -23,7 +23,8 @@
     "uploadedImageTitle": "Uploaded Image",
     "closeButton": "Close",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "searchPatient": "Search Patient"
   },
   "ar": {
     "addNewDentalHistory": "إضافة سجل طبي جديد",
@@ -49,6 +50,7 @@
     "uploadedImageTitle": "الصورة المرفقة",
     "closeButton": "إغلاق",
     "previous": "السابق",
-    "next": "التالي"
+    "next": "التالي",
+    "searchPatient": "ابحث عن المريض"
   }
 }

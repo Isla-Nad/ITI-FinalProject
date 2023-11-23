@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MedicalHistoryForm from "./MedicalHistoryForm";
-import { Button, Col, Container, Modal, Pagination, Row } from "react-bootstrap";
+import { Button, Col, Container, FloatingLabel, Modal, Pagination, Row } from "react-bootstrap";
 import PatientDataPopup from "./PatientDataPopup";
 import "./MedicalHistory.css";
 import axios from "axios";
@@ -38,15 +38,22 @@ const MedicalHistory = () => {
   const ITEMS_PER_PAGE = 7;
   const totalPages = Math.ceil(historyData.length / ITEMS_PER_PAGE);
   const language = useSelector((state) => state.lang);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const translate = (key) => {
     return translations[language][key];
   };
 
+  // const getCurrentPageData = () => {
+  //   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  //   const endIndex = startIndex + ITEMS_PER_PAGE;
+  //   return historyData.slice(startIndex, endIndex);
+  // };
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
-    return historyData.slice(startIndex, endIndex);
+    const filteredData = historyData.filter((history) => history.patient_name.toLowerCase().includes(searchTerm.toLowerCase()));
+    return filteredData.slice(startIndex, endIndex);
   };
 
   useEffect(() => {
@@ -189,9 +196,16 @@ const MedicalHistory = () => {
   return (
     <div className="medical-history-container" style={{ flex: "1 0 auto" }} dir={language === "ar" ? "rtl" : ""}>
       <Container>
-        <Button onClick={() => setShowForm(true)} className="add-button my-3">
-          {translate("addNewDentalHistory")} +
-        </Button>
+        <Row className="my-3 align-items-baseline">
+          <Col>
+            <Button onClick={() => setShowForm(true)} className="add-button my-3">
+              {translate("addNewDentalHistory")} +
+            </Button>
+          </Col>
+          <Col className="d-flex justify-content-end">
+            <input type="text" placeholder={translate("searchPatient")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="form-control my-2" />
+          </Col>
+        </Row>
         <Row className="grid-header">
           <Col className="grid-col col-1">#</Col>
           <Col className="grid-col">{translate("patientName")}</Col>
