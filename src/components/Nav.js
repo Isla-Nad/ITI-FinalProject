@@ -137,7 +137,7 @@ function Nav() {
     <>
       <nav className="navbar navbar-expand-lg ">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+          <Link to="/" className={`navbar-brand ${activeLink === "/" ? "active" : ""}`} onClick={() => setActiveLink("/")}>
             <img src={logo} alt="" style={{ width: "100px", height: "50px" }} />
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -182,6 +182,7 @@ function Nav() {
                         onClick={() => {
                           navigate(`/profile/${loggedInUser.id}`);
                           dispatch(setSignal(!signal));
+                          setActiveLink("");
                         }}
                       />
                       <Form.Control type="button" value={translate("logout")} className="mt-3 btn btn-outline-danger" onClick={handleLogout} />
