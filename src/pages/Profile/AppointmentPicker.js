@@ -233,7 +233,7 @@ const AppointmentPicker = (props) => {
                         <strong>{translate("from")}:</strong> {range.start_time} <br /> <strong>{translate("to")}:</strong> {range.end_time}
                       </ListGroup.Item>
                       <hr />
-                      {currentUser && props.doctor == currentUser.id && <Button className="btn-close position-absolute end-0 top-0 " onClick={() => openConfirmationModal(range)} variant="danger"></Button>}
+                      {currentUser && props.doctor == currentUser.id && !range.is_accepted && <Button className="btn-close position-absolute end-0 top-0 " onClick={() => openConfirmationModal(range)} variant="danger"></Button>}
                     </div>
                   ))}
                 </ListGroup>

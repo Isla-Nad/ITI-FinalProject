@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserNurse, faAddressCard, faCertificate, faBriefcaseMedical, faPhone, faBookMedical, faStar, faPen } from "@fortawesome/free-solid-svg-icons";
 import "./Profile.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AppointmentPicker from "./AppointmentPicker";
 import CommentsAndRating from "./CommentsAndRating";
 import { Button, Card, Container, Form, Image, ListGroup, ListGroupItem, Modal, NavLink, Offcanvas } from "react-bootstrap";
@@ -48,6 +48,7 @@ function Profile() {
   const [selectedAppointments, setSelectedAppointments] = useState(null);
   const [clinics, setClinics] = useState([]);
   const language = useSelector((state) => state.lang);
+  const navigate = useNavigate();
 
   const translate = (key) => {
     return translations[language][key];
@@ -70,7 +71,10 @@ function Profile() {
         console.log(res.data);
         setFormData(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        navigate("*");
+      });
   }, [signal]);
 
   useEffect(() => {

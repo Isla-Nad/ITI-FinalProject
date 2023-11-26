@@ -34,7 +34,10 @@ function ClinicDetail() {
         setCases(response.data.cases);
         setImages(response.data.images);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        navigate("*");
+      });
   }, [id]);
 
   return (
