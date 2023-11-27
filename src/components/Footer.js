@@ -23,17 +23,17 @@ function Footer() {
             <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
               <h6 className="text-uppercase mb-4 font-weight-bold">{translate("usefulLinks")}</h6>
               <p>
-                <Link to="/" className="text-decoration-none  text-dark">
+                <Link to="/" className="text-decoration-none text-info-emphasis">
                   {translate("home")}
                 </Link>
               </p>
               <p>
-                <Link to="/contactus" className="text-decoration-none text-dark ">
+                <Link to="/contactus" className="text-decoration-none text-info-emphasis">
                   {translate("contactUs")}
                 </Link>
               </p>
               <p>
-                <Link to="/posts" className="text-decoration-none text-dark">
+                <Link to="/posts" className="text-decoration-none text-info-emphasis">
                   {translate("community")}
                 </Link>
               </p>
@@ -72,18 +72,18 @@ function Footer() {
               </div>
             </div>
             <div className="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
-              <a className="btn  btn-floating m-1" role="button" href="https://www.facebook.com/" target="_blank">
+              <a className="btn  btn-floating m-1 text-info-emphasis" role="button" href="https://www.facebook.com/" target="_blank">
                 <FaTwitter />
               </a>
-              <a className="btn  btn-floating m-1" role="button" href="https://www.twitter.com/" target="_blank">
+              <a className="btn  btn-floating m-1 text-info-emphasis" role="button" href="https://www.twitter.com/" target="_blank">
                 <i className="fab fa-twitter"></i>
                 <FaFacebookF />
               </a>
-              <a className="btn  btn-floating m-1" role="button" href="https://www.google.com/" target="_blank">
+              <a className="btn  btn-floating m-1 text-info-emphasis" role="button" href="https://www.google.com/" target="_blank">
                 <i className="fab fa-google"></i>
                 <FaGoogle />
               </a>
-              <a className="btn  btn-floating m-1" role="button" href="https://www.instagram.com/" target="_blank">
+              <a className="btn  btn-floating m-1 text-info-emphasis" role="button" href="https://www.instagram.com/" target="_blank">
                 <i className="fab fa-instagram"></i>
                 <FaInstagram />
               </a>
