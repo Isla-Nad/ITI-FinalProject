@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import Clinics from "./pages/clinics/Clinics";
+// import Clinics from "./pages/clinics/Clinics";
 import Posts from "./pages/community/Posts";
 import ClinicDetail from "./pages/clinics/ClinicDetail";
 import Register from "./pages/log&res/Register";
